@@ -1,0 +1,15 @@
+{
+  "preferences": {
+    "target_unit": "C",
+    "target_style": "both",
+    "target_points_visible": 4,
+    "target_launch_package": "",
+    "complication_unit": "C",
+    "complication_style": "temperature",
+    "complication_trim_to_fit": 1,
+    "complication_launch_package": "",
+    "complication_suntimes_style": "exact",
+    "complication_suntimes_trim_to_fit": false
+  },
+  "weather": {}
+}

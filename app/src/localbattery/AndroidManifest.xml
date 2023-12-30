@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        tools:targetApi="34">
+        <activity
+            android:name="ui.activities.ConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+        <provider
+            android:name="targets.LocalBatteryTarget"
+            android:authorities="${applicationId}.target.battery"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
+            </intent-filter>
+        </provider>
+        <provider
+            android:name="providers.BatteryBroadcastProvider"
+            android:authorities="${applicationId}.broadcast.battery"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_BROADCASTS"
+            android:exported="true"/>
+    </application>
+
+</manifest>
