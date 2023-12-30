@@ -145,7 +145,6 @@ class ConfigurationActivity : ComponentActivity() {
                                 defaultText = launchPackage
                             )
 
-//                            Divider()
                             Text(
                                 text = "Weather complication",
                                 style = MaterialTheme.typography.headlineSmall,
@@ -207,163 +206,6 @@ class ConfigurationActivity : ComponentActivity() {
                                 checked = weatherComplicationTrimToFit
                             )
 
-    //                        Divider()
-    //                        Text("Sunrise complication")      // TODO: make proper title
-    //
-    //                        PreferenceMenu(
-    //                            icon = R.drawable.alert_circle,
-    //                            title = "Style",
-    //                            subtitle = "Select complication style",
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunrise_style", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunriseComplication::class.java)
-    //                            },
-    //                            items = listOf(
-    //                                Pair("Exact time", "exact"),
-    //                                Pair("Time to", "time_to"),
-    //                                Pair("Time to + exact time", "both")
-    //                            )
-    //                        )
-    //
-    //                        PreferenceMenu(
-    //                            icon = R.drawable.alert_circle,
-    //                            title = "Show before",
-    //                            subtitle = "Show complication x hours before sunrise",
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunrise_show_before", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunriseComplication::class.java)
-    //                            },
-    //                            items = listOf(
-    //                                Pair("10 minutes", 600000),
-    //                                Pair("15 minutes", 900000),
-    //                                Pair("30 minutes", 1800000),
-    //                                Pair("1 hour", 3600000),
-    //                                Pair("2 hours", 7200000),
-    //                                Pair("6 hours", 21600000),
-    //                                Pair("12 hours", 43200000)
-    //                            )
-    //                        )
-    //
-    //                        PreferenceMenu(
-    //                            icon = R.drawable.alert_circle,
-    //                            title = "Show after",
-    //                            subtitle = "Show complication x hours after sunrise",
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunrise_show_after", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunriseComplication::class.java)
-    //                            },
-    //                            items = listOf(
-    //                                Pair("10 minutes", 600000),
-    //                                Pair("15 minutes", 900000),
-    //                                Pair("30 minutes", 1800000),
-    //                                Pair("1 hour", 3600000),
-    //                                Pair("2 hours", 7200000),
-    //                                Pair("6 hours", 21600000),
-    //                                Pair("12 hours", 43200000)
-    //                            )
-    //                        )
-    //
-    //                        PreferenceSwitch(
-    //                            icon = R.drawable.content_cut,
-    //                            title = "Complication text trimming",
-    //                            subtitle = "Disable this if text is getting cut off. May \ncause unexpected results",       // TODO: fix (also exchange with RelativeSizeSpan)
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunrise_trim_to_fit", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunriseComplication::class.java)
-    //                            },
-    //                            checked = complicationTrimToFit
-    //                        )
-    //
-    //                        PreferenceSwitch(
-    //                            icon = R.drawable.alert_circle,
-    //                            title = "Force show complication",
-    //                            subtitle = "Forces complication to be visible, regardless\n other settings",
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunrise_forceenable", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunsetComplication::class.java)
-    //                            },
-    //                            checked = sunriseForceEnable
-    //                        )
-    //
-    //                        Divider()
-    //                        Text("Sunset complication")      // TODO: make proper title
-    //
-    //                        PreferenceMenu(
-    //                            icon = R.drawable.palette_outline,
-    //                            title = "Style",
-    //                            subtitle = "Select complication style",
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunset_style", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunsetComplication::class.java)
-    //                            },
-    //                            items = listOf(
-    //                                Pair("Exact time", "exact"),
-    //                                Pair("Time to", "time_to"),
-    //                                Pair("Time to + exact time", "both")
-    //                            )
-    //                        )
-    //
-    //                        PreferenceMenu(
-    //                            icon = R.drawable.alert_circle,
-    //                            title = "Show before",
-    //                            subtitle = "Show complication x hours before sunset",
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunset_show_before", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunsetComplication::class.java)
-    //                            },
-    //                            items = listOf(
-    //                                Pair("10 minutes", 600000),
-    //                                Pair("15 minutes", 900000),
-    //                                Pair("30 minutes", 1800000),
-    //                                Pair("1 hour", 3600000),
-    //                                Pair("2 hours", 7200000),
-    //                                Pair("6 hours", 21600000),
-    //                                Pair("12 hours", 43200000)
-    //                            )
-    //                        )
-    //
-    //                        PreferenceMenu(
-    //                            icon = R.drawable.alert_circle,
-    //                            title = "Show after",
-    //                            subtitle = "Show complication x hours after sunset",
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunset_show_after", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunsetComplication::class.java)
-    //                            },
-    //                            items = listOf(
-    //                                Pair("10 minutes", 600000),
-    //                                Pair("15 minutes", 900000),
-    //                                Pair("30 minutes", 1800000),
-    //                                Pair("1 hour", 3600000),
-    //                                Pair("2 hours", 7200000),
-    //                                Pair("6 hours", 21600000),
-    //                                Pair("12 hours", 43200000)
-    //                            )
-    //                        )
-    //
-    //                        PreferenceSwitch(
-    //                            icon = R.drawable.content_cut,
-    //                            title = "Complication text trimming",
-    //                            subtitle = "Disable this if text is getting cut off. May \ncause unexpected results",       // TODO: fix (also exchange with RelativeSizeSpan)
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunset_trim_to_fit", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunsetComplication::class.java)
-    //                            },
-    //                            checked = complicationTrimToFit
-    //                        )
-    //
-    //                        PreferenceSwitch(
-    //                            icon = R.drawable.alert_circle,
-    //                            title = "Force show complication",
-    //                            subtitle = "Forces complication to be visible, regardless\n other settings",
-    //                            stateCallback = {
-    //                                value -> savePreference(context,"complication_sunset_forceenable", value)
-    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunsetComplication::class.java)
-    //                            },
-    //                            checked = sunsetForceEnable
-    //                        )
-
-//                            Divider()
                             Text(
                                 text = "Sun times target",
                                 style = MaterialTheme.typography.headlineSmall,
@@ -384,6 +226,25 @@ class ConfigurationActivity : ComponentActivity() {
     //                                Pair("Exact time", "exact"),
     //                                Pair("Time to", "time_to"),
     //                                Pair("Time to + exact time", "both")
+    //                            )
+    //                        )
+    //
+    //                        PreferenceMenu(
+    //                            icon = R.drawable.alert_circle,
+    //                            title = "Show after",
+    //                            subtitle = "Show complication x hours after sunset",
+    //                            stateCallback = {
+    //                                value -> savePreference(context,"complication_sunset_show_after", value)
+    //                                SmartspacerComplicationProvider.notifyChange(context, GenericSunsetComplication::class.java)
+    //                            },
+    //                            items = listOf(
+    //                                Pair("10 minutes", 600000),
+    //                                Pair("15 minutes", 900000),
+    //                                Pair("30 minutes", 1800000),
+    //                                Pair("1 hour", 3600000),
+    //                                Pair("2 hours", 7200000),
+    //                                Pair("6 hours", 21600000),
+    //                                Pair("12 hours", 43200000)
     //                            )
     //                        )
 

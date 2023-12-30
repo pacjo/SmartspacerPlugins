@@ -1,5 +1,6 @@
 package nodomain.pacjo.smartspacer.plugin.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import nodomain.pacjo.smartspacer.plugin.R
 import java.io.File
@@ -50,6 +51,7 @@ fun convertTimeTo(timeInMilliseconds: Long, shortStyle: Boolean = false): String
     }
 }
 
+@SuppressLint("SimpleDateFormat")
 fun SimpleDateFormatWrapper(timeInMilliseconds: Long, shortStyle: Boolean = false): String {        // TODO: respect locale 12/24h
     // probably should add check for number of days
     return if (shortStyle) {
