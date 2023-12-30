@@ -4,11 +4,12 @@ import android.app.Activity
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -37,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.json.JSONObject
@@ -69,91 +71,24 @@ fun savePreference(context: Context, id: String, value: Any) {
 @Composable
 fun PreferenceContainer(icon: Int, title: String, subtitle: String) {
     Row {
-//        Box {
-//            Icon.createWithResource(        // TODO: should work, doesn't
-//                LocalContext.current,
-//                icon
-//            )
-//        }
+        Box(
+            modifier = Modifier
+                .size(56.dp)        // cause we're doing: <padding> <24dp icon> <padding>
+                .padding(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null
+            )
+        }
         Column {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold
             )
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodyLarge
-            )
-        }
-    }
-}
-
-@Composable
-fun PreferenceText(title: String, subtitle: String) {
-    Column {        // this feels wrong
-        Column(
-            modifier = Modifier
-                .weight(4f)
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-    }
-}
-
-@Composable
-fun WorsePreferenceSwitch(icon: Int, title: String, subtitle: String, stateCallback: (value: Boolean) -> Unit, checked: Boolean = false) {
-    var isChecked by remember { mutableStateOf(checked) }
-
-    Surface(
-        onClick = {
-            // Change state, then callback
-            isChecked = !isChecked
-            stateCallback(isChecked)
-        }
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Set the weight of the PreferenceContainer Column
-
-            // TODO:  try to convert the column below to separate composable
-//            PreferenceText(title = title, subtitle = subtitle)
-
-
-            Column(
-                modifier = Modifier
-                    .weight(4f)
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-
-            Spacer(modifier = Modifier.weight(1f)) // Spacer to push Switch to the far right
-
-            Switch(
-                checked = isChecked,
-                onCheckedChange = { state ->
-                    isChecked = state
-                    stateCallback(isChecked)
-                },
             )
         }
     }
@@ -296,7 +231,7 @@ fun PreferenceSlider(icon: Int, title: String, subtitle: String, stateCallback: 
     ) {
         PreferenceContainer(icon, title, subtitle)
 
-        Slider(             // TODO: add label
+        Slider(
             value = sliderPosition,
             onValueChange = {
                 // Round to the nearest integer value between 0 and 4
@@ -317,6 +252,8 @@ fun PreferenceSlider(icon: Int, title: String, subtitle: String, stateCallback: 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTopBar(context: Activity, title: String) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
     LargeTopAppBar(
         title = {
             Text(
@@ -336,6 +273,6 @@ fun SettingsTopBar(context: Activity, title: String) {
                 )
             }
         },
-        scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+        scrollBehavior = scrollBehavior
     )
 }

@@ -5,15 +5,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import nodomain.pacjo.smartspacer.plugin.R
 import targets.LocalBatteryTarget
@@ -50,14 +54,20 @@ class ConfigurationActivity : ComponentActivity() {
                         SettingsTopBar((context as? Activity)!!,"Local Battery")
 
                         Column(
-                            modifier = Modifier.verticalScroll(rememberScrollState())
-
-                        ) {                        // TODO: check lazycolumn
-                            Divider()
-                            Text("Charging target")
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState())
+                                .padding(end = 16.dp)
+                        ) {
+                            Text(
+                                text = "Charging target",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
 
                             PreferenceSwitch(
-                                icon = R.drawable.baseline_bolt,   // TODO: change
+                                icon = R.drawable.clock_time_ten_outline,
                                 title = "Charging estimate",
                                 subtitle = "Show time to charge",
                                 stateCallback = {

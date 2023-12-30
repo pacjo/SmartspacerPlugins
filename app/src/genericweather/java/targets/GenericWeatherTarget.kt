@@ -160,7 +160,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                 icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                     Icon.createWithResource(
                         context,
-                        R.drawable.baseline_error_24
+                        R.drawable.alert_circle
                     )
                 )
             ).create())

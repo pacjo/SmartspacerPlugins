@@ -87,7 +87,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
                             context,
-                            R.drawable.baseline_error_24
+                            R.drawable.alert_circle
                         )
                     ),
                     content = Text("No data"),

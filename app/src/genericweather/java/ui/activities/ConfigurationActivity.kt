@@ -5,15 +5,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import nodomain.pacjo.smartspacer.plugin.R
@@ -26,7 +30,6 @@ import nodomain.pacjo.smartspacer.plugin.utils.PreferenceMenu
 import nodomain.pacjo.smartspacer.plugin.utils.PreferenceSlider
 import nodomain.pacjo.smartspacer.plugin.utils.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.utils.SettingsTopBar
-import nodomain.pacjo.smartspacer.plugin.utils.WorsePreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import nodomain.pacjo.smartspacer.plugin.utils.savePreference
 import org.json.JSONObject
@@ -61,14 +64,21 @@ class ConfigurationActivity : ComponentActivity() {
                         SettingsTopBar((context as? Activity)!!,"Generic Weather")
 
                         Column(
-                            modifier = Modifier.verticalScroll(rememberScrollState())
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState())
+                                .padding(end = 16.dp)
 
-                        ) {                        // TODO: check lazycolumn
-                            Divider()
-                            Text("Weather target")
+                        ) {
+                            Text(
+                                text = "Weather target",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
 
                             PreferenceSlider(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.calendar_range_outline,
                                 title = "Forecast points to show",
                                 subtitle = "Select number of visible forecast days/hours",
                                 stateCallback = {
@@ -94,7 +104,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
 
                             PreferenceMenu(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.palette_outline,
                                 title = "Style",
                                 subtitle = "Select complication style",
                                 stateCallback = {
@@ -109,7 +119,7 @@ class ConfigurationActivity : ComponentActivity() {
                             )
 
                             PreferenceMenu(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.thermometer,
                                 title = "Unit",
                                 subtitle = "Select temperature unit",
                                 stateCallback = {
@@ -124,7 +134,7 @@ class ConfigurationActivity : ComponentActivity() {
                             )
 
                             PreferenceInput(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.package_variant,
                                 title = "Launch Package",
                                 subtitle = "Select package name of an app to open when complication is clicked",
                                 stateCallback = {
@@ -135,11 +145,17 @@ class ConfigurationActivity : ComponentActivity() {
                                 defaultText = launchPackage
                             )
 
-                            Divider()
-                            Text("Weather complication")
+//                            Divider()
+                            Text(
+                                text = "Weather complication",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
 
                             PreferenceMenu(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.palette_outline,
                                 title = "Style",
                                 subtitle = "Select complication style",
                                 stateCallback = {
@@ -154,7 +170,7 @@ class ConfigurationActivity : ComponentActivity() {
                             )
 
                             PreferenceMenu(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.thermometer,
                                 title = "Unit",
                                 subtitle = "Select temperature unit",
                                 stateCallback = {
@@ -169,7 +185,7 @@ class ConfigurationActivity : ComponentActivity() {
                             )
 
                             PreferenceInput(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.package_variant,
                                 title = "Launch Package",
                                 subtitle = "Select package name of an app to open when complication is clicked",
                                 stateCallback = {
@@ -181,9 +197,9 @@ class ConfigurationActivity : ComponentActivity() {
                             )
 
                             PreferenceSwitch(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.content_cut,
                                 title = "Complication text trimming",
-                                subtitle = "Disable this if text is getting cut off. May \ncause unexpected results",
+                                subtitle = "Disable this if text is getting cut off. \nMay cause unexpected results",
                                 stateCallback = {
                                     value -> savePreference(context,"weather_complication_trim_to_fit", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
@@ -195,7 +211,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        Text("Sunrise complication")      // TODO: make proper title
     //
     //                        PreferenceMenu(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.alert_circle,
     //                            title = "Style",
     //                            subtitle = "Select complication style",
     //                            stateCallback = {
@@ -210,7 +226,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
     //
     //                        PreferenceMenu(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.alert_circle,
     //                            title = "Show before",
     //                            subtitle = "Show complication x hours before sunrise",
     //                            stateCallback = {
@@ -229,7 +245,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
     //
     //                        PreferenceMenu(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.alert_circle,
     //                            title = "Show after",
     //                            subtitle = "Show complication x hours after sunrise",
     //                            stateCallback = {
@@ -248,7 +264,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
     //
     //                        PreferenceSwitch(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.content_cut,
     //                            title = "Complication text trimming",
     //                            subtitle = "Disable this if text is getting cut off. May \ncause unexpected results",       // TODO: fix (also exchange with RelativeSizeSpan)
     //                            stateCallback = {
@@ -259,7 +275,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
     //
     //                        PreferenceSwitch(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.alert_circle,
     //                            title = "Force show complication",
     //                            subtitle = "Forces complication to be visible, regardless\n other settings",
     //                            stateCallback = {
@@ -273,7 +289,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        Text("Sunset complication")      // TODO: make proper title
     //
     //                        PreferenceMenu(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.palette_outline,
     //                            title = "Style",
     //                            subtitle = "Select complication style",
     //                            stateCallback = {
@@ -288,7 +304,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
     //
     //                        PreferenceMenu(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.alert_circle,
     //                            title = "Show before",
     //                            subtitle = "Show complication x hours before sunset",
     //                            stateCallback = {
@@ -307,7 +323,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
     //
     //                        PreferenceMenu(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.alert_circle,
     //                            title = "Show after",
     //                            subtitle = "Show complication x hours after sunset",
     //                            stateCallback = {
@@ -326,7 +342,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
     //
     //                        PreferenceSwitch(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.content_cut,
     //                            title = "Complication text trimming",
     //                            subtitle = "Disable this if text is getting cut off. May \ncause unexpected results",       // TODO: fix (also exchange with RelativeSizeSpan)
     //                            stateCallback = {
@@ -337,7 +353,7 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
     //
     //                        PreferenceSwitch(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.alert_circle,
     //                            title = "Force show complication",
     //                            subtitle = "Forces complication to be visible, regardless\n other settings",
     //                            stateCallback = {
@@ -347,11 +363,17 @@ class ConfigurationActivity : ComponentActivity() {
     //                            checked = sunsetForceEnable
     //                        )
 
-                            Divider()
-                            Text("Sun times complication")
+//                            Divider()
+                            Text(
+                                text = "Sun times target",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
 
     //                        PreferenceMenu(
-    //                            icon = R.drawable.baseline_error_24,
+    //                            icon = R.drawable.palette_outline,
     //                            title = "Style",
     //                            subtitle = "Select complication style",
     //                            stateCallback = {
@@ -366,9 +388,9 @@ class ConfigurationActivity : ComponentActivity() {
     //                        )
 
                             PreferenceSwitch(
-                                icon = R.drawable.baseline_error_24,
+                                icon = R.drawable.content_cut,
                                 title = "Complication text trimming",
-                                subtitle = "Disable this if text is getting cut off. May \ncause unexpected results",       // TODO: fix (also exchange with RelativeSizeSpan)
+                                subtitle = "Disable this if text is getting cut off. \nMay cause unexpected results",       // TODO: fix (also exchange with RelativeSizeSpan)
                                 stateCallback = {
                                     value -> savePreference(context,"suntimes_complication_trim_to_fit", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericSunTimesComplication::class.java)
