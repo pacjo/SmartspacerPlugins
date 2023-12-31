@@ -8,6 +8,7 @@ import android.graphics.drawable.Icon
 import android.os.BatteryManager
 import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
@@ -58,16 +59,6 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             }
         }
 
-//        var subtitle = if (charging && chargingTimeRemaining > -1) {
-//            "${level}% — full in ${convertTimeTo(chargingTimeRemaining)}"
-//        } else {
-//           "${level}%"
-//        }
-//
-//        if (level == 100) {
-//            subtitle = "${level}% — charging complete"
-//        }
-
         if (charging) {
             return listOf(TargetTemplate.Basic(
                 id = "example_$smartspacerId",
@@ -79,7 +70,8 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                         provideContext(),
                         R.drawable.baseline_bolt
                     )
-                )
+                ),
+                onClick = TapAction(intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY))
             ).create().apply {
                 canBeDismissed = false
             })
