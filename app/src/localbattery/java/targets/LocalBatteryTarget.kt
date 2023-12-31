@@ -84,7 +84,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
         return Config(
             label = "Charging info",
             description = "Shows charging information",
-            icon = Icon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+            icon = Icon.createWithResource(provideContext(), R.drawable.battery_unknown),
             configActivity = Intent(context, ConfigurationActivity::class.java),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.localbattery.broadcast.battery"
         )

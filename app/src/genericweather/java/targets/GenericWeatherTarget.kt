@@ -171,7 +171,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
         return Config(
             label = "Generic weather",
             description = "Shows weather information from supported apps",
-            icon = Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
+            icon = Icon.createWithResource(context, R.drawable.weather_sunny_alert),
             configActivity = Intent(context, ConfigurationActivity::class.java),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.genericweather.providers.weather"
         )
