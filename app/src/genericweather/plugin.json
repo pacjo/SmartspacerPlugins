@@ -1,0 +1,7 @@
+{
+	"description": "Current weather condition and hourly forecast additionally it provides sunrise / sunset complication. By using Gadgetbridge's GenericWeather protocol it supports multiple apps. \n\nInformation about configuration and supported apps can be found [here](https://gadgetbridge.org/basics/integrations/weather/)",
+	"download_url": "",
+	"version_code": 10,
+	"changelog": "First release",
+	"screenshots": ["complication_condition.png", "complication_suntimes.png", "target_forecast.png"]
+}

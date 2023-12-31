@@ -1,0 +1,7 @@
+{
+	"description": "Allows you to see current battery level and remaining charging time when connected to power",
+	"download_url": "",
+	"version_code": 10,
+	"changelog": "First release",
+	"screenshots": ["charging.png", "fully_charged.png", "charging_no_estimate.png"]
+}
