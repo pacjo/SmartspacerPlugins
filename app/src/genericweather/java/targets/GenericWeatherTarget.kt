@@ -64,7 +64,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
             if (dataPoints > 0) {
 
                 val carouselItemList =         // TODO: allow switching daily <-> hourly
-                    List(hourlyData.take(dataPoints).size) { index ->       // TODO: default is broken, shows 0 instead of 4
+                    List(hourlyData.take(dataPoints).size) { index ->
                         val carouselItem = CarouselTemplateData.CarouselItem(
                             Text(temperatureUnitConverter(hourlyData[index].temp, targetUnit)),
                             Text(SimpleDateFormat("HH:mm ").format(hourlyData[index].timestamp * 1000L)),
