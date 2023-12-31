@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.icu.text.SimpleDateFormat
+import android.util.Log
 import androidx.core.graphics.drawable.IconCompat
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget

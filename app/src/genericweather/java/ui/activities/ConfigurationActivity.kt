@@ -2,6 +2,7 @@ package ui.activities
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,7 @@ class ConfigurationActivity : ComponentActivity() {
             val file = File(context.filesDir, "data.json")
             val jsonObject = JSONObject(file.readText())
             val preferences = jsonObject.getJSONObject("preferences")
-            val dataPoints = preferences.optInt("target_point_visible", 4)
+            val dataPoints = preferences.optInt("target_points_visible", 4)
             val launchPackage = preferences.optString("launch_package", "")
 
             val weatherComplicationTrimToFit = preferences.optBoolean("weather_complication_trim_to_fit", true)
@@ -82,7 +83,8 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Forecast points to show",
                                 subtitle = "Select number of visible forecast days/hours",
                                 stateCallback = {
-                                    value -> savePreference(context,"target_point_visible", value)
+                                    value -> savePreference(context,"target_points_visible", value)
+                                    Log.i("pacjodebug", "callback, value: $value")
                                     SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
                                 },
                                 range = (0..4),
@@ -123,7 +125,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Unit",
                                 subtitle = "Select temperature unit",
                                 stateCallback = {
-                                    value -> savePreference(context,"target_unit", value)
+                                        value -> savePreference(context,"target_unit", value)
                                     SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
                                 },
                                 items = listOf(
@@ -138,7 +140,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Launch Package",
                                 subtitle = "Select package name of an app to open when complication is clicked",
                                 stateCallback = {
-                                    value -> savePreference(context,"launch_package", value)
+                                    value -> savePreference(context,"target_launch_package", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
                                 },
                                 dialogText = "Enter package name",
@@ -158,7 +160,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Style",
                                 subtitle = "Select complication style",
                                 stateCallback = {
-                                    value -> savePreference(context,"complication_style", value)
+                                    value -> savePreference(context,"condition_complication_style", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
                                 },
                                 items = listOf(
@@ -173,7 +175,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Unit",
                                 subtitle = "Select temperature unit",
                                 stateCallback = {
-                                    value -> savePreference(context,"complication_unit", value)
+                                    value -> savePreference(context,"condition_complication_unit", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
                                 },
                                 items = listOf(
@@ -188,7 +190,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Launch Package",
                                 subtitle = "Select package name of an app to open when complication is clicked",
                                 stateCallback = {
-                                    value -> savePreference(context,"launch_package", value)
+                                    value -> savePreference(context,"condition_complication_launch_package", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
                                 },
                                 dialogText = "Enter package name",
@@ -200,7 +202,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Complication text trimming",
                                 subtitle = "Disable this if text is getting cut off. \nMay cause unexpected results",
                                 stateCallback = {
-                                    value -> savePreference(context,"weather_complication_trim_to_fit", value)
+                                    value -> savePreference(context,"condition_complication_trim_to_fit", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
                                 },
                                 checked = weatherComplicationTrimToFit
@@ -258,6 +260,8 @@ class ConfigurationActivity : ComponentActivity() {
                                 },
                                 checked = sunTimesComplicationTrimToFit
                             )
+
+                            // TODO: add launch package
                         }
                     }
                 }
