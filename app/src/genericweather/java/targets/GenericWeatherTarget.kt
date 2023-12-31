@@ -116,7 +116,12 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                             intent = Intent(context!!.packageManager.getLaunchIntentForPackage(launchPackage))
                         )
                     },
-                    onCarouselClick = null      // TODO: why isn't it optional
+                    onCarouselClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
+                        null -> null
+                        else -> TapAction(
+                            intent = Intent(context!!.packageManager.getLaunchIntentForPackage(launchPackage))
+                        )
+                    }
                 ).create().apply {
                     canBeDismissed = false
                 })
