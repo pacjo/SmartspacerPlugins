@@ -1,5 +1,5 @@
 {
-	"description": "Allows you to see current battery level and remaining charging time when connected to power",
+	"description": "This plugin shows charging information when device is connected to power.",
 	"download_url": "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/localbattery/release/app-localbattery-release.apk",
 	"version_code": 10,
 	"changelog": "First release",
