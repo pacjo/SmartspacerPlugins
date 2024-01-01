@@ -50,7 +50,7 @@ class ConfigurationActivity : ComponentActivity() {
             val dataPoints = preferences.optInt("target_points_visible", 4)
             val launchPackage = preferences.optString("launch_package", "")
 
-            val weatherComplicationTrimToFit = preferences.optBoolean("weather_complication_trim_to_fit", true)
+            val conditionComplicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit", true)
             val sunTimesComplicationTrimToFit = preferences.optBoolean("suntimes_complication_trim_to_fit", true)
 
             MaterialTheme (
@@ -108,7 +108,7 @@ class ConfigurationActivity : ComponentActivity() {
                             PreferenceMenu(
                                 icon = R.drawable.palette_outline,
                                 title = "Style",
-                                subtitle = "Select complication style",
+                                subtitle = "Select target style",
                                 stateCallback = {
                                     value -> savePreference(context,"target_style", value)
                                     SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
@@ -138,7 +138,7 @@ class ConfigurationActivity : ComponentActivity() {
                             PreferenceInput(
                                 icon = R.drawable.package_variant,
                                 title = "Launch Package",
-                                subtitle = "Select package name of an app to open when complication is clicked",
+                                subtitle = "Select package name of an app to open when target is clicked",
                                 stateCallback = {
                                     value -> savePreference(context,"target_launch_package", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
@@ -205,7 +205,7 @@ class ConfigurationActivity : ComponentActivity() {
                                     value -> savePreference(context,"condition_complication_trim_to_fit", value)
                                     SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
                                 },
-                                checked = weatherComplicationTrimToFit
+                                checked = conditionComplicationTrimToFit
                             )
 
                             Text(

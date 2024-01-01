@@ -34,10 +34,10 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
-        val complicationUnit = preferences.optString("complication_unit", "C")
-        val complicationStyle = preferences.optString("complication_style","temperature")
-        val complicationTrimToFit = preferences.optBoolean("complication_trim_to_fit",true)
-        val launchPackage = preferences.optString("complication_launch_package", "")
+        val complicationUnit = preferences.optString("condition_complication_unit", "C")
+        val complicationStyle = preferences.optString("condition_complication_style","temperature")
+        val complicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit",true)
+        val launchPackage = preferences.optString("condition_complication_launch_package", "")
 
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()

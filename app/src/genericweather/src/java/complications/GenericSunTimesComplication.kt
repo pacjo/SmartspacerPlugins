@@ -31,7 +31,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
-        val complicationTrimToFit = preferences.optBoolean("complication_suntimes_trim_to_fit",true)
+        val complicationTrimToFit = preferences.optBoolean("suntimes_complication_trim_to_fit",true)
         val launchPackage = preferences.optString("complication_launch_package", "")        // TODO: maybe make one for all
 
         // get weather data
