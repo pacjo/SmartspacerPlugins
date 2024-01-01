@@ -183,6 +183,8 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
         )
     }
 
+    // TODO: consider removal (onProviderRemoved)
+
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
         return false
     }
