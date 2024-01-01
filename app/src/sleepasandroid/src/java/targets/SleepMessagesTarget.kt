@@ -71,7 +71,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
 
     override fun getConfig(smartspacerId: String?): Config {
         return Config(
-            label = "Sleep As Android messages",
+            label = "Sleep messages",
             description = "Shows messages from Sleep as Android app",
             icon = Icon.createWithResource(provideContext(), R.drawable.sleep),
             configActivity = Intent(context, ConfigurationActivity::class.java),
@@ -97,7 +97,6 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
         jsonObject.put("event", "")
         file.writeText(jsonObject.toString())
 
-        Log.i("pacjodebug", "ondismiss")
         notifyChange(context!!, SleepMessagesTarget::class.java)
         return true
     }
