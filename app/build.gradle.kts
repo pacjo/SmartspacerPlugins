@@ -52,13 +52,13 @@ android {
 
     sourceSets {
         getByName("localbattery") {
-            setRoot("src/localbattery")
+            setRoot("src/localbattery/src")
         }
         getByName("genericweather") {
-            setRoot("src/genericweather")
+            setRoot("src/genericweather/src")
         }
         getByName("sleepasandroid") {
-            setRoot("src/sleepasandroid")
+            setRoot("src/sleepasandroid/src")
         }
     }
 
