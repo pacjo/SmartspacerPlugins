@@ -35,10 +35,6 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
         // get event (intent.action)
         val event = jsonObject.optString("event")
 
-        // remove event from data file, since we don't want to show the target all day
-        jsonObject.put("event", "")
-        file.writeText(jsonObject.toString())
-
         val title = when {
             (event == "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" && showTimeToBed) -> "Time to bed."
             (event == "com.urbandroid.sleep.alarmclock.ALARM_ALERT_DISMISS_AUTO" && showAlarmDismissed) -> "Good morning!"
@@ -92,6 +88,16 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
     }
 
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
+        val file = File(context?.filesDir, "data.json")
+
+        val jsonString = file.readText()
+        val jsonObject = JSONObject(jsonString)
+
+        // remove event from data file, since we don't want to show the target all day
+        jsonObject.put("event", "")
+        file.writeText(jsonObject.toString())
+
+        Log.i("pacjodebug", "ondismiss")
         notifyChange(context!!, SleepMessagesTarget::class.java)
         return true
     }
