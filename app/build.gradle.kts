@@ -44,6 +44,10 @@ android {
             applicationId = "genericweather"
             applicationId = "nodomain.pacjo.smartspacer.plugin.genericweather"
         }
+        create("sleepasandroid") {
+            applicationId = "sleepasandroid"
+            applicationId = "nodomain.pacjo.smartspacer.plugin.sleepasandroid"
+        }
     }
 
     sourceSets {
@@ -52,6 +56,9 @@ android {
         }
         getByName("genericweather") {
             setRoot("src/genericweather")
+        }
+        getByName("sleepasandroid") {
+            setRoot("src/sleepasandroid")
         }
     }
 

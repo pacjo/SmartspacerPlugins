@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        tools:targetApi="34">
+        <activity
+            android:name="ui.activities.ConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+        <provider
+            android:name="targets.SleepMessagesTarget"
+            android:authorities="${applicationId}.target.sleep"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
+            </intent-filter>
+        </provider>
+        <provider
+            android:name="providers.SleepBroadcastProvider"
+            android:authorities="${applicationId}.broadcast.sleep"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_BROADCASTS"
+            android:exported="true"/>
+    </application>
+
+</manifest>
