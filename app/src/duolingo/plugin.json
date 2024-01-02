@@ -1,0 +1,7 @@
+{
+	"description": "This plugins shows Duolingo widget and it's corresponding message.",
+	"download_url": "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/duolingo/release/app-duolingo-release.apk",
+	"version_code": 10,
+	"changelog": "First release",
+	"screenshots": [""]
+}
