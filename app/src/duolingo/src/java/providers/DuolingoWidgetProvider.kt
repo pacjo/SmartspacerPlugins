@@ -13,6 +13,7 @@ import android.widget.RemoteViews
 import android.widget.TextView
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerWidgetProvider
+import com.kieronquinn.app.smartspacer.sdk.utils.dumpToLog
 import com.kieronquinn.app.smartspacer.sdk.utils.findViewByIdentifier
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
@@ -47,24 +48,11 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
         // sound simple, looks nice, took way to long
 
         fun saveViewToFile(view: View, file: File) {
-//            view.dumpToLog("Views")
-
             // without this we get empty image
             view.measure(0, 0)  // those don't matter
             view.layout(0, 0, view.measuredWidth, view.measuredHeight)
 
-            // this is our gradient background
-            val backgroundView = view.findViewByIdentifier<ImageView>("com.duolingo:id/background")
-            backgroundView?.layout(
-                0,
-                0,
-                (view.measuredHeight * (16/9F)).toInt(),
-                view.measuredHeight
-            )
-
-            // remove background from widget view
-            (view as ViewGroup).removeView(view.findViewByIdentifier<ImageView>("com.duolingo:id/background"))
-
+            // this will be out result bitmap
             val extendedBitmap = Bitmap.createBitmap(
                 (view.measuredHeight * (16/9F)).toInt(),
                 view.measuredHeight,
@@ -73,11 +61,34 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
 
             val extendedCanvas = Canvas(extendedBitmap)
 
-            // background
-            extendedCanvas.save()
-            backgroundView?.draw(extendedCanvas)
+            val backgroundIDs = listOf(
+                    "background",
+                    "backgroundExtraCenterCrop",
+                    "backgroundExtraCenterFit",
+                    "backgroundExtraLeft"
+                )
 
-            // foreground (original view without background)
+            // stretch all backgrounds
+            for (backgroundID in backgroundIDs) {
+
+                // get background with id and layout it (to change its size)
+                val backgroundView = view.findViewByIdentifier<ImageView>("com.duolingo:id/$backgroundID")
+                backgroundView?.layout(
+                    0,
+                    0,
+                    (view.measuredHeight * (16/9F)).toInt(),
+                    view.measuredHeight
+                )
+
+                // remove background from widget view
+                (view as ViewGroup).removeView(view.findViewByIdentifier<ImageView>("com.duolingo:id/$backgroundID"))
+
+                // draw (now resized) background onto canvas
+                backgroundView?.draw(extendedCanvas)
+
+            }
+
+            // foreground (original view without backgrounds)
             extendedCanvas.translate((((view.measuredHeight * (16/9F)) - view.measuredWidth))/2, 0F)
             view.draw(extendedCanvas)        // paint the parent with background removed
 
@@ -99,19 +110,28 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
         // Load the RemoteViews into regular Views
         val view = remoteViews?.load() ?: return
 
-        // extract messages from target
-        val ids = listOf("streakSubtitle", "otherModeText", "negativeStreakSubtitle", "encouragingSubtitle")
-        for (id in ids) {
-            Log.i("pacjodebug", "$id: ${view.findViewByIdentifier<TextView>("com.duolingo:id/$id")?.text}")
+//        view.dumpToLog("View")
+
+        // extract messages from target (and remove them from view)
+        val subtitleIDs = listOf(
+            "streakSubtitle",
+            "otherModeText",
+            "negativeStreakSubtitle",
+            "encouragingSubtitle"
+        )
+
+        for (subtitleID in subtitleIDs) {
             // TODO: write generic save
 
             // Read JSON
             val jsonObject = JSONObject(dataFile.readText())
             val dataObject = jsonObject.getJSONObject("data")
 
-            dataObject.put(id, view.findViewByIdentifier<TextView>("com.duolingo:id/$id")?.text)
+            dataObject.put(subtitleID, view.findViewByIdentifier<TextView>("com.duolingo:id/$subtitleID")?.text)
 
             dataFile.writeText(jsonObject.toString())
+
+            //view.findViewByIdentifier<TextView>("com.duolingo:id/$subtitleID")?.text  = ""      // TODO: maybe fully remove item
         }
 
         saveViewToFile(view, imageFile)
