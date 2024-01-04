@@ -51,7 +51,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
                 icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                     Icon.createWithResource(
                         provideContext(),
-                        R.drawable.school_outline
+                        R.drawable.duolingo
                     ),
                 ),
                 image = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
@@ -71,7 +71,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
         return Config(
             label = "Duolingo progress",
             description = "Duolingo progress and motivational message",
-            icon = Icon.createWithResource(provideContext(), R.drawable.school_outline),
+            icon = Icon.createWithResource(provideContext(), R.drawable.duolingo),
             compatibilityState = getCompatibilityState(),
             widgetProvider = "nodomain.pacjo.smartspacer.plugin.duolingo.widget.duolingo"
         )
@@ -88,5 +88,4 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
         return false
     }
-
 }
