@@ -20,10 +20,9 @@ import kotlin.random.Random
 class SleepMessagesTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
+        isFirstRun(context!!)
 
         val file = File(context?.filesDir, "data.json")
-
-        isFirstRun(context!!)
 
         val jsonString = file.readText()
         val jsonObject = JSONObject(jsonString)
