@@ -55,6 +55,10 @@ android {
             applicationId = "duolingo"
             applicationId = "nodomain.pacjo.smartspacer.plugin.duolingo"
         }
+        create("livelygreeting") {
+            applicationId = "livelygreeting"
+            applicationId = "nodomain.pacjo.smartspacer.plugin.livelygreeting"
+        }
     }
 
     sourceSets {
@@ -69,6 +73,9 @@ android {
         }
         getByName("duolingo") {
             setRoot("src/duolingo/src")
+        }
+        getByName("livelygreeting") {
+            setRoot("src/livelygreeting/src")
         }
     }
 
