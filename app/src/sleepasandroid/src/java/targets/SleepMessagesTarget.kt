@@ -15,6 +15,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
 import java.io.File
+import kotlin.random.Random
 
 class SleepMessagesTarget: SmartspacerTargetProvider() {
 
@@ -36,8 +37,16 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
         val event = jsonObject.optString("event")
 
         val title = when {
-            (event == "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" && showTimeToBed) -> "Time to bed."
-            (event == "com.urbandroid.sleep.alarmclock.ALARM_ALERT_DISMISS_AUTO" && showAlarmDismissed) -> "Good morning!"
+            (event == "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" && showTimeToBed) -> when (Random.nextInt(0, 2)) {
+                0 -> "Time to bed."
+                1 -> "Goodnight."
+                else -> "It's late."
+            }
+            (event == "com.urbandroid.sleep.alarmclock.ALARM_ALERT_DISMISS_AUTO" && showAlarmDismissed) -> when (Random.nextInt(0, 2)) {
+                0 -> "Still sleepy?"
+                1 -> "Morning! How have you slept?"
+                else -> "It's never enough, isn't it?"
+            }
             else -> ""
         }
 
