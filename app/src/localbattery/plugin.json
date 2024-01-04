@@ -3,5 +3,5 @@
 	"download_url": "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/localbattery/release/app-localbattery-release.apk",
 	"version_code": 10,
 	"changelog": "First release",
-	"screenshots": ["https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/charging.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/fully_charged.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/charging_no_estimate.png"]
+	"screenshots": ["https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/target_1.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/target_2.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/target_3.png"]
 }

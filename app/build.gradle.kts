@@ -11,8 +11,6 @@ android {
         applicationId = "nodomain.pacjo.smartspacer.plugin"
         minSdk = 29
         targetSdk = 34
-        versionCode = 10
-        versionName = "1.0"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -42,22 +40,37 @@ android {
         create("localbattery") {
             applicationId = "localbattery"
             applicationId = "nodomain.pacjo.smartspacer.plugin.localbattery"
+
+            versionCode = 10
+            versionName = "1.0"
         }
         create("genericweather") {
             applicationId = "genericweather"
             applicationId = "nodomain.pacjo.smartspacer.plugin.genericweather"
+
+            versionCode = 11
+            versionName = "1.1"
         }
         create("sleepasandroid") {
             applicationId = "sleepasandroid"
             applicationId = "nodomain.pacjo.smartspacer.plugin.sleepasandroid"
+
+            versionCode = 10
+            versionName = "1.0"
         }
         create("duolingo") {
             applicationId = "duolingo"
             applicationId = "nodomain.pacjo.smartspacer.plugin.duolingo"
+
+            versionCode = 10
+            versionName = "1.0"
         }
         create("livelygreeting") {
             applicationId = "livelygreeting"
             applicationId = "nodomain.pacjo.smartspacer.plugin.livelygreeting"
+
+            versionCode = 10
+            versionName = "1.0"
         }
     }
 

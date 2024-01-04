@@ -1,6 +1,6 @@
 # Sleep as Android Plugin
 
-This plugin shows sleep messages sent out by [Sleep as Android](https://sleep.urbandroid.org/).
+Shows sleep messages sent out by [Sleep as Android](https://sleep.urbandroid.org/).
 
 # Features:
 |        target         | description                                                                     | is customisable |
@@ -8,7 +8,7 @@ This plugin shows sleep messages sent out by [Sleep as Android](https://sleep.ur
 | Sleep messages target | Shows sleep messages from [Sleep as Android](https://sleep.urbandroid.org/) app |        ✅        |
 
 
-| Screenshots                                                                  |
-|------------------------------------------------------------------------------|
-| ![screenshot showing text: "Good morning!"](screenshots/alarm_dismissed.png) |
-| ![screenshot showing text: "Time to bed."](screenshots/time_to_bed.png)      |
+| Screenshots                                                                          |
+|--------------------------------------------------------------------------------------|
+| ![screenshot showing text: "Morning! How have you slept?"](screenshots/target_1.png) |
+| ![screenshot showing text: "Time to bed."](screenshots/target_2.png)                 |

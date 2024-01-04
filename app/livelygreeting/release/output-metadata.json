@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "nodomain.pacjo.smartspacer.plugin.livelygreeting",
+  "variantName": "livelygreetingRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 10,
+      "versionName": "1.0",
+      "outputFile": "app-livelygreeting-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

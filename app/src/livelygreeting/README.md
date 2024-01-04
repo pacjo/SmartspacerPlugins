@@ -5,7 +5,7 @@ Shows different greeting messages to make your day just a little brighter.
 # Features:
 |      target      | description                              | is customisable |
 |:----------------:|------------------------------------------|:---------------:|
-| Greeting target  | Shows random different greeting messages |       ❌         |
+| Greeting target  | Shows random different greeting messages |        ❌        |
 
 
 | Screenshots                                                                                      |
