@@ -47,7 +47,7 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
         //   5. save the result so it can be used later
         // sound simple, looks nice, took way to long
 
-        fun saveViewToFile(view: View, file: File) {
+        fun saveWidgetViewToFile(view: View, file: File) {
             // without this we get empty image
             view.measure(0, 0)  // those don't matter
             view.layout(0, 0, view.measuredWidth, view.measuredHeight)
@@ -92,8 +92,6 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
             extendedCanvas.translate((((view.measuredHeight * (16/9F)) - view.measuredWidth))/2, 0F)
             view.draw(extendedCanvas)        // paint the parent with background removed
 
-            // TODO: we could also remove the text
-
             // Save the bitmap to a file
             FileOutputStream(file).use { out ->
                 extendedBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
@@ -105,7 +103,7 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
     override fun onWidgetChanged(smartspacerId: String, remoteViews: RemoteViews?) {
         isFirstRun(provideContext())
         val dataFile = File(context?.filesDir, "data.json")
-        val imageFile = File(context?.filesDir, "image.png")     // TODO: don't hardcode
+        val imageFile = File(context?.filesDir, "image.png")
 
         // Load the RemoteViews into regular Views
         val view = remoteViews?.load() ?: return
@@ -121,20 +119,20 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
         )
 
         for (subtitleID in subtitleIDs) {
-            // TODO: write generic save
-
             // Read JSON
             val jsonObject = JSONObject(dataFile.readText())
             val dataObject = jsonObject.getJSONObject("data")
 
+            // add string to file
             dataObject.put(subtitleID, view.findViewByIdentifier<TextView>("com.duolingo:id/$subtitleID")?.text)
 
+            // write JSON
             dataFile.writeText(jsonObject.toString())
 
-            //view.findViewByIdentifier<TextView>("com.duolingo:id/$subtitleID")?.text  = ""      // TODO: maybe fully remove item
+            view.findViewByIdentifier<TextView>("com.duolingo:id/$subtitleID")?.text  = ""
         }
 
-        saveViewToFile(view, imageFile)
+        saveWidgetViewToFile(view, imageFile)
 
         // Notify target about new data
         SmartspacerTargetProvider.notifyChange(provideContext(), DuolingoProgressTarget::class.java)
