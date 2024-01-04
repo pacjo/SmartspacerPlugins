@@ -41,8 +41,6 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
             else -> ""
         }
 
-        Log.i("pacjodebug", "event: $event, title: $title")
-
         if (title != "") {
             // TODO: maybe add image target?
             return listOf(TargetTemplate.Basic(
