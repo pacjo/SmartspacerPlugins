@@ -13,6 +13,9 @@ android {
         targetSdk = 34
         versionCode = 10
         versionName = "1.0"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -48,6 +51,10 @@ android {
             applicationId = "sleepasandroid"
             applicationId = "nodomain.pacjo.smartspacer.plugin.sleepasandroid"
         }
+        create("duolingo") {
+            applicationId = "duolingo"
+            applicationId = "nodomain.pacjo.smartspacer.plugin.duolingo"
+        }
     }
 
     sourceSets {
@@ -59,6 +66,9 @@ android {
         }
         getByName("sleepasandroid") {
             setRoot("src/sleepasandroid/src")
+        }
+        getByName("duolingo") {
+            setRoot("src/duolingo/src")
         }
     }
 
@@ -77,6 +87,11 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
