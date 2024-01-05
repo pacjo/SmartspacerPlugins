@@ -10,5 +10,6 @@ This plugin shows charging information when device is connected to power.
 
 | Screenshots                                                                                     |
 |-------------------------------------------------------------------------------------------------|
-| ![screenshot showing text: "Charging, 91% - full in 13 minutes"](screenshots/charging.png)      |
-| ![screenshot showing text: "Charging, 100% - charging complete"](screenshots/fully_charged.png) |
+| ![screenshot showing text: "Charging, 91% - full in 13 minutes"](screenshots/target_1.png)      |
+| ![screenshot showing text: "Charging, 100% - charging complete"](screenshots/target_2.png)      |
+| ![screenshot showing text: "Charging, 62%"](screenshots/target_3.png)                           |
