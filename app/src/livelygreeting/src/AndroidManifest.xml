@@ -14,6 +14,15 @@
             android:exported="true"
             android:launchMode="singleInstance" />
 
+        <receiver
+            android:name="receivers.LivelyGreetingTargetUpdateReceiver"
+            android:exported="true"
+            android:permission="com.kieronquinn.app.smartspacer.permission.SEND_UPDATE_BROADCAST">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.REQUEST_TARGET_UPDATE" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="targets.LivelyGreetingTarget"
             android:authorities="${applicationId}.target.greeting"

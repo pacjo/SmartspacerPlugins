@@ -74,8 +74,7 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
             label = "Lively Greeting",
             description = "Shows fun messages to brighten your day",
             icon = Icon.createWithResource(provideContext(), R.drawable.human_greeting_variant),
-//            configActivity = Intent(context, ConfigurationActivity::class.java),
-            refreshPeriodMinutes = 30       // TODO: make configurable
+            refreshPeriodMinutes = 30
         )
     }
 
