@@ -34,10 +34,9 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
 
         // get data
         val dataObject = jsonObject.getJSONObject("data")
-
-        val isCharging = dataObject.getBoolean("isCharging")
-        val chargingTimeRemaining = dataObject.getLong("chargingTimeRemaining")
-        val level = dataObject.getInt("level")
+        val isCharging = dataObject.optBoolean("isCharging", false)
+        val chargingTimeRemaining = dataObject.optLong("chargingTimeRemaining", 0)
+        val level = dataObject.optInt("level", -1)
 
         val title = "Charging"
 

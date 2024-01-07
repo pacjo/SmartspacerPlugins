@@ -6,7 +6,10 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerBroadcastProvider
+import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import complications.BatteryLevelComplication
+import complications.ChargingStatusComplication
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import targets.LocalBatteryTarget
@@ -32,6 +35,8 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
         val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
         val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING
         val chargingTimeRemaining = batteryManager.computeChargeTimeRemaining()
+        val current = intent.extras?.getInt("current")
+        val voltage = intent.extras?.getInt("voltage")
         val level = (
             (
                 (
@@ -45,6 +50,8 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
         dataObject.put("status", status)
         dataObject.put("isCharging", isCharging)
         dataObject.put("chargingTimeRemaining", chargingTimeRemaining)
+        dataObject.put("current", current)
+        dataObject.put("voltage", voltage)
         dataObject.put("level", level)
 
         jsonObject.put("data", dataObject)
@@ -52,6 +59,8 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
 
         // notify about change
         SmartspacerTargetProvider.notifyChange(context!!, LocalBatteryTarget::class.java)
+        SmartspacerComplicationProvider.notifyChange(context!!, BatteryLevelComplication::class.java)
+        SmartspacerComplicationProvider.notifyChange(context!!, ChargingStatusComplication::class.java)
     }
 
     override fun getConfig(smartspacerId: String): Config {
