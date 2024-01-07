@@ -1,6 +1,7 @@
 {
   "preferences": {
-    "target_show_estimate": true
+    "target_show_estimate": true,
+    "target_disable_complications": false
   },
   "data": {}
 }

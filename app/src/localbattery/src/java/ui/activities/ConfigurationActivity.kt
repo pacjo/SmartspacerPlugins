@@ -41,6 +41,7 @@ class ConfigurationActivity : ComponentActivity() {
             val jsonObject = JSONObject(file.readText())
             val preferences = jsonObject.getJSONObject("preferences")
             val showEstimate = preferences.optBoolean("target_show_estimate", true)
+            val disableComplications = preferences.optBoolean("target_disable_complications", false)
 
             MaterialTheme (
                 // Change default colorScheme to our dynamic one
@@ -75,6 +76,17 @@ class ConfigurationActivity : ComponentActivity() {
                                     SmartspacerTargetProvider.notifyChange(context, LocalBatteryTarget::class.java)
                                 },
                                 checked = showEstimate
+                            )
+
+                            PreferenceSwitch(
+                                icon = R.drawable.card_off_outline,
+                                title = "Force no complications",
+                                subtitle = "Disables complication spot",
+                                stateCallback = {
+                                    value -> savePreference(context,"target_disable_complications", value)
+                                    SmartspacerTargetProvider.notifyChange(context, LocalBatteryTarget::class.java)
+                                },
+                                checked = disableComplications
                             )
                         }
                     }

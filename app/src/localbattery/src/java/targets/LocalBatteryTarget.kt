@@ -8,6 +8,7 @@ import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.convertTimeTo
@@ -29,6 +30,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
         // get preferences
         val preferencesObject = jsonObject.getJSONObject("preferences")
         val showEstimate = preferencesObject.optBoolean("target_show_estimate", true)
+        val disableComplications = preferencesObject.optBoolean("target_disable_complications", false)
 
         // get data
         val dataObject = jsonObject.getJSONObject("data")
@@ -47,8 +49,8 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             }
         }
 
-        if (isCharging) {
-            return listOf(TargetTemplate.Basic(
+        return if (isCharging) {
+            listOf(TargetTemplate.Basic(
                 id = "example_$smartspacerId",
                 componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
                 title = Text(title),
@@ -59,13 +61,18 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                         R.drawable.baseline_bolt
                     )
                 ),
-                onClick = TapAction(intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY))
+                onClick = TapAction(intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY)),
+                subComplication = when (disableComplications) {
+                    true -> ComplicationTemplate.Basic(     // TODO: check blank()
+                                id = "example_$smartspacerId",
+                                onClick = null
+                            ).create()
+                    else -> null
+                }
             ).create().apply {
                 canBeDismissed = false
             })
-        } else {
-            return emptyList()
-        }
+        } else emptyList()
     }
 
     override fun getConfig(smartspacerId: String?): Config {
