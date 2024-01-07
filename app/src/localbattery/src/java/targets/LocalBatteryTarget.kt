@@ -63,10 +63,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                 ),
                 onClick = TapAction(intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY)),
                 subComplication = when (disableComplications) {
-                    true -> ComplicationTemplate.Basic(     // TODO: check blank()
-                                id = "example_$smartspacerId",
-                                onClick = null
-                            ).create()
+                    true -> ComplicationTemplate.blank().create()
                     else -> null
                 }
             ).create().apply {
