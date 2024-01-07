@@ -1,11 +1,8 @@
 package targets
 
 import android.content.ComponentName
-import android.content.Context.BATTERY_SERVICE
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.drawable.Icon
-import android.os.BatteryManager
 import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -30,28 +27,19 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
         val jsonObject = JSONObject(jsonString)
 
         // get preferences
-        val preferences = jsonObject.getJSONObject("preferences")
-        val showEstimate = preferences.optBoolean("target_show_estimate", true)
+        val preferencesObject = jsonObject.getJSONObject("preferences")
+        val showEstimate = preferencesObject.optBoolean("target_show_estimate", true)
 
-        val batteryManager = context?.getSystemService(BATTERY_SERVICE) as BatteryManager
-        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
-            context!!.registerReceiver(null, ifilter)
-        }
+        // get data
+        val dataObject = jsonObject.getJSONObject("data")
 
-        val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-        val charging = status == BatteryManager.BATTERY_STATUS_CHARGING
-        val chargingTimeRemaining = batteryManager.computeChargeTimeRemaining()
-        val level = (
-                (
-                        (100f *
-                                batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, 0)!!) /
-                                batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
-                        )
-                ).toInt()
+        val isCharging = dataObject.getBoolean("isCharging")
+        val chargingTimeRemaining = dataObject.getLong("chargingTimeRemaining")
+        val level = dataObject.getInt("level")
 
         val title = "Charging"
 
-        val subtitle = when (showEstimate && (charging && chargingTimeRemaining > -1)) {
+        val subtitle = when (showEstimate && (isCharging && chargingTimeRemaining > -1)) {
             false -> "${level}%"        // if estimate is user-disable or we don't have it
             else -> when (level == 100) {
                 true -> "${level}% — charging complete"
@@ -59,7 +47,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             }
         }
 
-        if (charging) {
+        if (isCharging) {
             return listOf(TargetTemplate.Basic(
                 id = "example_$smartspacerId",
                 componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
