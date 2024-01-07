@@ -74,7 +74,7 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
             label = "Lively Greeting",
             description = "Shows fun messages to brighten your day",
             icon = Icon.createWithResource(provideContext(), R.drawable.human_greeting_variant),
-            refreshPeriodMinutes = 30
+            refreshPeriodMinutes = 60
         )
     }
 
