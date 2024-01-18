@@ -55,8 +55,8 @@ android {
             applicationId = "sleepasandroid"
             applicationId = "nodomain.pacjo.smartspacer.plugin.sleepasandroid"
 
-            versionCode = 10
-            versionName = "1.0"
+            versionCode = 11
+            versionName = "1.1"
         }
         create("duolingo") {
             applicationId = "duolingo"
