@@ -40,6 +40,7 @@ class ConfigurationActivity : ComponentActivity() {
             val file = File(context.filesDir, "data.json")
             val jsonObject = JSONObject(file.readText())
             val preferences = jsonObject.getJSONObject("preferences")
+            val simpleStyle = preferences.optBoolean("simple_style", false)
             val showTimeToBed = preferences.optBoolean("show_time_to_bed", true)
             val showAlarmDismissed = preferences.optBoolean("show_alarm_dismissed", true)
 
@@ -66,6 +67,17 @@ class ConfigurationActivity : ComponentActivity() {
                                 modifier = Modifier.padding(start = 16.dp)
                             )
                             Spacer(modifier = Modifier.height(8.dp))
+
+                            PreferenceSwitch(
+                                icon = R.drawable.cog,
+                                title = "Simple style",
+                                subtitle = "Show basic target instead\n of image one",
+                                stateCallback = {
+                                    value -> savePreference(context,"simple_style", value)
+                                    SmartspacerTargetProvider.notifyChange(context, SleepMessagesTarget::class.java)
+                                },
+                                checked = simpleStyle
+                            )
 
                             PreferenceSwitch(
                                 icon = R.drawable.bed_outline,

@@ -3,7 +3,6 @@ package targets
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.drawable.Icon
-import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.model.CompatibilityState
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -11,11 +10,13 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.getRandom
+import nodomain.pacjo.smartspacer.plugin.utils.getRandomFromPairs
+import nodomain.pacjo.smartspacer.plugin.utils.imageTargetAdjustDrawable
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
 import java.io.File
-import kotlin.random.Random
 
 class SleepMessagesTarget: SmartspacerTargetProvider() {
 
@@ -29,49 +30,94 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
+        val simpleStyle = preferences.optBoolean("simple_style", false)
         val showTimeToBed = preferences.optBoolean("show_time_to_bed", true)
         val showAlarmDismissed = preferences.optBoolean("show_alarm_dismissed", true)
 
         // get event (intent.action)
         val event = jsonObject.optString("event")
 
-        val title = when {
-            (event == "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" && showTimeToBed) -> when (Random.nextInt(0, 2)) {
-                0 -> "Time to bed."
-                1 -> "Goodnight."
-                else -> "It's late."
-            }
-            (event == "com.urbandroid.sleep.alarmclock.ALARM_ALERT_DISMISS_AUTO" && showAlarmDismissed) -> when (Random.nextInt(0, 2)) {
-                0 -> "Still sleepy?"
-                1 -> "Morning! How have you slept?"
-                else -> "It's never enough, isn't it?"
-            }
-            else -> ""
+        val (title, subtitle) = when {
+            (event == "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" && showTimeToBed) ->
+                listOf(
+                    Pair("Time to bed.", ""),
+                    Pair("Goodnight.", ""),
+                    Pair("It's late.", "")
+                ).getRandomFromPairs()
+            (event == "com.urbandroid.sleep.alarmclock.ALARM_ALERT_DISMISS_AUTO" && showAlarmDismissed) ->
+                listOf(
+                    Pair("Still sleepy?", ""),
+                    Pair("Morning!", "How have you slept?"),
+                    Pair("It's never enough", "isn't it?")
+                ).getRandomFromPairs()
+            else -> Pair("", "")
         }
 
         if (title != "") {
-            // TODO: maybe add image target?
-            return listOf(TargetTemplate.Basic(
-                id = "example_$smartspacerId",
-                componentName = ComponentName(
-                    provideContext(),
-                    SleepMessagesTarget::class.java
-                ),
-                title = Text(title),
-                subtitle = Text(""),
-                icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                    Icon.createWithResource(
+            return if (simpleStyle) {
+                listOf(TargetTemplate.Basic(
+                    id = "example_$smartspacerId",
+                    componentName = ComponentName(
                         provideContext(),
-                        when (event) {
-                            "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" -> R.drawable.bed_outline
-                            else -> R.drawable.tea_outline
-                        }
+                        SleepMessagesTarget::class.java
+                    ),
+                    title = Text("$title $subtitle"),   // bit of a hack, but should work
+                    subtitle = Text(""),
+                    icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
+                        Icon.createWithResource(
+                            provideContext(),
+                            when (event) {
+                                "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" -> R.drawable.bed_outline
+                                else -> R.drawable.tea_outline
+                            }
+                        )
+                    ),
+                    onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage("com.urbandroid.sleep")))
+                ).create().apply {
+                    canTakeTwoComplications = true
+                })
+            } else {
+                listOf(TargetTemplate.Image(
+                    context = provideContext(),
+                    id = "example_$smartspacerId",
+                    componentName = ComponentName(
+                        provideContext(),
+                        SleepMessagesTarget::class.java
+                    ),
+                    title = Text(title),
+                    subtitle = Text(subtitle),
+                    icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
+                        Icon.createWithResource(
+                            provideContext(),
+                            when (event) {
+                                "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" -> R.drawable.bed_outline
+                                else -> R.drawable.tea_outline
+                            }
+                        )
+                    ),
+                    image = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
+                        imageTargetAdjustDrawable(
+                            context!!,
+                            when (event) {
+                                "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" ->
+                                    listOf(
+                                        R.drawable.saa_read,
+                                        R.drawable.saa_sleep,
+                                        R.drawable.saa_tooth
+                                    ).getRandom()
+                                else ->
+                                    listOf(
+                                        R.drawable.saa_food,
+                                        R.drawable.saa_home,
+                                        R.drawable.saa_work
+                                    ).getRandom()
+                            }
+                        )
+                    ),
+                    onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage("com.urbandroid.sleep"))
                     )
-                ),
-                onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage("com.urbandroid.sleep")))
-            ).create().apply {
-                canTakeTwoComplications = true
-            })
+                ).create())
+            }
         } else return emptyList()
     }
 
