@@ -62,8 +62,8 @@ android {
             applicationId = "duolingo"
             applicationId = "nodomain.pacjo.smartspacer.plugin.duolingo"
 
-            versionCode = 11
-            versionName = "1.1"
+            versionCode = 12
+            versionName = "1.2"
         }
         create("livelygreeting") {
             applicationId = "livelygreeting"

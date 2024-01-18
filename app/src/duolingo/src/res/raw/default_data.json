@@ -1,4 +1,6 @@
 {
   "preferences": {},
-  "data": {}
+  "data": {
+    "hide_when_completed": false
+  }
 }

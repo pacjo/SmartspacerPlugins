@@ -5,7 +5,7 @@ Shows Duolingo widget and it's corresponding message.
 # Features:
 |     target      | description                       | is customisable |
 |:---------------:|-----------------------------------|:---------------:|
-| Progress target | Shows Duolingo widget and message |        ❌        |
+| Progress target | Shows Duolingo widget and message |        ✅        |
 
 
 | Screenshots                                                                                         |
