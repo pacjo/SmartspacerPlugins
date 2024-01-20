@@ -90,8 +90,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
             icon = Icon.createWithResource(provideContext(), R.drawable.duolingo),
             configActivity = Intent(context, ConfigurationActivity::class.java),
             compatibilityState = getCompatibilityState(),
-            widgetProvider = "nodomain.pacjo.smartspacer.plugin.duolingo.widget.duolingo",
-            notificationProvider = "nodomain.pacjo.smartspacer.plugin.duolingo.notification.duolingo"
+            widgetProvider = "nodomain.pacjo.smartspacer.plugin.duolingo.widget.duolingo"
         )
     }
 

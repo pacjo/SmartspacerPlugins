@@ -31,11 +31,6 @@
             android:authorities="${applicationId}.widget.duolingo"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_WIDGETS"
             android:exported="true"/>
-        <provider
-            android:name="providers.DuolingoNotificationProvider"
-            android:authorities="${applicationId}.notification.duolingo"
-            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_NOTIFICATIONS"
-            android:exported="true"/>
     </application>
 
 </manifest>
