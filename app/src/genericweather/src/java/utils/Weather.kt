@@ -1,6 +1,7 @@
 package utils
 
 import nodomain.pacjo.smartspacer.plugin.R
+import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData.WeatherStateIcon
 
 // TODO: add missing data from weather json
 
@@ -54,6 +55,89 @@ data class AirQuality(
     val so2Aqi: Int
 )
 
+// this mapping is wrong and should be changed
+fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0): WeatherStateIcon {
+    // type:
+    // 0 - current
+    // 1 - hourly
+    // 2 - daily
+
+    val iconMap = mapOf(
+        200 to WeatherStateIcon.STRONG_TSTORMS,
+        201 to WeatherStateIcon.STRONG_TSTORMS,
+        202 to WeatherStateIcon.STRONG_TSTORMS,
+        210 to WeatherStateIcon.STRONG_TSTORMS,
+        211 to WeatherStateIcon.STRONG_TSTORMS,
+        212 to WeatherStateIcon.STRONG_TSTORMS,
+        221 to WeatherStateIcon.STRONG_TSTORMS,
+        230 to WeatherStateIcon.STRONG_TSTORMS,
+        231 to WeatherStateIcon.STRONG_TSTORMS,
+        232 to WeatherStateIcon.STRONG_TSTORMS,
+        300 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        301 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        302 to WeatherStateIcon.HEAVY_RAIN,
+        310 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        311 to WeatherStateIcon.HEAVY_RAIN,
+        312 to WeatherStateIcon.HEAVY_RAIN,
+        313 to WeatherStateIcon.HEAVY_RAIN,
+        314 to WeatherStateIcon.HEAVY_RAIN,
+        321 to WeatherStateIcon.HEAVY_RAIN,
+        500 to WeatherStateIcon.HEAVY_RAIN,
+        501 to WeatherStateIcon.HEAVY_RAIN,
+        502 to WeatherStateIcon.HEAVY_RAIN,
+        503 to WeatherStateIcon.HEAVY_RAIN,
+        504 to WeatherStateIcon.HEAVY_RAIN,
+        511 to WeatherStateIcon.HEAVY_SNOW,
+        520 to WeatherStateIcon.HEAVY_RAIN,
+        521 to WeatherStateIcon.HEAVY_RAIN,
+        522 to WeatherStateIcon.HEAVY_RAIN,
+        531 to WeatherStateIcon.HEAVY_RAIN,
+        600 to WeatherStateIcon.HEAVY_SNOW,
+        601 to WeatherStateIcon.HEAVY_SNOW,
+        602 to WeatherStateIcon.HEAVY_SNOW,
+        611 to WeatherStateIcon.HEAVY_SNOW,
+        612 to WeatherStateIcon.HEAVY_SNOW,
+        613 to WeatherStateIcon.HEAVY_SNOW,
+        615 to WeatherStateIcon.BLOWING_SNOW,
+        616 to WeatherStateIcon.BLOWING_SNOW,
+        620 to WeatherStateIcon.HEAVY_SNOW,
+        621 to WeatherStateIcon.HEAVY_SNOW,
+        622 to WeatherStateIcon.HEAVY_SNOW,
+        701 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        711 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        721 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        731 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        741 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        751 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        761 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        762 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        771 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        781 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+        800 to WeatherStateIcon.SUNNY,
+        801 to WeatherStateIcon.MOSTLY_SUNNY,
+        802 to WeatherStateIcon.MOSTLY_SUNNY,
+        803 to WeatherStateIcon.CLOUDY,
+        804 to WeatherStateIcon.CLOUDY
+    )
+
+    val conditionCode = when (type) {
+        0 -> data.currentConditionCode
+        1 -> data.hourly[index].conditionCode
+        2 -> data.forecasts[index].conditionCode
+        else -> throw IllegalArgumentException("Unknown type: $type")
+    }
+
+    if (System.currentTimeMillis() > data.sunSet * 1000L && System.currentTimeMillis() < data.forecasts[0].sunRise * 1000L) {
+        if (conditionCode == 800) return WeatherStateIcon.CLEAR_NIGHT
+        else if (conditionCode in 801..802) return WeatherStateIcon.MOSTLY_CLEAR_NIGHT
+    }
+
+    return iconMap.getOrElse(conditionCode) {
+        throw IllegalArgumentException("Unknown condition code: $conditionCode")
+    }
+}
+
+// this mapping is wrong and should be changed
 fun weatherDataToIcon(data: WeatherData, type: Int, index: Int = 0): Int {
     // type:
     // 0 - current
