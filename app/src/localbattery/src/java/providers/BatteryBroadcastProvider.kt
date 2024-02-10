@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
-import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerBroadcastProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import complications.BatteryLevelComplication
-import complications.ChargingStatusComplication
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import targets.LocalBatteryTarget
@@ -60,7 +58,7 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
         // notify about change
         if (isCharging) {
             SmartspacerTargetProvider.notifyChange(context!!, LocalBatteryTarget::class.java)
-            SmartspacerComplicationProvider.notifyChange(context!!, ChargingStatusComplication::class.java)
+//            SmartspacerComplicationProvider.notifyChange(context!!, ChargingStatusComplication::class.java)
         }
         SmartspacerComplicationProvider.notifyChange(context!!, BatteryLevelComplication::class.java)
     }
