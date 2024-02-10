@@ -1,10 +1,19 @@
 package utils
 
-import nodomain.pacjo.smartspacer.plugin.R
+import androidx.annotation.Keep
 import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData.WeatherStateIcon
+import nodomain.pacjo.smartspacer.plugin.R
 
 // TODO: add missing data from weather json
 
+/*
+Removing @Keep breaks minification and proguard
+This is an issue with GSON as mentioned here:
+  - https://github.com/google/gson/issues/2379
+  - https://issuetracker.google.com/issues/112386012
+*/
+
+@Keep
 data class WeatherData(
     val timestamp: Long,
     val location: String,
@@ -18,6 +27,7 @@ data class WeatherData(
     val airQuality: AirQuality
 )
 
+@Keep
 data class Daily(
     val minTemp: Int,
     val maxTemp: Int,
@@ -29,7 +39,7 @@ data class Daily(
     val moonPhase: Int,
     val airQuality: AirQuality?
 )
-
+@Keep
 data class Hourly(
     val timestamp: Long,
     val temp: Int,
@@ -38,7 +48,7 @@ data class Hourly(
     val windSpeed: Double,
     val windDirection: Int
 )
-
+@Keep
 data class AirQuality(
     val aqi: Int,
     val co: Double,

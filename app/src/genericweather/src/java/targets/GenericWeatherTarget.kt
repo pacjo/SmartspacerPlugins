@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.icu.text.SimpleDateFormat
-import android.util.Log
 import androidx.core.graphics.drawable.IconCompat
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
@@ -16,12 +15,12 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
+import org.json.JSONObject
 import ui.activities.ConfigurationActivity
 import utils.WeatherData
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import utils.temperatureUnitConverter
 import utils.weatherDataToIcon
-import org.json.JSONObject
 import java.io.File
 
 class GenericWeatherTarget: SmartspacerTargetProvider() {
