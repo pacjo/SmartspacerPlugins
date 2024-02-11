@@ -3,7 +3,6 @@ package targets
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.drawable.Icon
-import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
@@ -33,7 +32,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
         val disableComplications = preferencesObject.optBoolean("target_disable_complications", false)
 
         // get data
-        val dataObject = jsonObject.getJSONObject("data")
+        val dataObject = jsonObject.getJSONObject("local_data")
         val isCharging = dataObject.optBoolean("isCharging", false)
         val chargingTimeRemaining = dataObject.optLong("chargingTimeRemaining", 0)
         val level = dataObject.optInt("level", -1)

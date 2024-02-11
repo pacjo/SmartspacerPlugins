@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+
+    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,6 +23,15 @@
         <provider
             android:name="targets.LocalBatteryTarget"
             android:authorities="${applicationId}.target.battery"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
+            </intent-filter>
+        </provider>
+        <provider
+            android:name="targets.BluetoothBatteryTarget"
+            android:authorities="${applicationId}.target.bluetooth_battery"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS"
             android:exported="true">
             <intent-filter>
@@ -43,6 +59,11 @@
         <provider
             android:name="providers.BatteryBroadcastProvider"
             android:authorities="${applicationId}.broadcast.battery"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_BROADCASTS"
+            android:exported="true"/>
+        <provider
+            android:name="providers.BluetoothBroadcastProvider"
+            android:authorities="${applicationId}.broadcast.bluetooth_battery"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_BROADCASTS"
             android:exported="true"/>
     </application>

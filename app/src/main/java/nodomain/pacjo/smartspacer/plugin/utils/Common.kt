@@ -2,10 +2,14 @@ package nodomain.pacjo.smartspacer.plugin.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageInfo.REQUESTED_PERMISSION_GRANTED
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Icon
+import android.os.Build
 import androidx.core.content.ContextCompat
 import nodomain.pacjo.smartspacer.plugin.R
 import java.io.File
@@ -21,14 +25,33 @@ fun isFirstRun(context: Context) {
     //   - it's the first run after installation / data reset
     //   - something went wrong, but we can blame that on the user
     if (!file.exists()) {
-        val outputFile = File(context.filesDir, "data.json")
-        val outputStream: OutputStream = FileOutputStream(outputFile)
+        val outputStream: OutputStream = FileOutputStream(file)
 
         context.resources.openRawResource(R.raw.default_data).use { input ->
             outputStream.use { output ->
                 input.copyTo(output)
             }
         }
+    }
+}
+
+// https://github.com/KieronQuinn/Smartspacer/blob/main/app/src/main/java/com/kieronquinn/app/smartspacer/utils/extensions/Extensions+PackageManager.kt
+@Suppress("DEPRECATION")
+fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): PackageInfo {
+    return if (Build.VERSION.SDK_INT >= 33) {
+        getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
+    } else {
+        getPackageInfo(packageName, flags)
+    }
+}
+
+fun PackageManager.packageHasPermission(packageName: String, permission: String): Boolean {
+    return try {
+        val info = getPackageInfoCompat(packageName, PackageManager.GET_PERMISSIONS)
+        val permissions = info.requestedPermissions.zip(info.requestedPermissionsFlags.toTypedArray())
+        permissions.any { it.first == permission && it.second and REQUESTED_PERMISSION_GRANTED != 0 }
+    } catch (e: PackageManager.NameNotFoundException){
+        false
     }
 }
 

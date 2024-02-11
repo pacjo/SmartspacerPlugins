@@ -23,7 +23,7 @@ class BatteryLevelComplication: SmartspacerComplicationProvider() {
         val jsonObject = JSONObject(jsonString)
 
         // get data
-        val dataObject = jsonObject.getJSONObject("data")
+        val dataObject = jsonObject.getJSONObject("local_data")
         val level = dataObject.optInt("level", -1)
 
         return listOf(

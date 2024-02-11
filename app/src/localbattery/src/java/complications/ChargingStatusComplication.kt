@@ -23,7 +23,7 @@ class ChargingStatusComplication: SmartspacerComplicationProvider() {
         val jsonObject = JSONObject(jsonString)
 
         // get data
-        val dataObject = jsonObject.getJSONObject("data")
+        val dataObject = jsonObject.getJSONObject("local_data")
         val isCharging = dataObject.optBoolean("isCharging", false)
         val current = dataObject.optInt("current", 0)
         val voltage = dataObject.optInt("voltage", 0)

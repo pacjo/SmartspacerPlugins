@@ -3,5 +3,6 @@
     "target_show_estimate": true,
     "target_disable_complications": false
   },
-  "data": {}
+  "local_data": {},
+  "bluetooth_data": []
 }

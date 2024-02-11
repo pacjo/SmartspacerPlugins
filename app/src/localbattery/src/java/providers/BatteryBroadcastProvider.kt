@@ -52,7 +52,7 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
         dataObject.put("voltage", voltage)
         dataObject.put("level", level)
 
-        jsonObject.put("data", dataObject)
+        jsonObject.put("local_data", dataObject)
         file.writeText(jsonObject.toString())
 
         // notify about change
