@@ -124,7 +124,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-android:1.6.1")
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("com.kieronquinn.smartspacer:sdk-plugin:1.0.3")
-    implementation(platform("androidx.compose:compose-bom:2023.10.01"))
+    implementation(platform("androidx.compose:compose-bom:2024.02.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
