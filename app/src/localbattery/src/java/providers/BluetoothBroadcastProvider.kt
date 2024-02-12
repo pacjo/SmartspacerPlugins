@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerBroadcastProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
@@ -15,17 +14,50 @@ import targets.BluetoothBatteryTarget
 import java.io.File
 
 fun removeDeviceFromArray(deviceArray: JSONArray, deviceAddress: String): JSONArray {
+    val newArray = JSONArray()
+
+    // Remove ALL devices with the same address
     for (i in 0 until deviceArray.length()) {
-        Log.i("pacjodebug", "removefun: checking $i from $deviceArray, with len: ${deviceArray.length()}")
-        if (deviceAddress == deviceArray.getJSONObject(i).getString("deviceAddress")) {
-//            Log.i("pacjodebug", "removing: $i from $deviceArray of length: ${deviceArray.length()}")
-            deviceArray.remove(i)
-            break
+        if (deviceAddress != deviceArray.getJSONObject(i).getString("deviceAddress")) {
+            newArray.put(newArray.length(), deviceArray.getJSONObject(i))
         }
     }
 
-    return deviceArray
+    return newArray
 }
+
+fun deduplicateJSONArray(dataArray: JSONArray): JSONArray {
+    val uniqueDevicesMap = mutableMapOf<String, JSONObject>()
+
+    // Iterate over each JSONObject in the JSONArray
+    for (i in 0 until dataArray.length()) {
+        val jsonObject = dataArray.getJSONObject(i)
+        val deviceAddress = jsonObject.getString("deviceAddress")
+        val modifiedTime = jsonObject.getLong("modifiedTime")
+
+        // Check if the deviceAddress is already present in the map
+        if (uniqueDevicesMap.containsKey(deviceAddress)) {
+            // If present, compare the modifiedTime
+            val existingObject = uniqueDevicesMap[deviceAddress]!!
+            val existingModifiedTime = existingObject.getLong("modifiedTime")
+
+            // If the current object has a newer modifiedTime, replace the existing one
+            if (modifiedTime > existingModifiedTime) {
+                uniqueDevicesMap[deviceAddress] = jsonObject
+            }
+        } else {
+            // If deviceAddress is not present, add it to the map
+            uniqueDevicesMap[deviceAddress] = jsonObject
+        }
+    }
+
+    // Convert the map back to a JSONArray
+    val newArray = JSONArray()
+    uniqueDevicesMap.values.forEach { newArray.put(it) }
+
+    return newArray
+}
+
 
 class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
 
@@ -47,40 +79,27 @@ class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
         }
 
-        Log.i("pacjodebug", "${intent.action} for ${device?.address}, array: $dataArray")
-
         if (device != null) {
-            // Save battery level
             if (intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL") != -1) {
-                for (i in 0 until dataArray.length()) {
-                    if (device.address == dataArray.getJSONObject(i).getString("deviceAddress")) {
-
-                        val newDevice = JSONObject()
-                        newDevice.put("deviceAddress", device.address)
-                        newDevice.put("deviceClass", device.bluetoothClass)
-                        newDevice.put("deviceName", device.name)
-                        newDevice.put("deviceBattery", intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL"))
-                        dataArray.put(dataArray.length(), newDevice)
-
-                        break
-                    }
-                }
-
-                // Do the same if we don't already have this device saved
                 val newDevice = JSONObject()
                 newDevice.put("deviceAddress", device.address)
                 newDevice.put("deviceClass", device.bluetoothClass)
                 newDevice.put("deviceName", device.name)
                 newDevice.put("deviceBattery", intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL"))
+                newDevice.put("modifiedTime", System.currentTimeMillis())
                 dataArray.put(dataArray.length(), newDevice)
+
+            // Remove device, since we we get '-1' when device is disconnected
             } else if (dataArray.length() != 0) {
                 dataArray = removeDeviceFromArray(dataArray, device.address)
             }
+
+            // this is important as some devices (ehm Xbox controller, ehm) don't always report proper stats
+            dataArray = deduplicateJSONArray(dataArray)
         }
 
         jsonObject.put("bluetooth_data", dataArray)
         file.writeText(jsonObject.toString())
-        Log.i("pacjodebug", "saved: $dataArray")
 
         SmartspacerTargetProvider.notifyChange(provideContext(), BluetoothBatteryTarget::class.java)
     }
