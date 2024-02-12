@@ -6,7 +6,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -16,10 +18,12 @@ import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.packageHasPermission
 import org.json.JSONObject
+import utils.iconMap
 import java.io.File
 
 class BluetoothBatteryTarget: SmartspacerTargetProvider() {
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         // Show error if we're missing permissions
         if ((ActivityCompat.checkSelfPermission(
@@ -73,7 +77,7 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
                         icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                             Icon.createWithResource(
                                 provideContext(),
-                                R.drawable.headset
+                                iconMap.getOrDefault(device.getInt("deviceClass"), R.drawable.bluetooth)
                             )
                         )
                     ).create().apply {
