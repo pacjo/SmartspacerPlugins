@@ -2,8 +2,6 @@ package targets
 
 import android.content.ComponentName
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.icu.text.SimpleDateFormat
 import androidx.core.graphics.drawable.IconCompat
@@ -28,7 +26,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val file = File(context?.filesDir, "data.json")
 
-        isFirstRun(context!!)
+        isFirstRun(provideContext())
 
         val jsonString = file.readText()
         val jsonObject = JSONObject(jsonString)
@@ -68,16 +66,9 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                             Text(temperatureUnitConverter(hourlyData[index].temp, targetUnit)),
                             Text(SimpleDateFormat("HH:mm ").format(hourlyData[index].timestamp * 1000L)),
                             com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                                IconCompat.createWithBitmap(
-                                    Bitmap.createScaledBitmap(
-                                        BitmapFactory.decodeResource(
-                                            resources,
-                                            weatherDataToIcon(weatherData, 1, index)
-                                        ),
-                                        50,
-                                        50,
-                                        true
-                                    )
+                                IconCompat.createWithResource(
+                                    provideContext(),
+                                    weatherDataToIcon(provideContext(), weatherData, 0)
                                 ).toIcon(context),
                                 shouldTint = false
                             ), null
@@ -95,16 +86,9 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         else -> temperatureUnitConverter(weatherData.currentTemp, targetUnit)
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        IconCompat.createWithBitmap(
-                            Bitmap.createScaledBitmap(
-                                BitmapFactory.decodeResource(
-                                    resources,
-                                    weatherDataToIcon(weatherData, 0)
-                                ),
-                                25,
-                                25,
-                                true
-                            )
+                        IconCompat.createWithResource(
+                            provideContext(),
+                            weatherDataToIcon(provideContext(), weatherData, 0)
                         ).toIcon(context),
                         shouldTint = false
                     ),
@@ -135,16 +119,9 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         else -> temperatureUnitConverter(weatherData.currentTemp, targetUnit)
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        IconCompat.createWithBitmap(
-                            Bitmap.createScaledBitmap(
-                                BitmapFactory.decodeResource(
-                                    resources,
-                                    weatherDataToIcon(weatherData, 0)
-                                ),
-                                50,
-                                50,
-                                true
-                            )
+                        IconCompat.createWithResource(
+                            provideContext(),
+                            weatherDataToIcon(provideContext(), weatherData, 0)
                         ).toIcon(context),
                         shouldTint = false
                     ),

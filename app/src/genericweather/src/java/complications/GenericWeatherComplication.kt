@@ -1,8 +1,6 @@
 package complications
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import androidx.core.graphics.drawable.IconCompat
 import com.google.gson.Gson
@@ -11,19 +9,19 @@ import com.kieronquinn.app.smartspacer.sdk.annotations.LimitedNativeSupport
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
-import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData as SmartspacerWeatherData
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
+import org.json.JSONObject
 import ui.activities.ConfigurationActivity
 import utils.WeatherData
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import utils.temperatureUnitConverter
 import utils.weatherDataToIcon
-import org.json.JSONObject
 import utils.weatherDataToSmartspacerToIcon
 import java.io.File
+import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData as SmartspacerWeatherData
 
 class GenericWeatherComplication: SmartspacerComplicationProvider() {
 
@@ -31,7 +29,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
         val file = File(context?.filesDir, "data.json")
 
-        isFirstRun(context!!)
+        isFirstRun(provideContext())
         val jsonString = file.readText()
         val jsonObject = JSONObject(jsonString)
 
@@ -53,16 +51,9 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                 ComplicationTemplate.Basic(
                     id = "example_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        IconCompat.createWithBitmap(
-                            Bitmap.createScaledBitmap(
-                                BitmapFactory.decodeResource(
-                                    resources,
-                                    weatherDataToIcon(data, 0)
-                                ),
-                                50,
-                                50,
-                                true
-                            )
+                        IconCompat.createWithResource(
+                            provideContext(),
+                            weatherDataToIcon(provideContext(), data, 0)
                         ).toIcon(context),
                         shouldTint = false
                     ),

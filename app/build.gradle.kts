@@ -52,6 +52,12 @@ android {
 
             versionCode = 11
             versionName = "1.1"
+
+            buildTypes {
+                release {
+                    isShrinkResources = false
+                }
+            }
         }
         create("sleepasandroid") {
             applicationId = "sleepasandroid"

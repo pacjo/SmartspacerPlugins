@@ -1,8 +1,10 @@
 package utils
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Configuration
 import androidx.annotation.Keep
 import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData.WeatherStateIcon
-import nodomain.pacjo.smartspacer.plugin.R
 
 // TODO: add missing data from weather json
 
@@ -148,68 +150,70 @@ fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0)
 }
 
 // this mapping is wrong and should be changed
-fun weatherDataToIcon(data: WeatherData, type: Int, index: Int = 0): Int {
+@SuppressLint("DiscouragedApi")
+fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int = 0): Int {
     // type:
     // 0 - current
     // 1 - hourly
     // 2 - daily
 
+    // by default return dark mode, day icon
     val iconMap = mapOf(
-        200 to R.drawable.thunderstorm,
-        201 to R.drawable.thunderstorm,
-        202 to R.drawable.thunderstorm,
-        210 to R.drawable.thunder,
-        211 to R.drawable.thunderstorm,
-        212 to R.drawable.thunderstorm,
-        221 to R.drawable.thunderstorm,
-        230 to R.drawable.thunder,
-        231 to R.drawable.thunder,
-        232 to R.drawable.thunderstorm,
-        300 to R.drawable.haze,
-        301 to R.drawable.haze,
-        302 to R.drawable.rain,
-        310 to R.drawable.haze,
-        311 to R.drawable.rain,
-        312 to R.drawable.rain,
-        313 to R.drawable.rain,
-        314 to R.drawable.rain,
-        321 to R.drawable.rain,
-        500 to R.drawable.rain,
-        501 to R.drawable.rain,
-        502 to R.drawable.rain,
-        503 to R.drawable.rain,
-        504 to R.drawable.rain,
-        511 to R.drawable.snow,
-        520 to R.drawable.rain,
-        521 to R.drawable.rain,
-        522 to R.drawable.rain,
-        531 to R.drawable.rain,
-        600 to R.drawable.snow,
-        601 to R.drawable.snow,
-        602 to R.drawable.snow,
-        611 to R.drawable.snow,
-        612 to R.drawable.snow,
-        613 to R.drawable.snow,
-        615 to R.drawable.sleet,
-        616 to R.drawable.sleet,
-        620 to R.drawable.snow,
-        621 to R.drawable.snow,
-        622 to R.drawable.snow,
-        701 to R.drawable.fog,
-        711 to R.drawable.fog,
-        721 to R.drawable.fog,
-        731 to R.drawable.fog,
-        741 to R.drawable.fog,
-        751 to R.drawable.fog,
-        761 to R.drawable.fog,
-        762 to R.drawable.fog,
-        771 to R.drawable.fog,
-        781 to R.drawable.fog,
-        800 to R.drawable.clear_day,
-        801 to R.drawable.partly_cloudy_day,
-        802 to R.drawable.partly_cloudy_day,
-        803 to R.drawable.cloudy,
-        804 to R.drawable.cloudy
+        200 to "google_<theme>_isolated_scattered_thunderstorms_<time>",
+        201 to "google_<theme>_isolated_scattered_thunderstorms_<time>",
+        202 to "google_<theme>_isolated_scattered_thunderstorms_<time>",
+        210 to "google_<theme>_isolated_thunderstorms",
+        211 to "google_<theme>_isolated_thunderstorms",
+        212 to "google_<theme>_isolated_thunderstorms",
+        221 to "google_<theme>_isolated_thunderstorms",
+        230 to "google_<theme>_isolated_thunderstorms",
+        231 to "google_<theme>_isolated_thunderstorms",
+        232 to "google_<theme>_isolated_thunderstorms",
+        300 to "google_<theme>_scattered_showers_<time>",
+        301 to "google_<theme>_scattered_showers_<time>",
+        302 to "google_<theme>_scattered_showers_<time>",
+        310 to "google_<theme>_showers_rain",
+        311 to "google_<theme>_showers_rain",
+        312 to "google_<theme>_showers_rain",
+        313 to "google_<theme>_showers_rain",
+        314 to "google_<theme>_showers_rain",
+        321 to "google_<theme>_scattered_showers_<time>",
+        500 to "google_<theme>_showers_rain",
+        501 to "google_<theme>_showers_rain",
+        502 to "google_<theme>_heavy_rain",
+        503 to "google_<theme>_heavy_rain",
+        504 to "google_<theme>_heavy_rain",
+        511 to "google_<theme>_showers_rain",
+        520 to "google_<theme>_showers_rain",
+        521 to "google_<theme>_scattered_showers_<time>",
+        522 to "google_<theme>_scattered_showers_<time>",
+        531 to "google_<theme>_scattered_showers_<time>",
+        600 to "google_<theme>_scattered_snow_showers_<time>",
+        601 to "google_<theme>_scattered_snow_showers_<time>",
+        602 to "google_<theme>_heavy_snow",
+        611 to "google_<theme>_sleet_hail",
+        612 to "google_<theme>_sleet_hail",
+        613 to "google_<theme>_sleet_hail",
+        615 to "google_<theme>_scattered_snow_showers_<time>",
+        616 to "google_<theme>_scattered_snow_showers_<time>",
+        620 to "google_<theme>_scattered_snow_showers_<time>",
+        621 to "google_<theme>_scattered_snow_showers_<time>",
+        622 to "google_<theme>_heavy_snow",
+        701 to "google_<theme>_haze_fog_dust_smoke",
+        711 to "google_<theme>_haze_fog_dust_smoke",
+        721 to "google_<theme>_haze_fog_dust_smoke",
+        731 to "google_<theme>_haze_fog_dust_smoke",
+        741 to "google_<theme>_haze_fog_dust_smoke",
+        751 to "google_<theme>_haze_fog_dust_smoke",
+        761 to "google_<theme>_haze_fog_dust_smoke",
+        762 to "google_<theme>_haze_fog_dust_smoke",
+        771 to "google_<theme>_haze_fog_dust_smoke",
+        781 to "google_<theme>_tornado",
+        800 to "google_<theme>_clear_<time>",
+        801 to "google_<theme>_partly_cloudy",
+        802 to "google_<theme>_partly_cloudy",
+        803 to "google_<theme>_cloudy",
+        804 to "google_<theme>_cloudy"
     )
 
     val conditionCode = when (type) {
@@ -219,14 +223,23 @@ fun weatherDataToIcon(data: WeatherData, type: Int, index: Int = 0): Int {
         else -> throw IllegalArgumentException("Unknown type: $type")
     }
 
-    if (System.currentTimeMillis() > data.sunSet * 1000L && System.currentTimeMillis() < data.forecasts[0].sunRise * 1000L) {
-        if (conditionCode == 800) return R.drawable.clear_night
-        else if (conditionCode in 801..802) return R.drawable.partly_cloudy_night
+    val time =
+        if (System.currentTimeMillis() > data.sunSet * 1000L && System.currentTimeMillis() < data.forecasts[0].sunRise * 1000L) {
+            "day"
+        } else {
+            "night"
+        }
+
+    val theme = when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+        Configuration.UI_MODE_NIGHT_YES -> "dark"
+        else -> "light"
     }
 
-    return iconMap.getOrElse(conditionCode) {
+    val drawableName = iconMap.getOrElse(conditionCode) {
         throw IllegalArgumentException("Unknown condition code: $conditionCode")
-    }
+    }.replace("<theme>", theme).replace("<time>", time)
+
+    return context.resources.getIdentifier(drawableName, "drawable", "nodomain.pacjo.smartspacer.plugin.genericweather")
 }
 
 fun temperatureUnitConverter(value: Int, preference: String): String {
