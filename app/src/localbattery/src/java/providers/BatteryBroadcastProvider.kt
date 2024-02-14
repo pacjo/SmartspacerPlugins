@@ -56,10 +56,8 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
         file.writeText(jsonObject.toString())
 
         // notify about change
-        if (isCharging) {
-            SmartspacerTargetProvider.notifyChange(context!!, LocalBatteryTarget::class.java)
-//            SmartspacerComplicationProvider.notifyChange(context!!, ChargingStatusComplication::class.java)
-        }
+        SmartspacerTargetProvider.notifyChange(context!!, LocalBatteryTarget::class.java)
+//        SmartspacerComplicationProvider.notifyChange(context!!, ChargingStatusComplication::class.java)
         SmartspacerComplicationProvider.notifyChange(context!!, BatteryLevelComplication::class.java)
     }
 
