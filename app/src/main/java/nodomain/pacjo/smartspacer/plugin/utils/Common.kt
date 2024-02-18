@@ -11,6 +11,17 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import nodomain.pacjo.smartspacer.plugin.R
 import java.io.File
 import java.io.FileOutputStream
@@ -35,8 +46,44 @@ fun isFirstRun(context: Context) {
     }
 }
 
+fun saveToDataStore(dataStore: DataStore<Preferences>, key: String, value: Any) {
+    CoroutineScope(Dispatchers.IO).launch {
+        dataStore.edit { settings ->
+            when (value) {
+                is String -> settings[stringPreferencesKey(key)] = value.toString()
+                is Int -> settings[intPreferencesKey(key)] = value
+                is Boolean -> settings[booleanPreferencesKey(key)] = value
+                // ... and that's all we need for now
+            }
+        }
+    }
+}
+
+fun getBoolFromDataStore(dataStore: DataStore<Preferences>, key: String): Boolean? {
+    var result: Boolean?
+    runBlocking {
+        result = dataStore.data.first()[booleanPreferencesKey(key)]
+    }
+    return result
+}
+
+fun getIntFromDataStore(dataStore: DataStore<Preferences>, key: String): Int? {
+    var result: Int?
+    runBlocking {
+        result = dataStore.data.first()[intPreferencesKey(key)]
+    }
+    return result
+}
+
+fun getStringFromDataStore(dataStore: DataStore<Preferences>, key: String): String? {
+    var result: String?
+    runBlocking {
+        result = dataStore.data.first()[stringPreferencesKey(key)]
+    }
+    return result
+}
+
 // https://github.com/KieronQuinn/Smartspacer/blob/main/app/src/main/java/com/kieronquinn/app/smartspacer/utils/extensions/Extensions+PackageManager.kt
-@Suppress("DEPRECATION")
 fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): PackageInfo {
     return if (Build.VERSION.SDK_INT >= 33) {
         getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
