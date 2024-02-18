@@ -26,11 +26,23 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         // Show error if we're missing permissions
-        if ((ActivityCompat.checkSelfPermission(
-                provideContext(),
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) || (!provideContext().packageManager.packageHasPermission("com.kieronquinn.app.smartspacer", Manifest.permission.BLUETOOTH_CONNECT))) {
+        val isPluginMissingPermissions = ActivityCompat.checkSelfPermission(
+            provideContext(),
+            (when {
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> Manifest.permission.BLUETOOTH_CONNECT
+                else -> Manifest.permission.BLUETOOTH
+            })
+        ) != PackageManager.PERMISSION_GRANTED
+
+        val isSmartspacerMissingPermission = !provideContext().packageManager.packageHasPermission(
+            "com.kieronquinn.app.smartspacer",
+            (when {
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> Manifest.permission.BLUETOOTH_CONNECT
+                else -> Manifest.permission.BLUETOOTH
+            })
+        )
+
+        if (isPluginMissingPermissions || isSmartspacerMissingPermission) {
             return listOf(TargetTemplate.Basic(
                 id = "example_$smartspacerId",
                 componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
@@ -45,12 +57,9 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
                 onClick = TapAction(intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(
                     Uri.fromParts("package",
                         when {
-                            (ActivityCompat.checkSelfPermission(
-                                provideContext(),
-                                Manifest.permission.BLUETOOTH_CONNECT
-                            ) != PackageManager.PERMISSION_GRANTED) -> "nodomain.pacjo.smartspacer.plugin.localbattery"
+                            isPluginMissingPermissions -> "nodomain.pacjo.smartspacer.plugin.localbattery"
                             else -> "com.kieronquinn.app.smartspacer"
-                             },
+                        },
                         null
                     )
                 ))
