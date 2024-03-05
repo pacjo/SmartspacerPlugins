@@ -43,15 +43,15 @@ android {
             applicationId = "localbattery"
             applicationId = "nodomain.pacjo.smartspacer.plugin.localbattery"
 
-            versionCode = 10
-            versionName = "1.0"
+            versionCode = 11
+            versionName = "1.1"
         }
         create("genericweather") {
             applicationId = "genericweather"
             applicationId = "nodomain.pacjo.smartspacer.plugin.genericweather"
 
-            versionCode = 11
-            versionName = "1.1"
+            versionCode = 12
+            versionName = "1.2"
 
             buildTypes {
                 release {
@@ -78,8 +78,8 @@ android {
             applicationId = "livelygreeting"
             applicationId = "nodomain.pacjo.smartspacer.plugin.livelygreeting"
 
-            versionCode = 10
-            versionName = "1.0"
+            versionCode = 11
+            versionName = "1.1"
         }
     }
 
