@@ -23,24 +23,18 @@ import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.theme.getColorScheme
 import nodomain.pacjo.smartspacer.plugin.utils.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.utils.SettingsTopBar
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import nodomain.pacjo.smartspacer.plugin.utils.savePreference
-import org.json.JSONObject
+import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
+import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
 import targets.LivelyGreetingTarget
-import java.io.File
+import targets.dataStore
 
 class ConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
-            isFirstRun(context)
 
-            // get number of forecast points (as we need it to show the default)
-            val file = File(context.filesDir, "data.json")
-            val jsonObject = JSONObject(file.readText())
-            val preferences = jsonObject.getJSONObject("preferences")
-            val showEstimate = preferences.optBoolean("target_show_estimate", true)
+            val hideNoComplications = getBoolFromDataStore(context.dataStore, "target_hide_no_complications") ?: false
 
             MaterialTheme (
                 // Change default colorScheme to our dynamic one
@@ -51,7 +45,7 @@ class ConfigurationActivity : ComponentActivity() {
                 ) {
                     Column {
 
-                        SettingsTopBar((context as? Activity)!!,"Local Battery")
+                        SettingsTopBar((context as? Activity)!!,"Lively Greeting")
 
                         Column(
                             modifier = Modifier
@@ -59,7 +53,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 .padding(end = 16.dp)
                         ) {
                             Text(
-                                text = "Charging target",
+                                text = "Greeting target",
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.padding(start = 16.dp)
@@ -67,14 +61,14 @@ class ConfigurationActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.height(8.dp))
 
                             PreferenceSwitch(
-                                icon = R.drawable.alert_circle,
-                                title = "Charging estimate",
-                                subtitle = "Show time to charge",
+                                icon = R.drawable.eye_off,
+                                title = "Dynamically hide",
+                                subtitle = "Hide target when no complications\nare available",
                                 stateCallback = {
-                                    value -> savePreference(context,"target_show_estimate", value)
+                                    value -> saveToDataStore(context.dataStore, "target_hide_no_complications", value)
                                     SmartspacerTargetProvider.notifyChange(context, LivelyGreetingTarget::class.java)
                                 },
-                                checked = showEstimate
+                                checked = hideNoComplications
                             )
                         }
                     }

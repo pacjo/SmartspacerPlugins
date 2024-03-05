@@ -1,30 +1,28 @@
 package targets
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.icu.util.Calendar
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
+import ui.activities.ConfigurationActivity
 import kotlin.random.Random
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "greeting_target_settings")
 
 class LivelyGreetingTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-//        val file = File(context?.filesDir, "data.json")
-//
-//        isFirstRun(context!!)
-//
-//        val jsonString = file.readText()
-//        val jsonObject = JSONObject(jsonString)
-//
-//        // get preferences
-//        val preferences = jsonObject.getJSONObject("preferences")
-//        val showEstimate = preferences.optBoolean("target_show_estimate", true)
+        val hideNoComplications = getBoolFromDataStore(provideContext().dataStore, "target_hide_no_complications") ?: false
 
         val morningString = context!!.resources.getStringArray(R.array.quickspace_psa_morning)
         val lateEveningStrings = context!!.resources.getStringArray(R.array.quickspace_psa_late_evening)
@@ -66,6 +64,7 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
         ).create().apply {
             canBeDismissed = false
             canTakeTwoComplications = true
+            hideIfNoComplications = hideNoComplications
         })
     }
 
@@ -74,6 +73,8 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
             label = "Lively Greeting",
             description = "Shows fun messages to brighten your day",
             icon = Icon.createWithResource(provideContext(), R.drawable.human_greeting_variant),
+            allowAddingMoreThanOnce = true,
+            configActivity = Intent(context, ConfigurationActivity::class.java),
             refreshPeriodMinutes = 60
         )
     }
