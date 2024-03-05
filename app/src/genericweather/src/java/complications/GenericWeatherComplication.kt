@@ -105,7 +105,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
         return Config(
             label = "Generic weather",
             description = "Shows temperature and/or condition icon from supported apps",
-            icon = Icon.createWithResource(context, R.drawable.weather_sunny_alert),     // TODO: fix small size in smartspacer
+            icon = Icon.createWithResource(context, R.drawable.weather_sunny_alert),
             configActivity = Intent(context, ConfigurationActivity::class.java),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.genericweather.providers.weather"
         )
