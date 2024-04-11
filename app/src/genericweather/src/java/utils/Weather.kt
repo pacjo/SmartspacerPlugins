@@ -139,9 +139,9 @@ fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0)
         else -> throw IllegalArgumentException("Unknown type: $type")
     }
 
-    if (System.currentTimeMillis() > data.sunSet * 1000L && System.currentTimeMillis() < data.forecasts[0].sunRise * 1000L) {
-        if (conditionCode == 800) return WeatherStateIcon.CLEAR_NIGHT
-        else if (conditionCode in 801..802) return WeatherStateIcon.MOSTLY_CLEAR_NIGHT
+    if (System.currentTimeMillis() > data.sunRise * 1000L && System.currentTimeMillis() < data.sunSet * 1000L) {
+        if (conditionCode in 801..802) return WeatherStateIcon.MOSTLY_CLEAR_NIGHT
+        else if (conditionCode == 800) return WeatherStateIcon.CLEAR_NIGHT
     }
 
     return iconMap.getOrElse(conditionCode) {
@@ -210,8 +210,8 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
         771 to "google_<theme>_haze_fog_dust_smoke",
         781 to "google_<theme>_tornado",
         800 to "google_<theme>_clear_<time>",
-        801 to "google_<theme>_partly_cloudy",
-        802 to "google_<theme>_partly_cloudy",
+        801 to "google_<theme>_partly_cloudy_<time>",
+        802 to "google_<theme>_partly_cloudy_<time>",
         803 to "google_<theme>_cloudy",
         804 to "google_<theme>_cloudy"
     )
@@ -224,7 +224,7 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
     }
 
     val time =
-        if (System.currentTimeMillis() > data.sunSet * 1000L && System.currentTimeMillis() < data.forecasts[0].sunRise * 1000L) {
+        if (System.currentTimeMillis() > data.sunRise * 1000L && System.currentTimeMillis() < data.sunSet * 1000L) {
             "day"
         } else {
             "night"
