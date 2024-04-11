@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Fix tint issue
+-keep class com.kieronquinn.app.smartspacer.sdk.** { *; }

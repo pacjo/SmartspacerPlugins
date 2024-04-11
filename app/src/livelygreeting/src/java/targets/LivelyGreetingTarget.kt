@@ -59,7 +59,7 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
                     else -> funnyGreeting
                 }
             ),
-            subtitle = Text(""),
+            subtitle = null,
             icon = null
         ).create().apply {
             canBeDismissed = false
