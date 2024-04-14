@@ -210,9 +210,9 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
         771 to "google_<theme>_haze_fog_dust_smoke",
         781 to "google_<theme>_tornado",
         800 to "google_<theme>_clear_<time>",
-        801 to "google_<theme>_partly_cloudy_<time>",
+        801 to "google_<theme>_sunny_with_cloudy",
         802 to "google_<theme>_partly_cloudy_<time>",
-        803 to "google_<theme>_cloudy",
+        803 to "google_<theme>_cloudy_with_sunny",
         804 to "google_<theme>_cloudy"
     )
 
