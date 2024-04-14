@@ -269,7 +269,7 @@ fun SettingsTopBar(context: Activity, title: String) {
             }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back arrow"
+                    contentDescription = "Back arrow"       // TODO: make string resource
                 )
             }
         },

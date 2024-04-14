@@ -47,15 +47,15 @@
                 <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
             </intent-filter>
         </provider>
-<!--        <provider-->
-<!--            android:name="complications.ChargingStatusComplication"-->
-<!--            android:authorities="${applicationId}.complication.status"-->
-<!--            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS"-->
-<!--            android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />-->
-<!--            </intent-filter>-->
-<!--        </provider>-->
+        <provider
+            android:name="complications.ChargingStatusComplication"
+            android:authorities="${applicationId}.complication.status"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
+            </intent-filter>
+        </provider>
         <provider
             android:name="providers.BatteryBroadcastProvider"
             android:authorities="${applicationId}.broadcast.battery"

@@ -18,15 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import complications.ChargingStatusComplication
 import nodomain.pacjo.smartspacer.plugin.R
-import targets.LocalBatteryTarget
 import nodomain.pacjo.smartspacer.plugin.ui.theme.getColorScheme
 import nodomain.pacjo.smartspacer.plugin.utils.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.utils.SettingsTopBar
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import nodomain.pacjo.smartspacer.plugin.utils.savePreference
 import org.json.JSONObject
+import targets.LocalBatteryTarget
 import java.io.File
 
 class ConfigurationActivity : ComponentActivity() {
@@ -41,7 +43,7 @@ class ConfigurationActivity : ComponentActivity() {
             val jsonObject = JSONObject(file.readText())
             val preferences = jsonObject.getJSONObject("preferences")
             val showEstimate = preferences.optBoolean("target_show_estimate", true)
-            val disableComplications = preferences.optBoolean("target_disable_complications", false)
+            val disableComplicationTextTrimming = preferences.optBoolean("complication_disable_trimming", false)
 
             MaterialTheme (
                 // Change default colorScheme to our dynamic one
@@ -79,14 +81,14 @@ class ConfigurationActivity : ComponentActivity() {
                             )
 
                             PreferenceSwitch(
-                                icon = R.drawable.card_off_outline,
-                                title = "Force no complications",
-                                subtitle = "Disables complication spot",
+                                icon = R.drawable.content_cut,
+                                title = "Disable Complication Text Trimming",
+                                subtitle = "Allows longer text in charging \ncomplication",
                                 stateCallback = {
-                                    value -> savePreference(context,"target_disable_complications", value)
-                                    SmartspacerTargetProvider.notifyChange(context, LocalBatteryTarget::class.java)
+                                    value -> savePreference(context,"complication_disable_trimming", value)
+                                    SmartspacerComplicationProvider.notifyChange(context, ChargingStatusComplication::class.java)
                                 },
-                                checked = disableComplications
+                                checked = disableComplicationTextTrimming
                             )
                         }
                     }
