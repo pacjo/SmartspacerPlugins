@@ -19,9 +19,9 @@ import java.io.File
 class LocalBatteryTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        val file = File(context?.filesDir, "data.json")
-
         isFirstRun(context!!)
+
+        val file = File(context?.filesDir, "data.json")
 
         val jsonString = file.readText()
         val jsonObject = JSONObject(jsonString)

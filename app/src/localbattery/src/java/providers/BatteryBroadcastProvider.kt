@@ -6,10 +6,13 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerBroadcastProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
+import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerRequirementProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import complications.BatteryLevelComplication
+import complications.ChargingStatusComplication
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
+import requirements.ChargingRequirement
 import targets.LocalBatteryTarget
 import java.io.File
 
@@ -60,8 +63,9 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
 
         // notify about change
         SmartspacerTargetProvider.notifyChange(context!!, LocalBatteryTarget::class.java)
-//        SmartspacerComplicationProvider.notifyChange(context!!, ChargingStatusComplication::class.java)
+        SmartspacerComplicationProvider.notifyChange(context!!, ChargingStatusComplication::class.java)
         SmartspacerComplicationProvider.notifyChange(context!!, BatteryLevelComplication::class.java)
+        SmartspacerRequirementProvider.notifyChange(context!!, ChargingRequirement::class.java)
     }
 
     override fun getConfig(smartspacerId: String): Config {
@@ -69,5 +73,4 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
             intentFilters = listOf(IntentFilter(Intent.ACTION_BATTERY_CHANGED))
         )
     }
-
 }
