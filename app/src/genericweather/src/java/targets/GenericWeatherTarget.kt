@@ -2,9 +2,13 @@ package targets
 
 import android.content.ComponentName
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.Icon
 import android.icu.text.SimpleDateFormat
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.IconCompat
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toIcon
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.CarouselTemplateData
@@ -20,6 +24,7 @@ import utils.WeatherData
 import utils.temperatureUnitConverter
 import utils.weatherDataToIcon
 import java.io.File
+import java.util.Locale
 
 class GenericWeatherTarget: SmartspacerTargetProvider() {
 
@@ -36,7 +41,6 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
         val targetUnit = preferences.optString("target_unit", "C")
         val targetStyle = preferences.optString("target_style","both")
         val launchPackage = preferences.optString("target_launch_package", "")
-        val dataSource = preferences.optString("target_data_source", "hourly")
         val dataPoints = preferences.optInt("target_points_visible", 4)
 
         // get weather data
@@ -51,25 +55,23 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
             val currentCondition = weatherData.currentCondition
 
             val hourlyData = weatherData.hourly
-//            val dailyForecasts = weatherData.forecasts
-//
-//            val forecast = when (dataSource) {
-//                "daily" -> weatherData.forecasts
-//                else -> weatherData.hourly
-//            }
 
             if (dataPoints > 0) {
-
                 val carouselItemList =         // TODO: allow switching daily <-> hourly
                     List(hourlyData.take(dataPoints).size) { index ->
                         val carouselItem = CarouselTemplateData.CarouselItem(
                             Text(temperatureUnitConverter(hourlyData[index].temp, targetUnit)),
-                            Text(SimpleDateFormat("HH:mm ").format(hourlyData[index].timestamp * 1000L)),
+                            Text(SimpleDateFormat("HH:mm ", Locale.getDefault()).format(hourlyData[index].timestamp * 1000L)),
                             com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                                IconCompat.createWithResource(
-                                    provideContext(),
-                                    weatherDataToIcon(provideContext(), weatherData, 0)
-                                ).toIcon(context),
+                                Bitmap.createScaledBitmap(
+                                    (ContextCompat.getDrawable(
+                                        provideContext(),
+                                        weatherDataToIcon(provideContext(), weatherData, 0)
+                                    ))!!.toBitmap(),
+                                    (24 * resources.displayMetrics.density).toInt(),
+                                    (24 * resources.displayMetrics.density).toInt(),
+                                    true
+                                ).toIcon(),
                                 shouldTint = false
                             ), null
                         )
@@ -81,9 +83,9 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                     componentName = ComponentName(context!!, GenericWeatherTarget::class.java),
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
-                        "condition" -> weatherData.currentCondition
-                        "both" -> "${temperatureUnitConverter(weatherData.currentTemp, targetUnit)} ${weatherData.currentCondition}"
-                        else -> temperatureUnitConverter(weatherData.currentTemp, targetUnit)
+                        "condition" -> currentCondition
+                        "both" -> "${temperatureUnitConverter(currentTemperature, targetUnit)} $currentCondition"
+                        else -> temperatureUnitConverter(currentTemperature, targetUnit)
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         IconCompat.createWithResource(
@@ -114,9 +116,9 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                     componentName = ComponentName(context!!, GenericWeatherTarget::class.java),
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
-                        "condition" -> weatherData.currentCondition
-                        "both" -> "${temperatureUnitConverter(weatherData.currentTemp, targetUnit)} ${weatherData.currentCondition}"
-                        else -> temperatureUnitConverter(weatherData.currentTemp, targetUnit)
+                        "condition" -> currentCondition
+                        "both" -> "${temperatureUnitConverter(currentTemperature, targetUnit)} $currentCondition"
+                        else -> temperatureUnitConverter(currentTemperature, targetUnit)
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         IconCompat.createWithResource(
