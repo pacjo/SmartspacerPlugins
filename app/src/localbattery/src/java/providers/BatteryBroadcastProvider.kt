@@ -30,11 +30,14 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
             context!!.registerReceiver(null, ifilter)
         }
 
-        val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING
+        val status = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
+        val isCharging =
+            status == BatteryManager.BATTERY_STATUS_CHARGING ||
+            status == BatteryManager.BATTERY_STATUS_FULL ||
+            batteryManager.isCharging
         val chargingTimeRemaining = batteryManager.computeChargeTimeRemaining()
-        val current = intent.extras?.getInt("current")
-        val voltage = intent.extras?.getInt("voltage")
+        val voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)
+        val current = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
         val level = (
             (
                 (
@@ -48,8 +51,8 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
         dataObject.put("status", status)
         dataObject.put("isCharging", isCharging)
         dataObject.put("chargingTimeRemaining", chargingTimeRemaining)
-        dataObject.put("current", current)
         dataObject.put("voltage", voltage)
+        dataObject.put("current", current)
         dataObject.put("level", level)
 
         jsonObject.put("local_data", dataObject)
