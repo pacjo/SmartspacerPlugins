@@ -66,7 +66,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                                 Bitmap.createScaledBitmap(
                                     (ContextCompat.getDrawable(
                                         provideContext(),
-                                        weatherDataToIcon(provideContext(), weatherData, 0)
+                                        weatherDataToIcon(provideContext(), weatherData, 1, index)
                                     ))!!.toBitmap(),
                                     (24 * resources.displayMetrics.density).toInt(),
                                     (24 * resources.displayMetrics.density).toInt(),

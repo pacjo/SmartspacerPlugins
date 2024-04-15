@@ -12,11 +12,12 @@ import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvi
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
 import nodomain.pacjo.smartspacer.plugin.R
-import ui.activities.ConfigurationActivity
-import utils.WeatherData
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
+import ui.activities.ConfigurationActivity
+import utils.WeatherData
 import java.io.File
+import java.util.Locale
 import kotlin.math.min
 
 class GenericSunTimesComplication: SmartspacerComplicationProvider() {
@@ -75,7 +76,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
 //                            "both" -> "in ${SimpleDateFormatWrapper(nextEvent - System.currentTimeMillis(), true)} (${SimpleDateFormat("HH:mm").format(nextEvent)})"
 //                            else -> SimpleDateFormat("HH:mm").format(nextEvent)
 //                        }
-                        SimpleDateFormat("HH:mm").format(nextEvent)
+                        SimpleDateFormat("HH:mm", Locale.getDefault()).format(nextEvent)
                     ),
                     onClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
                         null -> null
