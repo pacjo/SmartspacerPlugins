@@ -58,11 +58,14 @@
                 <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
             </intent-filter>
         </provider>
-        <provider
-            android:name="providers.GenericWeatherProvider"
-            android:authorities="${applicationId}.providers.weather"
-            android:exported="true"
-            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_BROADCASTS" />
-    </application>
 
+        <receiver
+            android:name="receivers.WeatherBroadcastReceiver"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="nodomain.freeyourgadget.gadgetbridge.ACTION_GENERIC_WEATHER" />
+            </intent-filter>
+        </receiver>
+    </application>
 </manifest>
