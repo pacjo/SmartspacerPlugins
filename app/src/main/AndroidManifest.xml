@@ -5,6 +5,7 @@
     <application
         android:allowBackup="true"
         android:supportsRtl="false"
+        android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.BaseTheme"
         tools:targetApi="34" />
 
