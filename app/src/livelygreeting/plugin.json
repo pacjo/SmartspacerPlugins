@@ -1,7 +1,7 @@
 {
 	"description": "Shows different greeting messages to make your day just a little brighter.",
 	"download_url": "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/livelygreeting/release/app-livelygreeting-release.apk",
-	"version_code": 11,
-	"changelog": "- fix periodic broadcasts\n- livelygreeting: add option to dynamically hide target\n- allow multiple instances",
+	"version_code": 13,
+	"changelog": "see <a href='https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3'>https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3</a>",
 	"screenshots": ["https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/livelygreeting/screenshots/greeting_1.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/livelygreeting/screenshots/greeting_2.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/livelygreeting/screenshots/greeting_3.png"]
 }
