@@ -21,10 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import nodomain.pacjo.smartspacer.plugin.R
 import complications.GenericSunTimesComplication
 import complications.GenericWeatherComplication
-import targets.GenericWeatherTarget
+import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.theme.getColorScheme
 import nodomain.pacjo.smartspacer.plugin.utils.PreferenceInput
 import nodomain.pacjo.smartspacer.plugin.utils.PreferenceMenu
@@ -34,6 +33,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.SettingsTopBar
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import nodomain.pacjo.smartspacer.plugin.utils.savePreference
 import org.json.JSONObject
+import targets.GenericWeatherTarget
 import java.io.File
 
 class ConfigurationActivity : ComponentActivity() {
@@ -70,6 +70,18 @@ class ConfigurationActivity : ComponentActivity() {
                                 .padding(end = 16.dp)
 
                         ) {
+                            PreferenceInput(
+                                icon = R.drawable.package_variant,
+                                title = "Launch Package",
+                                subtitle = "Select package name of an app to open when target / complication is clicked",
+                                stateCallback = {
+                                        value -> savePreference(context,"launch_package", value)
+                                    SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
+                                },
+                                dialogText = "Enter package name",
+                                defaultText = launchPackage
+                            )
+
                             Text(
                                 text = "Weather target",
                                 style = MaterialTheme.typography.headlineSmall,
@@ -135,18 +147,6 @@ class ConfigurationActivity : ComponentActivity() {
                                 )
                             )
 
-                            PreferenceInput(
-                                icon = R.drawable.package_variant,
-                                title = "Launch Package",
-                                subtitle = "Select package name of an app to open when target is clicked",
-                                stateCallback = {
-                                    value -> savePreference(context,"target_launch_package", value)
-                                    SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
-                                },
-                                dialogText = "Enter package name",
-                                defaultText = launchPackage
-                            )
-
                             Text(
                                 text = "Weather complication",
                                 style = MaterialTheme.typography.headlineSmall,
@@ -183,18 +183,6 @@ class ConfigurationActivity : ComponentActivity() {
                                     Pair("Celsius", "C"),
                                     Pair("Fahrenheit", "F")
                                 )
-                            )
-
-                            PreferenceInput(
-                                icon = R.drawable.package_variant,
-                                title = "Launch Package",
-                                subtitle = "Select package name of an app to open when complication is clicked",
-                                stateCallback = {
-                                    value -> savePreference(context,"condition_complication_launch_package", value)
-                                    SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
-                                },
-                                dialogText = "Enter package name",
-                                defaultText = launchPackage
                             )
 
                             PreferenceSwitch(
@@ -260,8 +248,6 @@ class ConfigurationActivity : ComponentActivity() {
                                 },
                                 checked = sunTimesComplicationTrimToFit
                             )
-
-                            // TODO: add launch package
                         }
                     }
                 }

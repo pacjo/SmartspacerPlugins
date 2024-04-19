@@ -40,7 +40,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
         val preferences = jsonObject.getJSONObject("preferences")
         val targetUnit = preferences.optString("target_unit", "C")
         val targetStyle = preferences.optString("target_style","both")
-        val launchPackage = preferences.optString("target_launch_package", "")
+        val launchPackage = preferences.optString("launch_package", "")
         val dataPoints = preferences.optInt("target_points_visible", 4)
 
         // get weather data
@@ -156,8 +156,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
             label = "Generic weather",
             description = "Shows weather information from supported apps",
             icon = Icon.createWithResource(context, R.drawable.weather_sunny_alert),
-            configActivity = Intent(context, ConfigurationActivity::class.java),
-            broadcastProvider = "nodomain.pacjo.smartspacer.plugin.genericweather.providers.weather"
+            configActivity = Intent(context, ConfigurationActivity::class.java)
         )
     }
 

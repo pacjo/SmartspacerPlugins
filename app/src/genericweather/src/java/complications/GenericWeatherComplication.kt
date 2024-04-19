@@ -38,7 +38,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
         val complicationUnit = preferences.optString("condition_complication_unit", "C")
         val complicationStyle = preferences.optString("condition_complication_style","temperature")
         val complicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit",true)
-        val launchPackage = preferences.optString("condition_complication_launch_package", "")
+        val launchPackage = preferences.optString("launch_package", "")
 
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()
@@ -106,8 +106,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
             label = "Generic weather",
             description = "Shows temperature and/or condition icon from supported apps",
             icon = Icon.createWithResource(context, R.drawable.weather_sunny_alert),
-            configActivity = Intent(context, ConfigurationActivity::class.java),
-            broadcastProvider = "nodomain.pacjo.smartspacer.plugin.genericweather.providers.weather"
+            configActivity = Intent(context, ConfigurationActivity::class.java)
         )
     }
 
