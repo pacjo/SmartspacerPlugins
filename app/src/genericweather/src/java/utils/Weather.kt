@@ -139,10 +139,9 @@ fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0)
         else -> throw IllegalArgumentException("Unknown type: $type")
     }
 
-    val timestamp: Long = when (type) {
-        0 -> System.currentTimeMillis()
+    val timestamp = when (type) {
         1 -> data.hourly[index].timestamp
-        else -> System.currentTimeMillis()      // TODO: change
+        else -> System.currentTimeMillis() / 1000
     }
 
     val time = when (timestamp) {
@@ -235,10 +234,9 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
         else -> throw IllegalArgumentException("Unknown type: $type")
     }
 
-    val timestamp: Long = when (type) {
-        0 -> System.currentTimeMillis()
+    val timestamp = when (type) {
         1 -> data.hourly[index].timestamp
-        else -> System.currentTimeMillis()      // TODO: change
+        else -> System.currentTimeMillis() / 1000
     }
 
     val time = when (timestamp) {
