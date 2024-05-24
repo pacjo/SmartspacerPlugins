@@ -64,6 +64,9 @@ android {
         create("livelygreeting") {
             applicationIdSuffix = ".livelygreeting"
         }
+        create("anki") {
+            applicationIdSuffix = ".anki"
+        }
     }
 
     sourceSets {
@@ -81,6 +84,9 @@ android {
         }
         getByName("livelygreeting") {
             setRoot("src/livelygreeting/src")
+        }
+        getByName("anki") {
+            setRoot("src/anki/src")
         }
     }
 
