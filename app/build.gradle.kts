@@ -44,12 +44,10 @@ android {
     flavorDimensions += "default"
     productFlavors {
         create("localbattery") {
-            applicationId = "localbattery"
-            applicationId = "nodomain.pacjo.smartspacer.plugin.localbattery"
+            applicationIdSuffix = ".localbattery"
         }
         create("genericweather") {
-            applicationId = "genericweather"
-            applicationId = "nodomain.pacjo.smartspacer.plugin.genericweather"
+            applicationIdSuffix = ".genericweather"
 
             buildTypes {
                 release {
@@ -58,16 +56,13 @@ android {
             }
         }
         create("sleepasandroid") {
-            applicationId = "sleepasandroid"
-            applicationId = "nodomain.pacjo.smartspacer.plugin.sleepasandroid"
+            applicationIdSuffix = ".sleepasandroid"
         }
         create("duolingo") {
-            applicationId = "duolingo"
-            applicationId = "nodomain.pacjo.smartspacer.plugin.duolingo"
+            applicationIdSuffix = ".duolingo"
         }
         create("livelygreeting") {
-            applicationId = "livelygreeting"
-            applicationId = "nodomain.pacjo.smartspacer.plugin.livelygreeting"
+            applicationIdSuffix = ".livelygreeting"
         }
     }
 
@@ -113,18 +108,18 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("androidx.compose.foundation:foundation-android:1.6.5")
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.compose.foundation:foundation-android:1.6.7")
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("com.kieronquinn.smartspacer:sdk-plugin:1.0.3")
-    implementation(platform("androidx.compose:compose-bom:2024.04.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     "genericweatherImplementation"("com.google.code.gson:gson:2.10.1")
 }
