@@ -1,11 +1,8 @@
 package providers
 
-import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,27 +10,19 @@ import android.widget.RemoteViews
 import android.widget.TextView
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerWidgetProvider
-import com.kieronquinn.app.smartspacer.sdk.utils.dumpToLog
 import com.kieronquinn.app.smartspacer.sdk.utils.findViewByIdentifier
+import nodomain.pacjo.smartspacer.plugin.utils.getProvider
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import targets.DuolingoProgressTarget
 import java.io.File
 import java.io.FileOutputStream
 
-
 class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
 
     companion object {
-        private const val PACKAGE_NAME = "com.duolingo"
+        const val PACKAGE_NAME = "com.duolingo"
         private const val PROVIDER_CLASS = "com.duolingo.streak.streakWidget.StreakWidgetProvider"
-
-        fun getProvider(context: Context): AppWidgetProviderInfo? {
-            val manager = context.getSystemService(Context.APPWIDGET_SERVICE) as AppWidgetManager
-            return manager.installedProviders.firstOrNull {
-                it.provider.packageName == PACKAGE_NAME && it.provider.className == PROVIDER_CLASS
-            }
-        }
 
         // The following code needs some explanation
         //   - the view object we get is roughly square and we need it to be rectangular with ~16:9 ratio
@@ -72,7 +61,7 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
             for (backgroundID in backgroundIDs) {
 
                 // get background with id and layout it (to change its size)
-                val backgroundView = view.findViewByIdentifier<ImageView>("com.duolingo:id/$backgroundID")
+                val backgroundView = view.findViewByIdentifier<ImageView>("$PACKAGE_NAME:id/$backgroundID")
                 backgroundView?.layout(
                     0,
                     0,
@@ -81,7 +70,7 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
                 )
 
                 // remove background from widget view
-                (view as ViewGroup).removeView(view.findViewByIdentifier<ImageView>("com.duolingo:id/$backgroundID"))
+                (view as ViewGroup).removeView(view.findViewByIdentifier<ImageView>("$PACKAGE_NAME:id/$backgroundID"))
 
                 // draw (now resized) background onto canvas
                 backgroundView?.draw(extendedCanvas)
@@ -124,12 +113,12 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
             val dataObject = jsonObject.getJSONObject("data")
 
             // add string to file
-            dataObject.put(subtitleID, view.findViewByIdentifier<TextView>("com.duolingo:id/$subtitleID")?.text)
+            dataObject.put(subtitleID, view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/$subtitleID")?.text)
 
             // write JSON
             dataFile.writeText(jsonObject.toString())
 
-            view.findViewByIdentifier<TextView>("com.duolingo:id/$subtitleID")?.text  = ""
+            view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/$subtitleID")?.text  = ""
         }
 
         saveWidgetViewToFile(view, imageFile)
@@ -139,7 +128,7 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
     }
 
     override fun getAppWidgetProviderInfo(smartspacerId: String): AppWidgetProviderInfo? {
-        return getProvider(provideContext())
+        return getProvider(provideContext(), PACKAGE_NAME, PROVIDER_CLASS)
     }
 
     override fun getConfig(smartspacerId: String): Config {

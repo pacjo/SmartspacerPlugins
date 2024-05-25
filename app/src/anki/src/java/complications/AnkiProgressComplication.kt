@@ -1,11 +1,9 @@
 package complications
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
-import com.kieronquinn.app.smartspacer.sdk.model.CompatibilityState
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
@@ -13,6 +11,7 @@ import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvi
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
 import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
 import providers.AnkiWidgetProvider
 import providers.dataStore
@@ -52,16 +51,8 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
             label = "Anki progress",
             description = "Anki progress showing number of cards to do",
             icon = Icon.createWithResource(provideContext(), R.drawable.ankidroid),
-            compatibilityState = getCompatibilityState(),
+            compatibilityState = getCompatibilityState(context, AnkiWidgetProvider.PACKAGE_NAME, "Anki isn't installed"),
             widgetProvider = "nodomain.pacjo.smartspacer.plugin.anki.widget.anki"
         )
-    }
-
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun getCompatibilityState(): CompatibilityState {
-        // https://stackoverflow.com/questions/6758841/how-can-i-find-if-a-particular-package-exists-on-my-android-device
-        return if (context?.packageManager?.getInstalledApplications(0)?.find { info -> info.packageName == AnkiWidgetProvider.PACKAGE_NAME } == null) {
-            CompatibilityState.Incompatible("Anki isn't installed")
-        } else CompatibilityState.Compatible
     }
 }

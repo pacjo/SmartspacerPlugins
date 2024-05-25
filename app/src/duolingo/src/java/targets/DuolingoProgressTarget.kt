@@ -1,21 +1,20 @@
 package targets
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
-import android.util.Log
 import androidx.core.graphics.drawable.IconCompat
-import com.kieronquinn.app.smartspacer.sdk.model.CompatibilityState
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
+import providers.DuolingoWidgetProvider
 import ui.activities.ConfigurationActivity
 import java.io.File
 
@@ -72,7 +71,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
                     onClick = TapAction(
                         intent = Intent(
                             context!!.packageManager.getLaunchIntentForPackage(
-                                "com.duolingo"
+                                DuolingoWidgetProvider.PACKAGE_NAME
                             )
                         )
                     )
@@ -89,19 +88,10 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
             description = "Duolingo progress and motivational message",
             icon = Icon.createWithResource(provideContext(), R.drawable.duolingo),
             configActivity = Intent(context, ConfigurationActivity::class.java),
-            compatibilityState = getCompatibilityState(),
+            compatibilityState = getCompatibilityState(context, DuolingoWidgetProvider.PACKAGE_NAME, "Duolingo isn't installed"),
             widgetProvider = "nodomain.pacjo.smartspacer.plugin.duolingo.widget.duolingo"
         )
     }
-
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun getCompatibilityState(): CompatibilityState {
-        // https://stackoverflow.com/questions/6758841/how-can-i-find-if-a-particular-package-exists-on-my-android-device
-        return if (context?.packageManager?.getInstalledApplications(0)?.find { info -> info.packageName == "com.duolingo" } == null) {
-            CompatibilityState.Incompatible("Duolingo isn't installed")
-        } else CompatibilityState.Compatible
-    }
-
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
         return false
     }
