@@ -5,7 +5,7 @@ Shows number of due cards from AnkiDroid app.
 # Features:
 |     complication      | description                       | is customisable |
 |:---------------------:|-----------------------------------|:---------------:|
-| Progress complication | Shows number of cards due and ETA |        ❌        |
+| Progress complication | Shows number of cards due and ETA |        ✅        |
 
 
 | Screenshots                                                              |

@@ -70,8 +70,8 @@ class ConfigurationActivity : ComponentActivity() {
                                     SmartspacerComplicationProvider.notifyChange(context, AnkiProgressComplication::class.java)
                                 },
                                 dialogText = "Use: \n" +
-                                        "- '{eta}' to show remaining card count\n" +
-                                        "- '{due}' to show estimated completion time\n" +
+                                        "- '{due}' to show remaining card count\n" +
+                                        "- '{eta}' to show estimated completion time\n" +
                                         "keep the text short, it can overlap with other complications\n" +
                                         "(you can use emojis)",
                                 defaultText = template
