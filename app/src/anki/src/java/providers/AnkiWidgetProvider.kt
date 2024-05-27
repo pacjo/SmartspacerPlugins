@@ -26,11 +26,11 @@ class AnkiWidgetProvider: SmartspacerWidgetProvider() {
     override fun onWidgetChanged(smartspacerId: String, remoteViews: RemoteViews?) {
         val view = remoteViews?.load() ?: return
 
-        val ankiETA = view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/widget_eta")?.text
         val ankiDue = view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/widget_due")?.text
+        val ankiETA = view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/widget_eta")?.text
 
-        saveToDataStore(context!!.dataStore, "widget_eta", ankiETA)
         saveToDataStore(context!!.dataStore, "widget_due", ankiDue)
+        saveToDataStore(context!!.dataStore, "widget_eta", ankiETA)
 
         // Notify target about new data
         SmartspacerComplicationProvider.notifyChange(provideContext(), AnkiProgressComplication::class.java)

@@ -2,7 +2,6 @@ package complications
 
 import android.content.Intent
 import android.graphics.drawable.Icon
-import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -15,17 +14,20 @@ import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
 import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
 import providers.AnkiWidgetProvider
 import providers.dataStore
+import ui.activities.ConfigurationActivity
 
 class AnkiProgressComplication: SmartspacerComplicationProvider() {
 
     @OptIn(DisablingTrim::class)
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val ankiETA = getStringFromDataStore(context!!.dataStore, "widget_eta")
         val ankiDue = getStringFromDataStore(context!!.dataStore, "widget_due")
+        val ankiETA = getStringFromDataStore(context!!.dataStore, "widget_eta")
 
-        Log.i("pacjodebug", "from datastore: $ankiETA / $ankiDue")
+        val template = getStringFromDataStore(context!!.dataStore, "complication_template") ?: "Anki {eta} / {due}"
 
-        return if (ankiETA != null && ankiDue != null) listOf(
+        // for now we just the complication if we have both fields
+        // might break with card count so small eta is empty
+        return if (!ankiDue.isNullOrEmpty() && !ankiETA.isNullOrEmpty()) listOf(
             ComplicationTemplate.Basic(
                 id = "example_$smartspacerId",
                 icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
@@ -34,7 +36,11 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
                         R.drawable.ankidroid
                     ),
                 ),
-                content = Text("Anki $ankiETA / $ankiDue"),
+                content = Text(
+                    template
+                        .replace("{due}", ankiDue)
+                        .replace("{eta}", ankiETA)
+                ),
                 onClick = TapAction(
                     intent = Intent(context!!.packageManager.getLaunchIntentForPackage(
                         AnkiWidgetProvider.PACKAGE_NAME
@@ -51,6 +57,7 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
             label = "Anki progress",
             description = "Anki progress showing number of cards to do",
             icon = Icon.createWithResource(provideContext(), R.drawable.ankidroid),
+            configActivity = Intent(context, ConfigurationActivity::class.java),
             compatibilityState = getCompatibilityState(context, AnkiWidgetProvider.PACKAGE_NAME, "Anki isn't installed"),
             widgetProvider = "nodomain.pacjo.smartspacer.plugin.anki.widget.anki"
         )
