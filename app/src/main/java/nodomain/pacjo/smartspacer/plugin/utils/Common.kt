@@ -18,6 +18,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.kieronquinn.app.smartspacer.sdk.model.CompatibilityState
 import kotlinx.coroutines.CoroutineScope
@@ -49,14 +50,23 @@ fun isFirstRun(context: Context) {
     }
 }
 
-fun saveToDataStore(dataStore: DataStore<Preferences>, key: String, value: Any) {
+// TODO: maybe write it in a cleaner way?
+fun saveToDataStore(dataStore: DataStore<Preferences>, key: String, value: Any? = null) {
     CoroutineScope(Dispatchers.IO).launch {
         dataStore.edit { settings ->
-            when (value) {
-                is String -> settings[stringPreferencesKey(key)] = value.toString()
-                is Int -> settings[intPreferencesKey(key)] = value
-                is Boolean -> settings[booleanPreferencesKey(key)] = value
-                // ... and that's all we need for now
+            if (value == null) {
+                settings.remove(booleanPreferencesKey(key))
+                settings.remove(intPreferencesKey(key))
+                settings.remove(longPreferencesKey(key))
+                settings.remove(stringPreferencesKey(key))
+            } else {
+                when (value) {
+                    is Boolean -> settings[booleanPreferencesKey(key)] = value
+                    is Int -> settings[intPreferencesKey(key)] = value
+                    is Long -> settings[longPreferencesKey(key)] = value
+                    is String -> settings[stringPreferencesKey(key)] = value.toString()
+                    // ... and that's all we need for now
+                }
             }
         }
     }
@@ -74,6 +84,14 @@ fun getIntFromDataStore(dataStore: DataStore<Preferences>, key: String): Int? {
     var result: Int?
     runBlocking {
         result = dataStore.data.first()[intPreferencesKey(key)]
+    }
+    return result
+}
+
+fun getLongFromDataStore(dataStore: DataStore<Preferences>, key: String): Long? {
+    var result: Long?
+    runBlocking {
+        result = dataStore.data.first()[longPreferencesKey(key)]
     }
     return result
 }
