@@ -4,6 +4,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
+import android.provider.Settings
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -46,8 +48,16 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
         val level = dataObject.optInt("level", -1)
         val isLowBatteryDismissed = getBoolFromDataStore(context!!.dataStore, "low_battery_dismissed") ?: false
 
+        // get battery saver trigger level (and set a default value, in case it's unset)
+        var batterySaverTriggerLevel = 15
+        try {
+            batterySaverTriggerLevel = Settings.Global.getInt(context!!.contentResolver, "low_power_trigger_level")
+        } catch (e: Settings.SettingNotFoundException) {
+            Log.e("BatterySaverTrigger", "Battery saver trigger level setting not found", e)
+        }
+
         // reset the dismissed status (writing null removes entry)
-        if (level > 20)     // TODO: get this value from OS
+        if (level > batterySaverTriggerLevel)
             saveToDataStore(context!!.dataStore, "low_battery_dismissed")
 
         val title = when {
@@ -80,7 +90,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             ).create().apply {
                 canBeDismissed = false
             })
-        } else if (level <= 20 && !isLowBatteryDismissed) {   // TODO: we should get this value from the os instead
+        } else if (level <= batterySaverTriggerLevel && !isLowBatteryDismissed) {
             listOf(TargetTemplate.Basic(
                 id = "example_$smartspacerId",
                 componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),

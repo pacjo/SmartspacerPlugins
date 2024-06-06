@@ -25,7 +25,7 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
 
         val template = getStringFromDataStore(context!!.dataStore, "complication_template") ?: "Anki {eta} / {due}"
 
-        // for now we just the complication if we have both fields
+        // for now we just show the complication if we have both fields
         // might break with card count so small eta is empty
         return if (!ankiDue.isNullOrEmpty() && !ankiETA.isNullOrEmpty()) listOf(
             ComplicationTemplate.Basic(
@@ -46,7 +46,7 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
                         AnkiWidgetProvider.PACKAGE_NAME
                     ))
                 ),
-                trimToFit = TrimToFit.Disabled      // TODO: can this stay? i.e. does anyone complain?
+                trimToFit = TrimToFit.Disabled
             ).create()
         ) else
             emptyList()

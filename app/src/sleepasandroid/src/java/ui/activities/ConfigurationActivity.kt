@@ -20,29 +20,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import nodomain.pacjo.smartspacer.plugin.R
-import targets.SleepMessagesTarget
 import nodomain.pacjo.smartspacer.plugin.ui.theme.getColorScheme
 import nodomain.pacjo.smartspacer.plugin.utils.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.utils.SettingsTopBar
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import nodomain.pacjo.smartspacer.plugin.utils.savePreference
-import org.json.JSONObject
-import java.io.File
+import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
+import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
+import targets.SleepMessagesTarget
+import targets.dataStore
 
 class ConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
-            isFirstRun(context)
 
-            // get number of forecast points (as we need it to show the default)
-            val file = File(context.filesDir, "data.json")
-            val jsonObject = JSONObject(file.readText())
-            val preferences = jsonObject.getJSONObject("preferences")
-            val simpleStyle = preferences.optBoolean("simple_style", false)
-            val showTimeToBed = preferences.optBoolean("show_time_to_bed", true)
-            val showAlarmDismissed = preferences.optBoolean("show_alarm_dismissed", true)
+            val simpleStyle = getBoolFromDataStore(context.dataStore, "simple_style") ?: false
+            val showTimeToBed = getBoolFromDataStore(context.dataStore, "show_time_to_bed") ?: true
+            val showAlarmDismissed = getBoolFromDataStore(context.dataStore, "show_alarm_dismissed") ?: true
 
             MaterialTheme (
                 // Change default colorScheme to our dynamic one
@@ -73,7 +67,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Simple style",
                                 subtitle = "Show basic target instead\n of image one",
                                 stateCallback = {
-                                    value -> savePreference(context,"simple_style", value)
+                                    value -> saveToDataStore(context.dataStore,"simple_style", value)
                                     SmartspacerTargetProvider.notifyChange(context, SleepMessagesTarget::class.java)
                                 },
                                 checked = simpleStyle
@@ -84,7 +78,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Time to bed",
                                 subtitle = "Show time to bed message",
                                 stateCallback = {
-                                    value -> savePreference(context,"show_time_to_bed", value)
+                                    value -> saveToDataStore(context.dataStore,"show_time_to_bed", value)
                                     SmartspacerTargetProvider.notifyChange(context, SleepMessagesTarget::class.java)
                                 },
                                 checked = showTimeToBed
@@ -95,7 +89,7 @@ class ConfigurationActivity : ComponentActivity() {
                                 title = "Alarm dismissed",
                                 subtitle = "Show alarm dismissed message",
                                 stateCallback = {
-                                    value -> savePreference(context,"show_alarm_dismissed", value)
+                                    value -> saveToDataStore(context.dataStore,"show_alarm_dismissed", value)
                                     SmartspacerTargetProvider.notifyChange(context, SleepMessagesTarget::class.java)
                                 },
                                 checked = showAlarmDismissed

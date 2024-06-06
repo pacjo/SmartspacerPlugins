@@ -1,50 +1,49 @@
 package targets
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
-import com.kieronquinn.app.smartspacer.sdk.model.CompatibilityState
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
+import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
 import nodomain.pacjo.smartspacer.plugin.utils.getRandom
 import nodomain.pacjo.smartspacer.plugin.utils.getRandomFromPairs
+import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
 import nodomain.pacjo.smartspacer.plugin.utils.imageTargetAdjustDrawable
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
+import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
+import providers.SleepBroadcastProvider.Companion.INTENT_ALARM_DISMISS
+import providers.SleepBroadcastProvider.Companion.INTENT_TIME_TO_BED
+import providers.SleepBroadcastProvider.Companion.PACKAGE_NAME
 import ui.activities.ConfigurationActivity
-import java.io.File
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "status_target_data")
 
 class SleepMessagesTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        isFirstRun(context!!)
+        val simpleStyle = getBoolFromDataStore(context!!.dataStore, "simple_style") ?: false
+        val showTimeToBed = getBoolFromDataStore(context!!.dataStore, "show_time_to_bed") ?: true
+        val showAlarmDismissed = getBoolFromDataStore(context!!.dataStore, "show_alarm_dismissed") ?: true
 
-        val file = File(context?.filesDir, "data.json")
-
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
-
-        // get preferences
-        val preferences = jsonObject.getJSONObject("preferences")
-        val simpleStyle = preferences.optBoolean("simple_style", false)
-        val showTimeToBed = preferences.optBoolean("show_time_to_bed", true)
-        val showAlarmDismissed = preferences.optBoolean("show_alarm_dismissed", true)
-
-        // get event (intent.action)
-        val event = jsonObject.optString("event")
+        val event = getStringFromDataStore(context!!.dataStore, "event")
 
         val (title, subtitle) = when {
-            (event == "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" && showTimeToBed) ->
+            (event == INTENT_TIME_TO_BED && showTimeToBed) ->
                 listOf(
                     Pair("Time to bed.", ""),
                     Pair("Goodnight.", ""),
                     Pair("It's late.", "")
                 ).getRandomFromPairs()
-            (event == "com.urbandroid.sleep.alarmclock.ALARM_ALERT_DISMISS_AUTO" && showAlarmDismissed) ->
+            (event == INTENT_ALARM_DISMISS && showAlarmDismissed) ->
                 listOf(
                     Pair("Still sleepy?", ""),
                     Pair("Morning!", "How have you slept?"),
@@ -61,18 +60,18 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
                         provideContext(),
                         SleepMessagesTarget::class.java
                     ),
-                    title = Text("$title $subtitle"),   // bit of a hack, but should work
-                    subtitle = Text(""),
+                    title = Text("$title $subtitle"),   // bit of a hack, but should work, TODO: why is this here?
+                    subtitle = null,
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
                             provideContext(),
                             when (event) {
-                                "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" -> R.drawable.bed_outline
+                                INTENT_TIME_TO_BED -> R.drawable.bed_outline
                                 else -> R.drawable.tea_outline
                             }
                         )
                     ),
-                    onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage("com.urbandroid.sleep")))
+                    onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage(PACKAGE_NAME)))
                 ).create().apply {
                     canTakeTwoComplications = true
                 })
@@ -90,7 +89,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
                         Icon.createWithResource(
                             provideContext(),
                             when (event) {
-                                "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" -> R.drawable.bed_outline
+                                INTENT_TIME_TO_BED -> R.drawable.bed_outline
                                 else -> R.drawable.tea_outline
                             }
                         )
@@ -99,7 +98,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
                         imageTargetAdjustDrawable(
                             context!!,
                             when (event) {
-                                "com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT_AUTO" ->
+                                INTENT_TIME_TO_BED ->
                                     listOf(
                                         R.drawable.saa_read,
                                         R.drawable.saa_sleep,
@@ -114,7 +113,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
                             }
                         )
                     ),
-                    onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage("com.urbandroid.sleep"))
+                    onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage(PACKAGE_NAME))
                     )
                 ).create())
             }
@@ -127,29 +126,17 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
             description = "Shows messages from Sleep as Android app",
             icon = Icon.createWithResource(provideContext(), R.drawable.sleep_as_android),
             configActivity = Intent(context, ConfigurationActivity::class.java),
-            compatibilityState = getCompatibilityState(),
+            compatibilityState = getCompatibilityState(context, PACKAGE_NAME, "Sleep as Android isn't installed"),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.sleepasandroid.broadcast.sleep"
         )
     }
 
-    private fun getCompatibilityState(): CompatibilityState {
-        // https://stackoverflow.com/questions/6758841/how-can-i-find-if-a-particular-package-exists-on-my-android-device
-        return if (context?.packageManager?.getInstalledApplications(0)?.find { info -> info.packageName == "com.urbandroid.sleep" } == null) {
-            CompatibilityState.Incompatible("Sleep as Android isn't installed")
-        } else CompatibilityState.Compatible
-    }
-
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
-        val file = File(context?.filesDir, "data.json")
-
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
-
-        // remove event from data file, since we don't want to show the target all day
-        jsonObject.put("event", "")
-        file.writeText(jsonObject.toString())
+        // remove event from datastore
+        saveToDataStore(context!!.dataStore, "event")
 
         notifyChange(context!!, SleepMessagesTarget::class.java)
+
         return true
     }
 }

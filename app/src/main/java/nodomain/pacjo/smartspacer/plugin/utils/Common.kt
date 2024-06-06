@@ -26,13 +26,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import nodomain.pacjo.smartspacer.plugin.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import kotlin.random.Random
 
+@SuppressLint("DiscouragedApi")
 fun isFirstRun(context: Context) {
     val file = File(context.filesDir, "data.json")
 
@@ -40,11 +40,15 @@ fun isFirstRun(context: Context) {
     //   - it's the first run after installation / data reset
     //   - something went wrong, but we can blame that on the user
     if (!file.exists()) {
-        val outputStream: OutputStream = FileOutputStream(file)
+        val resourceId = context.resources.getIdentifier("default_data", "raw", context.packageName)
 
-        context.resources.openRawResource(R.raw.default_data).use { input ->
-            outputStream.use { output ->
-                input.copyTo(output)
+        if (resourceId != 0) {
+            val outputStream: OutputStream = FileOutputStream(file)
+
+            context.resources.openRawResource(resourceId).use { input ->
+                outputStream.use { output ->
+                    input.copyTo(output)
+                }
             }
         }
     }
@@ -200,17 +204,17 @@ fun imageTargetAdjustDrawable(context: Context, drawableResId: Int): Icon {
 }
 
 fun getRandomFromList(elements: List<Any>): Any {
-    val randomIndex = Random.nextInt(elements.size);
+    val randomIndex = Random.nextInt(elements.size)
 
     return elements[randomIndex]
 }
 
 fun <T> List<T>.getRandom(): T {
-    val randomIndex = Random.nextInt(size);
+    val randomIndex = Random.nextInt(size)
     return this[randomIndex]
 }
 
 fun <A, B> List<Pair<A, B>>.getRandomFromPairs(): Pair<A, B> {
-    val randomIndex = Random.nextInt(size);
+    val randomIndex = Random.nextInt(size)
     return this[randomIndex]
 }
