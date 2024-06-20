@@ -40,6 +40,16 @@
                 <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
             </intent-filter>
         </provider>
+<!--        <provider-->
+<!--            android:name="targets.WeatherForecastTarget"-->
+<!--            android:authorities="${applicationId}.target.forecast"-->
+<!--            android:exported="true"-->
+<!--            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS" >-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.kieronquinn.app.smartspacer.TARGET" />-->
+<!--            </intent-filter>-->
+<!--        </provider>-->
+
         <provider
             android:name="complications.GenericWeatherComplication"
             android:authorities="${applicationId}.complication.weather"
