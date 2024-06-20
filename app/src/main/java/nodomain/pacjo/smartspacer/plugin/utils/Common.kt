@@ -134,13 +134,10 @@ fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): Pa
 }
 
 fun PackageManager.packageHasPermission(packageName: String, permission: String): Boolean {
-    return try {
-        val info = getPackageInfoCompat(packageName, PackageManager.GET_PERMISSIONS)
-        val permissions = info.requestedPermissions.zip(info.requestedPermissionsFlags.toTypedArray())
-        permissions.any { it.first == permission && it.second and REQUESTED_PERMISSION_GRANTED != 0 }
-    } catch (e: PackageManager.NameNotFoundException){
-        false
-    }
+    val info = getPackageInfoCompat(packageName, PackageManager.GET_PERMISSIONS)
+    val permissions = info.requestedPermissionsFlags?.let { info.requestedPermissions?.zip(it.toTypedArray()) }
+
+    return permissions?.any { it.first == permission && it.second and REQUESTED_PERMISSION_GRANTED != 0 } == true
 }
 
 fun convertTimeTo(timeInMilliseconds: Long, shortStyle: Boolean = false): String {

@@ -38,7 +38,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
-        val targetUnit = preferences.optString("target_unit", "C")
+        val unit = preferences.optString("unit", "C")
         val targetStyle = preferences.optString("target_style","both")
         val launchPackage = preferences.optString("launch_package", "")
         val dataPoints = preferences.optInt("target_points_visible", 4)
@@ -60,7 +60,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                 val carouselItemList =         // TODO: allow switching daily <-> hourly
                     List(hourlyData.take(dataPoints).size) { index ->
                         val carouselItem = CarouselTemplateData.CarouselItem(
-                            Text(temperatureUnitConverter(hourlyData[index].temp, targetUnit)),
+                            Text(temperatureUnitConverter(hourlyData[index].temp, unit)),
                             Text(SimpleDateFormat("HH:mm ", Locale.getDefault()).format(hourlyData[index].timestamp * 1000L)),
                             com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                                 Bitmap.createScaledBitmap(
@@ -84,8 +84,8 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
                         "condition" -> currentCondition
-                        "both" -> "${temperatureUnitConverter(currentTemperature, targetUnit)} $currentCondition"
-                        else -> temperatureUnitConverter(currentTemperature, targetUnit)
+                        "both" -> "${temperatureUnitConverter(currentTemperature, unit)} $currentCondition"
+                        else -> temperatureUnitConverter(currentTemperature, unit)
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         IconCompat.createWithResource(
@@ -117,8 +117,8 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
                         "condition" -> currentCondition
-                        "both" -> "${temperatureUnitConverter(currentTemperature, targetUnit)} $currentCondition"
-                        else -> temperatureUnitConverter(currentTemperature, targetUnit)
+                        "both" -> "${temperatureUnitConverter(currentTemperature, unit)} $currentCondition"
+                        else -> temperatureUnitConverter(currentTemperature, unit)
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         IconCompat.createWithResource(

@@ -35,7 +35,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
-        val complicationUnit = preferences.optString("condition_complication_unit", "C")
+        val unit = preferences.optString("unit", "C")
         val complicationStyle = preferences.optString("condition_complication_style","temperature")
         val complicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit",true)
         val launchPackage = preferences.optString("launch_package", "")
@@ -59,8 +59,8 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                     ),
                     content = Text(when (complicationStyle) {
                         "condition" -> data.currentCondition
-                        "both" -> "${temperatureUnitConverter(data.currentTemp, complicationUnit)} ${data.currentCondition}"
-                        else -> temperatureUnitConverter(data.currentTemp, complicationUnit)
+                        "both" -> "${temperatureUnitConverter(data.currentTemp, unit)} ${data.currentCondition}"
+                        else -> temperatureUnitConverter(data.currentTemp, unit)
                     }),
                     onClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
                         null -> null
@@ -76,7 +76,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                             description = data.currentCondition,
                             state = weatherDataToSmartspacerToIcon(data, 0),
                             useCelsius = when {
-                                (complicationUnit == "F") -> false
+                                (unit == "F") -> false
                                 else -> true
                             },
                             temperature = data.currentTemp
