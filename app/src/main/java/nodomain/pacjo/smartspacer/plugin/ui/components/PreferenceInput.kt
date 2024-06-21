@@ -12,6 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import nodomain.pacjo.smartspacer.plugin.R
 
 /**
  * Allows the user to input custom text.
@@ -67,7 +69,7 @@ fun PreferenceInput(
                         onTextChange(textState.value)
                     },
                 ) {
-                    Text("OK")       // TODO: make string resource
+                    Text(stringResource(R.string.prompt_ok))
                 }
             },
             dismissButton = {
@@ -76,7 +78,7 @@ fun PreferenceInput(
                         isShown = false
                     },
                 ) {
-                    Text("Cancel")   // TODO: make string resource
+                    Text(stringResource(R.string.prompt_cancel))
                 }
             }
         )

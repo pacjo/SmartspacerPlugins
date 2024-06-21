@@ -20,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import nodomain.pacjo.smartspacer.plugin.R
 
 /**
  * Represents the root composable of all preference screens.
@@ -58,7 +60,7 @@ fun PreferenceLayout(
                         ) {
                             Icon (
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back arrow"      // TODO: make string resource
+                                contentDescription = stringResource(R.string.back_button_description)
                             )
                         }
                     },
