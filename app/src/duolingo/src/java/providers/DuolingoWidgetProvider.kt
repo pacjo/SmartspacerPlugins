@@ -12,9 +12,9 @@ import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerWidgetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.findViewByIdentifier
 import nodomain.pacjo.smartspacer.plugin.utils.getProvider
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
+import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
 import targets.DuolingoProgressTarget
+import targets.dataStore
 import java.io.File
 import java.io.FileOutputStream
 
@@ -90,14 +90,10 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
     }
 
     override fun onWidgetChanged(smartspacerId: String, remoteViews: RemoteViews?) {
-        isFirstRun(provideContext())
-        val dataFile = File(context?.filesDir, "data.json")
         val imageFile = File(context?.filesDir, "image.png")
 
         // Load the RemoteViews into regular Views
         val view = remoteViews?.load() ?: return
-
-//        view.dumpToLog("View")
 
         // extract messages from target (and remove them from view)
         val subtitleIDs = listOf(
@@ -107,19 +103,17 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
             "encouragingSubtitle"
         )
 
+        val subtitles = mutableListOf<String?>()
+
         for (subtitleID in subtitleIDs) {
-            // Read JSON
-            val jsonObject = JSONObject(dataFile.readText())
-            val dataObject = jsonObject.getJSONObject("data")
+            subtitles.add(view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/$subtitleID")?.text as String?)
 
-            // add string to file
-            dataObject.put(subtitleID, view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/$subtitleID")?.text)
-
-            // write JSON
-            dataFile.writeText(jsonObject.toString())
-
+            // remove element from widget
             view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/$subtitleID")?.text  = ""
         }
+
+        val subtitle = subtitles.firstOrNull { it?.isNotBlank() == true } ?: "Good job!"
+        saveToDataStore(context!!.dataStore, "widget_text", subtitle)
 
         saveWidgetViewToFile(view, imageFile)
 
