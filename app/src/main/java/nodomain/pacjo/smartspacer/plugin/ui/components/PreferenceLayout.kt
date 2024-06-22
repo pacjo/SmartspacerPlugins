@@ -1,6 +1,7 @@
 package nodomain.pacjo.smartspacer.plugin.ui.components
 
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.ui.activities.AboutActivity
 
 /**
  * Represents the root composable of all preference screens.
@@ -34,33 +37,46 @@ import nodomain.pacjo.smartspacer.plugin.R
 @Composable
 fun PreferenceLayout(
     title: String,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
-    val activity = (LocalContext.current as? Activity)
+    val context = LocalContext.current
+    val activity = (context as? Activity)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        Scaffold (
+        Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 LargeTopAppBar(
                     title = {
-                        Text (
+                        Text(
                             text = title,
                             fontWeight = FontWeight.SemiBold
                         )
                     },
                     navigationIcon = {
-                        IconButton (
+                        IconButton(
                             onClick = {
                                 activity?.finish()
                             }
                         ) {
-                            Icon (
+                            Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.back_button_description)
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                context.startActivity(Intent(context, AboutActivity::class.java))
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Info,
+                                contentDescription = stringResource(R.string.about_button_description)
                             )
                         }
                     },
@@ -68,7 +84,7 @@ fun PreferenceLayout(
                 )
             }
         ) {
-            Column (
+            Column(
                 modifier = Modifier
                     .padding(it)
                     .verticalScroll(rememberScrollState()),

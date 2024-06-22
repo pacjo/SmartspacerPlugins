@@ -7,6 +7,14 @@
         android:supportsRtl="false"
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.BaseTheme"
-        tools:targetApi="34" />
+        tools:targetApi="34" >
+
+        <activity
+            android:name=".ui.activities.AboutActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+    </application>
 
 </manifest>

@@ -91,16 +91,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -127,5 +128,10 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
-    "genericweatherImplementation"("com.google.code.gson:gson:2.10.1")
+    implementation("com.mikepenz:iconics-core:5.5.0-compose01")
+    implementation("com.mikepenz:iconics-compose:5.5.0-compose01")
+    implementation("com.mikepenz:community-material-typeface:7.0.96.1-kotlin")
+    implementation("com.mikepenz:simple-icons-typeface:17.0.0.2")
+
+    "genericweatherImplementation"("com.google.code.gson:gson:2.11.0")
 }
