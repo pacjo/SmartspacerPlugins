@@ -1,7 +1,7 @@
 {
 	"description": "This plugins shows number of due cards from AnkiDroid app.",
 	"download_url": "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/anki/release/app-anki-release.apk",
-	"version_code": 13,
-	"changelog": "see [https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3](https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3)",
+	"version_code": 14,
+	"changelog": "see [https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.4](https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.4)",
 	"screenshots": ["https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/anki/screenshots/complication_1.png"]
 }

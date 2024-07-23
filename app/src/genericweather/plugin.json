@@ -1,7 +1,7 @@
 {
 	"description": "Shows weather information and forecast from apps supporting GenericWeather protocol.\n\nInformation about configuration and supported apps can be found [here](https://gadgetbridge.org/basics/integrations/weather/).",
 	"download_url": "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/genericweather/release/app-genericweather-release.apk",
-	"version_code": 13,
-	"changelog": "see [https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3](https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3)",
+	"version_code": 14,
+	"changelog": "see [https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.4](https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.4)",
 	"screenshots": ["https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/genericweather/screenshots/complication_condition_1.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/genericweather/screenshots/target_forecast_1.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/genericweather/screenshots/complication_suntimes_1.png"]
 }

@@ -1,7 +1,7 @@
 {
-	"description": "This plugin shows charging information when device is connected to power.",
+	"description": "This plugin shows battery related information from both your phone and bluetooth devices.",
 	"download_url": "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/localbattery/release/app-localbattery-release.apk",
-	"version_code": 13,
-	"changelog": "see [https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3](https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3)",
+	"version_code": 14,
+	"changelog": "see [https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.4](https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.4)",
 	"screenshots": ["https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/target_1.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/target_2.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/localbattery/screenshots/target_3.png"]
 }

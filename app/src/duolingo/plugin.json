@@ -1,7 +1,7 @@
 {
 	"description": "This plugins shows Duolingo widget and it's corresponding message.",
 	"download_url": "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/duolingo/release/app-duolingo-release.apk",
-	"version_code": 13,
-	"changelog": "see [https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3](https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.3)",
+	"version_code": 14,
+	"changelog": "see [https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.4](https://github.com/pacjo/SmartspacerPlugins/releases/tag/v1.4)",
 	"screenshots": ["https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/duolingo/screenshots/target_1.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/duolingo/screenshots/target_2.png", "https://raw.githubusercontent.com/pacjo/SmartspacerPlugins/main/app/src/duolingo/screenshots/target_3.png"]
 }
