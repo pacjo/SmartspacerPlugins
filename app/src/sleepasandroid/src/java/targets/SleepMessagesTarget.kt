@@ -60,7 +60,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
                         provideContext(),
                         SleepMessagesTarget::class.java
                     ),
-                    title = Text("$title $subtitle"),   // bit of a hack, but should work, TODO: why is this here?
+                    title = Text("$title $subtitle"),
                     subtitle = null,
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
@@ -135,7 +135,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
         // remove event from datastore
         saveToDataStore(context!!.dataStore, "event")
 
-        notifyChange(context!!, SleepMessagesTarget::class.java)
+        notifyChange(provideContext(), SleepMessagesTarget::class.java)
 
         return true
     }

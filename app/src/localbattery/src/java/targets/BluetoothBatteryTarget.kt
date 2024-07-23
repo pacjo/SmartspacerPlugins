@@ -36,10 +36,10 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
 
         val isSmartspacerMissingPermission = !provideContext().packageManager.packageHasPermission(
             "com.kieronquinn.app.smartspacer",
-            (when {
+            when {
                 (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> Manifest.permission.BLUETOOTH_CONNECT
                 else -> Manifest.permission.BLUETOOTH
-            })
+            }
         )
 
         if (isPluginMissingPermissions || isSmartspacerMissingPermission) {
@@ -105,7 +105,6 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
             label = "Bluetooth Battery",
             description = "Provides battery from bluetooth devices",
             icon = Icon.createWithResource(provideContext(), R.drawable.battery_unknown_bluetooth),
-//            configActivity = Intent(context, ConfigurationActivity::class.java),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.localbattery.broadcast.bluetooth_battery"
         )
     }

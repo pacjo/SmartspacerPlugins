@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.mikepenz.iconics.typeface.IIcon
 
 /**
  * Represents a two-state (Boolean) toggleable preference.
@@ -23,6 +24,40 @@ import androidx.compose.ui.Modifier
 @Composable
 fun PreferenceSwitch(
     @DrawableRes icon: Int,
+    title: String,
+    description: String,
+    onCheckedChange: (Boolean) -> Unit,
+    checked: Boolean = false
+) {
+    var isChecked by remember { mutableStateOf(checked) }
+
+    Preference(
+        icon = icon,
+        title = title,
+        modifier = Modifier.clickable {
+            // Change state, then callback
+            isChecked = !isChecked
+            onCheckedChange(isChecked)
+        },
+        description = {
+            Text(text = description)
+        },
+        endWidget = {
+            Switch(
+                checked = isChecked,
+                onCheckedChange = { state ->
+                    isChecked = state
+                    onCheckedChange(isChecked)
+                },
+            )
+        },
+    )
+
+}
+
+@Composable
+fun PreferenceSwitch(
+    icon: IIcon,
     title: String,
     description: String,
     onCheckedChange: (Boolean) -> Unit,

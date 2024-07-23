@@ -3,8 +3,8 @@ package targets
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Icon
 import android.icu.util.Calendar
+import androidx.core.graphics.drawable.toIcon
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -12,6 +12,8 @@ import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
+import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
 import ui.activities.ConfigurationActivity
@@ -72,7 +74,7 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
         return Config(
             label = "Lively Greeting",
             description = "Shows fun messages to brighten your day",
-            icon = Icon.createWithResource(provideContext(), R.drawable.human_greeting_variant),
+            icon = IconicsDrawable(provideContext(), CommunityMaterial.Icon2.cmd_human_greeting).toBitmap().toIcon(),
             allowAddingMoreThanOnce = true,
             configActivity = Intent(context, ConfigurationActivity::class.java),
             refreshPeriodMinutes = 60

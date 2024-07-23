@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import nodomain.pacjo.smartspacer.plugin.R
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
@@ -28,8 +28,8 @@ class ConfigurationActivity : ComponentActivity() {
                 PreferenceLayout("Lively Greeting") {
                     PreferenceHeading("Greeting target")
 
-                    PreferenceSwitch (
-                        icon = R.drawable.eye_off,
+                    PreferenceSwitch(
+                        icon = CommunityMaterial.Icon.cmd_eye_off,
                         title = "Dynamically hide",
                         description = "Hide target when no complications are available",
                         onCheckedChange = {

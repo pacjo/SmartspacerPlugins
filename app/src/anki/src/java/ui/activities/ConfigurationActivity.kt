@@ -25,7 +25,7 @@ class ConfigurationActivity : ComponentActivity() {
             val template = getStringFromDataStore(context.dataStore, "complication_template") ?: "Anki {eta} / {due}"
 
             PluginTheme {
-                PreferenceLayout(title = "Anki") {
+                PreferenceLayout("Anki") {
                     PreferenceHeading("Messages target")
 
                     PreferenceInput (

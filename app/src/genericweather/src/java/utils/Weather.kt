@@ -84,6 +84,7 @@ fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0)
         221 to WeatherStateIcon.STRONG_TSTORMS,
         230 to WeatherStateIcon.STRONG_TSTORMS,
         231 to WeatherStateIcon.STRONG_TSTORMS,
+
         232 to WeatherStateIcon.STRONG_TSTORMS,
         300 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
         301 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
@@ -94,8 +95,9 @@ fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0)
         313 to WeatherStateIcon.HEAVY_RAIN,
         314 to WeatherStateIcon.HEAVY_RAIN,
         321 to WeatherStateIcon.HEAVY_RAIN,
-        500 to WeatherStateIcon.HEAVY_RAIN,
-        501 to WeatherStateIcon.HEAVY_RAIN,
+
+        500 to WeatherStateIcon.SHOWERS_RAIN,
+        501 to WeatherStateIcon.SHOWERS_RAIN,
         502 to WeatherStateIcon.HEAVY_RAIN,
         503 to WeatherStateIcon.HEAVY_RAIN,
         504 to WeatherStateIcon.HEAVY_RAIN,
@@ -104,6 +106,7 @@ fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0)
         521 to WeatherStateIcon.HEAVY_RAIN,
         522 to WeatherStateIcon.HEAVY_RAIN,
         531 to WeatherStateIcon.HEAVY_RAIN,
+
         600 to WeatherStateIcon.HEAVY_SNOW,
         601 to WeatherStateIcon.HEAVY_SNOW,
         602 to WeatherStateIcon.HEAVY_SNOW,
@@ -115,6 +118,7 @@ fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0)
         620 to WeatherStateIcon.HEAVY_SNOW,
         621 to WeatherStateIcon.HEAVY_SNOW,
         622 to WeatherStateIcon.HEAVY_SNOW,
+
         701 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
         711 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
         721 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
@@ -125,6 +129,7 @@ fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0)
         762 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
         771 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
         781 to WeatherStateIcon.HAZE_FOG_DUST_SMOKE,
+
         800 to WeatherStateIcon.SUNNY,
         801 to WeatherStateIcon.MOSTLY_SUNNY,
         802 to WeatherStateIcon.MOSTLY_SUNNY,
@@ -180,6 +185,7 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
         230 to "google_<theme>_isolated_thunderstorms",
         231 to "google_<theme>_isolated_thunderstorms",
         232 to "google_<theme>_isolated_thunderstorms",
+
         300 to "google_<theme>_scattered_showers_<time>",
         301 to "google_<theme>_scattered_showers_<time>",
         302 to "google_<theme>_scattered_showers_<time>",
@@ -189,9 +195,10 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
         313 to "google_<theme>_showers_rain",
         314 to "google_<theme>_showers_rain",
         321 to "google_<theme>_scattered_showers_<time>",
-        500 to "google_<theme>_showers_rain",
+
+        500 to "google_<theme>_cloudy_with_rain",
         501 to "google_<theme>_showers_rain",
-        502 to "google_<theme>_heavy_rain",
+        502 to "google_<theme>_showers_rain",
         503 to "google_<theme>_heavy_rain",
         504 to "google_<theme>_heavy_rain",
         511 to "google_<theme>_showers_rain",
@@ -199,6 +206,7 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
         521 to "google_<theme>_scattered_showers_<time>",
         522 to "google_<theme>_scattered_showers_<time>",
         531 to "google_<theme>_scattered_showers_<time>",
+
         600 to "google_<theme>_scattered_snow_showers_<time>",
         601 to "google_<theme>_scattered_snow_showers_<time>",
         602 to "google_<theme>_heavy_snow",
@@ -210,6 +218,7 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
         620 to "google_<theme>_scattered_snow_showers_<time>",
         621 to "google_<theme>_scattered_snow_showers_<time>",
         622 to "google_<theme>_heavy_snow",
+
         701 to "google_<theme>_haze_fog_dust_smoke",
         711 to "google_<theme>_haze_fog_dust_smoke",
         721 to "google_<theme>_haze_fog_dust_smoke",
@@ -220,6 +229,7 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
         762 to "google_<theme>_haze_fog_dust_smoke",
         771 to "google_<theme>_haze_fog_dust_smoke",
         781 to "google_<theme>_tornado",
+
         800 to "google_<theme>_clear_<time>",
         801 to "google_<theme>_mostly_clear_<time>",
         802 to "google_<theme>_partly_cloudy_<time>",
