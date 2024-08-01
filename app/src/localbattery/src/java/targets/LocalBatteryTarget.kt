@@ -94,12 +94,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                 componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
                 title = Text(title),
                 subtitle = null,
-                icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                    Icon.createWithResource(
-                        provideContext(),
-                        R.drawable.battery_low
-                    )
-                ),
+                icon = null,
                 onClick = TapAction(intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY))
             ).create().apply {
                 canTakeTwoComplications = true
