@@ -44,12 +44,12 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
             val nextSunrise: Long = when (System.currentTimeMillis() < weatherData.sunRise * 1000L) {
                 true -> weatherData.sunRise                 // if we're still before today's sunrise
                 else -> weatherData.forecasts[0].sunRise
-            } * 1000L           // broken without this
+            }
 
             val nextSunset: Long = when (System.currentTimeMillis() < weatherData.sunSet * 1000L) {
                 true -> weatherData.sunSet                 // if we're still before today's sunset
                 else -> weatherData.forecasts[0].sunSet
-            } * 1000L           // broken without this
+            }
 
             // so, we have next sunrise and sunset
             // we'll always show next event (relative to the current time)
