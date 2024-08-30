@@ -26,6 +26,7 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             isDebuggable = true
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -35,6 +36,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -118,15 +120,15 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.activity:activity-compose:1.9.1")
     implementation("androidx.compose.foundation:foundation-android:1.6.8")
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("com.kieronquinn.smartspacer:sdk-plugin:1.0.4")
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3")          // is this duplicated?
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     implementation("com.mikepenz:iconics-core:5.5.0-compose01")
