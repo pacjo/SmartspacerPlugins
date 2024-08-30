@@ -4,13 +4,13 @@ import android.content.Intent
 import android.graphics.drawable.Icon
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
+import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
 import providers.AnkiWidgetProvider
 import providers.dataStore
@@ -41,11 +41,7 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
                         .replace("{due}", ankiDue)
                         .replace("{eta}", ankiETA)
                 ),
-                onClick = TapAction(
-                    intent = Intent(context!!.packageManager.getLaunchIntentForPackage(
-                        AnkiWidgetProvider.PACKAGE_NAME
-                    ))
-                ),
+                onClick = getPackageLaunchTapAction(provideContext(), AnkiWidgetProvider.PACKAGE_NAME),
                 trimToFit = TrimToFit.Disabled
             ).create()
         ) else

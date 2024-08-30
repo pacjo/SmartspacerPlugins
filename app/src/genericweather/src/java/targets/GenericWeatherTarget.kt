@@ -11,12 +11,12 @@ import androidx.core.graphics.drawable.toIcon
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.CarouselTemplateData
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
+import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
@@ -97,19 +97,8 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         shouldTint = false
                     ),
                     items = carouselItemList,
-                    // TODO: export as utility functions
-                    onClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
-                        null -> null
-                        else -> TapAction(
-                            intent = Intent(context!!.packageManager.getLaunchIntentForPackage(launchPackage))
-                        )
-                    },
-                    onCarouselClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
-                        null -> null
-                        else -> TapAction(
-                            intent = Intent(context!!.packageManager.getLaunchIntentForPackage(launchPackage))
-                        )
-                    }
+                    onClick = getPackageLaunchTapAction(provideContext(), launchPackage),
+                    onCarouselClick = getPackageLaunchTapAction(provideContext(), launchPackage)
                 ).create().apply {
                     canBeDismissed = false
                 })
@@ -130,12 +119,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         ).toIcon(context),
                         shouldTint = false
                     ),
-                    onClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
-                        null -> null
-                        else -> TapAction(
-                            intent = Intent(context!!.packageManager.getLaunchIntentForPackage(launchPackage))
-                        )
-                    }
+                    onClick = getPackageLaunchTapAction(provideContext(), launchPackage)
                 ).create())
             }
         } else {

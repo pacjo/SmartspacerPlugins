@@ -10,13 +10,13 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
 import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
+import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
 import providers.DuolingoWidgetProvider
 import ui.activities.ConfigurationActivity
@@ -59,13 +59,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
                     ).toIcon(context),
                     shouldTint = false
                 ),
-                onClick = TapAction(
-                    intent = Intent(
-                        context.packageManager.getLaunchIntentForPackage(
-                            DuolingoWidgetProvider.PACKAGE_NAME
-                        )
-                    )
-                )
+                onClick = getPackageLaunchTapAction(provideContext(), DuolingoWidgetProvider.PACKAGE_NAME)
             ).create().apply {
                 canBeDismissed = false
             })

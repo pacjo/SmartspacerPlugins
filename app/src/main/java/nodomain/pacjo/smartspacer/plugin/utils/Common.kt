@@ -1,17 +1,11 @@
 package nodomain.pacjo.smartspacer.plugin.utils
 
 import android.annotation.SuppressLint
-import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
-import android.content.pm.PackageInfo
-import android.content.pm.PackageInfo.REQUESTED_PERMISSION_GRANTED
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Icon
-import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -20,7 +14,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.kieronquinn.app.smartspacer.sdk.model.CompatibilityState
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -107,36 +101,13 @@ fun getStringFromDataStore(dataStore: DataStore<Preferences>, key: String): Stri
     return result
 }
 
-@SuppressLint("QueryPermissionsNeeded")
-fun getCompatibilityState(context: Context?, packageName: String, incompatibilityMessage: String): CompatibilityState {
-    // https://stackoverflow.com/questions/6758841/how-can-i-find-if-a-particular-package-exists-on-my-android-device
-    return if (context?.packageManager?.getInstalledApplications(0)?.find { info -> info.packageName == packageName } == null) {
-        CompatibilityState.Incompatible(incompatibilityMessage)
-    } else CompatibilityState.Compatible
-}
-
-fun getProvider(context: Context, packageName: String, providerClass: String): AppWidgetProviderInfo? {
-    val manager = context.getSystemService(Context.APPWIDGET_SERVICE) as AppWidgetManager
-
-    return manager.installedProviders.firstOrNull {
-        it.provider.packageName == packageName && it.provider.className == providerClass
+fun getStringSetFromDataStore(dataStore: DataStore<Preferences>, key: String): Set<String>? {
+    var result: Set<String>?
+    runBlocking {
+        result = dataStore.data.first()[stringSetPreferencesKey(key)]
     }
-}
 
-// https://github.com/KieronQuinn/Smartspacer/blob/main/app/src/main/java/com/kieronquinn/app/smartspacer/utils/extensions/Extensions+PackageManager.kt
-fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): PackageInfo {
-    return if (Build.VERSION.SDK_INT >= 33) {
-        getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
-    } else {
-        getPackageInfo(packageName, flags)
-    }
-}
-
-fun PackageManager.packageHasPermission(packageName: String, permission: String): Boolean {
-    val info = getPackageInfoCompat(packageName, PackageManager.GET_PERMISSIONS)
-    val permissions = info.requestedPermissionsFlags?.let { info.requestedPermissions?.zip(it.toTypedArray()) }
-
-    return permissions?.any { it.first == permission && it.second and REQUESTED_PERMISSION_GRANTED != 0 } == true
+    return result
 }
 
 fun imageTargetAdjustDrawable(context: Context, drawableResId: Int): Icon {

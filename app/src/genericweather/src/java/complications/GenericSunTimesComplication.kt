@@ -5,13 +5,13 @@ import android.graphics.drawable.Icon
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
+import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
@@ -70,12 +70,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
                         )
                     ),
                     content = Text(Time(provideContext(), nextEvent).getEventTime()),
-                    onClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
-                        null -> null
-                        else -> TapAction(
-                            intent = Intent(context!!.packageManager.getLaunchIntentForPackage(launchPackage))
-                        )
-                    },
+                    onClick = getPackageLaunchTapAction(provideContext(), launchPackage),
                     trimToFit = when (complicationTrimToFit) {
                         false -> TrimToFit.Disabled
                         else -> TrimToFit.Enabled

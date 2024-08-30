@@ -8,13 +8,13 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
 import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
+import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.getRandom
 import nodomain.pacjo.smartspacer.plugin.utils.getRandomFromPairs
 import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
@@ -71,7 +71,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
                             }
                         )
                     ),
-                    onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage(PACKAGE_NAME)))
+                    onClick = getPackageLaunchTapAction(provideContext(), PACKAGE_NAME)
                 ).create().apply {
                     canTakeTwoComplications = true
                 })
@@ -113,8 +113,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
                             }
                         )
                     ),
-                    onClick = TapAction(intent = Intent(context!!.packageManager.getLaunchIntentForPackage(PACKAGE_NAME))
-                    )
+                    onClick = getPackageLaunchTapAction(provideContext(), PACKAGE_NAME)
                 ).create())
             }
         } else return emptyList()
