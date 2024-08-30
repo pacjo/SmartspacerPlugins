@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_package = "nodomain.pacjo.smartspacer.plugin.localbattery.data";
+option java_outer_classname = "BluetoothProto";
+
+message BluetoothDevice {
+    string macAddress = 1;
+    int32 bluetoothClass = 2;
+    string bluetoothName = 3;
+    int32 batteryLevel = 4;
+    int64 modifiedTime = 5;
+}
+
+message BluetoothDeviceStore {
+    map<string, BluetoothDevice> BluetoothDevices = 1;
+}

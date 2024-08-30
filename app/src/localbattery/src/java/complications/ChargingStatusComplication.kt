@@ -22,9 +22,11 @@ import org.json.JSONObject
 import ui.activities.ChargingComplicationConfigurationActivity
 import java.io.File
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
-
 class ChargingStatusComplication: SmartspacerComplicationProvider() {
+
+    companion object {
+        val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
+    }
 
     @OptIn(DisablingTrim::class)
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {

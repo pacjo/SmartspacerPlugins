@@ -14,7 +14,8 @@ import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.save
-import targets.dataStore
+import targets.LocalBatteryTarget
+import targets.LocalBatteryTarget.Companion.dataStore
 
 class StatusTargetConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +38,11 @@ class StatusTargetConfigurationActivity : ComponentActivity() {
                         onCheckedChange = { value ->
                             dataStore.save(showEstimateKey, value)
 
-                            SmartspacerTargetProvider.notifyChange(context, smartspacerId!!)
+                            SmartspacerTargetProvider.notifyChange(
+                                context = context,
+                                provider = LocalBatteryTarget::class.java,
+                                smartspacerId = smartspacerId!!
+                            )
                         },
                         checked = showEstimate
                     )

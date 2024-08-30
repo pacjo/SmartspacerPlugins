@@ -25,11 +25,13 @@ import org.json.JSONObject
 import ui.activities.StatusTargetConfigurationActivity
 import java.io.File
 
-// during the transition period we'll be using both json and datastore
-// over time we'll move everything to datastore, TODO: remove comment
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
-
 class LocalBatteryTarget: SmartspacerTargetProvider() {
+
+    companion object {
+        // during the transition period we'll be using both json and datastore
+        // over time we'll move everything to datastore, TODO: remove comment
+        val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
+    }
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         isFirstRun(context!!)

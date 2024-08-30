@@ -6,7 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.SmartspacerConstants
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
-import complications.dataStore
+import complications.ChargingStatusComplication
+import complications.ChargingStatusComplication.Companion.dataStore
 import data.ChargingComplicationDataStoreManager.Companion.disableTrimmingKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
@@ -37,7 +38,11 @@ class ChargingComplicationConfigurationActivity : ComponentActivity() {
                         onCheckedChange = { value ->
                             dataStore.save(disableTrimmingKey, value)
 
-                            SmartspacerComplicationProvider.notifyChange(context, smartspacerId!!)
+                            SmartspacerComplicationProvider.notifyChange(
+                                context = context,
+                                provider = ChargingStatusComplication::class.java,
+                                smartspacerId = smartspacerId!!
+                            )
                         },
                         checked = textTrimming
                     )

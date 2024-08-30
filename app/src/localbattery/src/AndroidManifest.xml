@@ -22,6 +22,12 @@
             android:launchMode="singleInstance" />
 
         <activity
+            android:name="ui.activities.BluetoothTargetConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+        <activity
             android:name="ui.activities.ChargingComplicationConfigurationActivity"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -36,6 +42,7 @@
                 <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
             </intent-filter>
         </provider>
+
         <provider
             android:name="targets.BluetoothBatteryTarget"
             android:authorities="${applicationId}.target.bluetooth_battery"
@@ -55,6 +62,7 @@
                 <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
             </intent-filter>
         </provider>
+
         <provider
             android:name="complications.ChargingStatusComplication"
             android:authorities="${applicationId}.complication.status"
@@ -70,6 +78,7 @@
             android:authorities="${applicationId}.broadcast.battery"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_BROADCASTS"
             android:exported="true"/>
+
         <provider
             android:name="providers.BluetoothBroadcastProvider"
             android:authorities="${applicationId}.broadcast.bluetooth_battery"
@@ -85,6 +94,7 @@
                 <action android:name="com.kieronquinn.app.smartspacer.REQUIREMENT" />
             </intent-filter>
         </provider>
+
     </application>
 
 </manifest>

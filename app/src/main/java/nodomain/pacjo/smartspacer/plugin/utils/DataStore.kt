@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-fun <T> DataStore<Preferences>.save(key: Preferences.Key<T>, value: T) {
+fun <T> DataStore<Preferences>.save(key: Preferences.Key<T>, value: T? = null) {
     val dataStore = this
 
     CoroutineScope(Dispatchers.IO).launch {

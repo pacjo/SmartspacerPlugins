@@ -1,7 +1,10 @@
+import com.google.protobuf.gradle.proto
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.protobuf")
 }
 
 android {
@@ -75,6 +78,10 @@ android {
     sourceSets {
         getByName("localbattery") {
             setRoot("src/localbattery/src")
+
+            proto {
+                srcDir("src/localbattery/src/proto")
+            }
         }
         getByName("genericweather") {
             setRoot("src/genericweather/src")
@@ -137,4 +144,22 @@ dependencies {
     implementation("com.mikepenz:simple-icons-typeface:17.0.0.2")
 
     "genericweatherImplementation"("com.google.code.gson:gson:2.11.0")
+
+    "localbatteryImplementation"("androidx.datastore:datastore:1.1.1")
+    "localbatteryImplementation"("com.google.protobuf:protobuf-javalite:4.27.3")
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.27.3"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

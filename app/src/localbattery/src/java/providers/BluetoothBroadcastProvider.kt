@@ -7,12 +7,17 @@ import android.content.IntentFilter
 import android.os.Build
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerBroadcastProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
+import data.BluetoothTargetDataStoreManager.Companion.removeBluetoothDevice
+import data.BluetoothTargetDataStoreManager.Companion.saveBluetoothDevice
 import targets.BluetoothBatteryTarget
-import utils.deduplicateJSONArray
-import utils.removeDeviceFromArray
-import java.io.File
+
+class BluetoothDevice(
+    val macAddress: String,
+    val bluetoothClass: Int,
+    val bluetoothName: String,
+    val batteryLevel: Int,
+    val modifiedTime: Long
+)
 
 class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
 
@@ -20,14 +25,7 @@ class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
     override fun onReceive(intent: Intent) {
         // https://stackoverflow.com/questions/53002816/how-to-get-bluetooth-headset-battery-level
 
-        isFirstRun(provideContext())
-
-        val file = File(context?.filesDir, "data.json")
-
-        val jsonObject = JSONObject(file.readText())
-        var dataArray = jsonObject.getJSONArray("bluetooth_data")
-
-        // Get BluetoothDevice
+        // Get bluetooth device
         val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
         } else {
@@ -35,27 +33,22 @@ class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
         }
 
-        if (device != null) {
+        device?.let {
             if (intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL") != -1) {
-                val newDevice = JSONObject()
-                newDevice.put("deviceAddress", device.address)
-                newDevice.put("deviceClass", device.bluetoothClass.deviceClass)
-                newDevice.put("deviceName", device.name)
-                newDevice.put("deviceBattery", intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL"))
-                newDevice.put("modifiedTime", System.currentTimeMillis())
-                dataArray.put(dataArray.length(), newDevice)
+                val bluetoothDevice = BluetoothDevice(
+                    macAddress = device.address,
+                    bluetoothClass = device.bluetoothClass.deviceClass,
+                    bluetoothName = device.name,
+                    batteryLevel = intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL")!!,     // TODO: check
+                    modifiedTime = System.currentTimeMillis()
+                )
 
-            // Remove device, since we we get '-1' when device is disconnected
-            } else if (dataArray.length() != 0) {
-                dataArray = removeDeviceFromArray(dataArray, device.address)
+                saveBluetoothDevice(provideContext(), device.address, bluetoothDevice)
+            } else {
+                // Remove device, since we we get '-1' when device is disconnected
+                removeBluetoothDevice(provideContext(), device.address)
             }
-
-            // this is important as some devices (ehm Xbox controller, ehm) don't always report proper stats
-            dataArray = deduplicateJSONArray(dataArray)
         }
-
-        jsonObject.put("bluetooth_data", dataArray)
-        file.writeText(jsonObject.toString())
 
         SmartspacerTargetProvider.notifyChange(provideContext(), BluetoothBatteryTarget::class.java)
     }

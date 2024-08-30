@@ -2,6 +2,7 @@ package targets
 
 import android.Manifest
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
@@ -10,22 +11,37 @@ import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import com.kieronquinn.app.smartspacer.sdk.SmartspacerConstants
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
+import data.BluetoothTargetDataStoreManager.Companion.DATASTORE_NAME
+import data.BluetoothTargetDataStoreManager.Companion.dismissedMACsKey
+import data.BluetoothTargetDataStoreManager.Companion.getBluetoothDevices
+import data.BluetoothTargetDataStoreManager.Companion.removeBluetoothDevice
+import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.packageHasPermission
-import org.json.JSONObject
+import nodomain.pacjo.smartspacer.plugin.utils.save
+import ui.activities.BluetoothTargetConfigurationActivity
 import utils.iconMap
-import java.io.File
 
 class BluetoothBatteryTarget: SmartspacerTargetProvider() {
 
+    companion object {
+        val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
+    }
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        // Show error if we're missing permissions
+
+        // show error if we're missing permissions
         val isPluginMissingPermissions = ActivityCompat.checkSelfPermission(
             provideContext(),
             (when {
@@ -35,7 +51,7 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
         ) != PackageManager.PERMISSION_GRANTED
 
         val isSmartspacerMissingPermission = !provideContext().packageManager.packageHasPermission(
-            "com.kieronquinn.app.smartspacer",
+            SmartspacerConstants.SMARTSPACER_PACKAGE_NAME,
             when {
                 (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> Manifest.permission.BLUETOOTH_CONNECT
                 else -> Manifest.permission.BLUETOOTH
@@ -45,7 +61,7 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
         if (isPluginMissingPermissions || isSmartspacerMissingPermission) {
             return listOf(TargetTemplate.Basic(
                 id = "example_$smartspacerId",
-                componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
+                componentName = ComponentName(provideContext(), BluetoothBatteryTarget::class.java),
                 title = Text("Missing bluetooth permission"),
                 subtitle = Text("Click here to open settings"),
                 icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
@@ -54,49 +70,42 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
                         R.drawable.alert_circle
                     )
                 ),
-                onClick = TapAction(intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(
-                    Uri.fromParts("package",
-                        when {
-                            isPluginMissingPermissions -> "nodomain.pacjo.smartspacer.plugin.localbattery"
-                            else -> "com.kieronquinn.app.smartspacer"
-                        },
-                        null
+                onClick = TapAction(
+                    intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(
+                        Uri.fromParts("package",
+                            when {
+                                isPluginMissingPermissions -> BuildConfig.APPLICATION_ID
+                                else -> SmartspacerConstants.SMARTSPACER_PACKAGE_NAME
+                            },
+                            null
+                        )
                     )
-                ))
+                )
             ).create().apply {
                 canBeDismissed = false
             })
-        } else {
-            val file = File(context?.filesDir, "data.json")
+        }
 
-            val jsonObject = JSONObject(file.readText())
-            val dataArray = jsonObject.getJSONArray("bluetooth_data")
+        val dismissedMACs = provideContext().dataStore.get(dismissedMACsKey) ?: emptySet()
 
-            val targetList = mutableListOf<SmartspaceTarget>()
+        val devices = getBluetoothDevices(provideContext())
 
-            for (i in 0 until dataArray.length()) {
-                val device = dataArray.getJSONObject(i)
-
-                targetList.add(
-                    TargetTemplate.Basic(
-                        id = "example_$smartspacerId",
-                        componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
-                        title = Text(device.getString("deviceName")),
-                        subtitle = Text("${device.getString("deviceBattery")}%"),
-                        icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                            Icon.createWithResource(
-                                provideContext(),
-                                iconMap.getOrDefault(device.getInt("deviceClass"), R.drawable.bluetooth)
-                            )
-                        )
-                    ).create().apply {
-                        canBeDismissed = false      // TODO: change
-//                        canTakeTwoComplications = true
-                    }
+        return devices
+            .filterNot { device ->
+                dismissedMACs.contains(device.macAddress)
+            }.map { device ->
+            TargetTemplate.Basic(
+                id = "${smartspacerId}_${device.macAddress}",
+                componentName = ComponentName(provideContext(), BluetoothBatteryTarget::class.java),
+                title = Text(device.bluetoothName),
+                subtitle = Text("${device.batteryLevel}%"),
+                icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
+                    Icon.createWithResource(
+                        provideContext(),
+                        iconMap.getOrDefault(device.bluetoothClass, R.drawable.bluetooth)
+                    )
                 )
-            }
-
-            return targetList
+            ).create()
         }
     }
 
@@ -105,12 +114,23 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
             label = "Bluetooth Battery",
             description = "Provides battery from bluetooth devices",
             icon = Icon.createWithResource(provideContext(), R.drawable.battery_unknown_bluetooth),
+            configActivity = Intent(context, BluetoothTargetConfigurationActivity::class.java),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.localbattery.broadcast.bluetooth_battery"
         )
     }
 
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
-        return false
-    }
+        val deviceMAC = targetId.substring(targetId.indexOf('_') + 1)
+        removeBluetoothDevice(
+            context = provideContext(),
+            macAddress =  deviceMAC
+        )
 
+        val dismissedMACs = provideContext().dataStore.get(dismissedMACsKey) ?: emptySet()
+        provideContext().dataStore.save(dismissedMACsKey, dismissedMACs.plus(deviceMAC))
+
+        notifyChange(smartspacerId)
+
+        return true
+    }
 }
