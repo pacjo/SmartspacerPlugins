@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Icon
-import android.icu.text.SimpleDateFormat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -17,14 +16,14 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
+import utils.Temperature
 import utils.WeatherData
-import utils.temperatureUnitConverter
 import utils.weatherDataToIcon
 import java.io.File
-import java.util.Locale
 
 class GenericWeatherTarget: SmartspacerTargetProvider() {
 
@@ -57,26 +56,29 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
             val hourlyData = weatherData.hourly
 
             if (dataPoints > 0) {
-                val carouselItemList =         // TODO: allow switching daily <-> hourly
-                    List(hourlyData.take(dataPoints).size) { index ->
-                        val carouselItem = CarouselTemplateData.CarouselItem(
-                            Text(temperatureUnitConverter(hourlyData[index].temp, unit)),
-                            Text(SimpleDateFormat("HH:mm ", Locale.getDefault()).format(hourlyData[index].timestamp * 1000L)),
-                            com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                                Bitmap.createScaledBitmap(
-                                    (ContextCompat.getDrawable(
-                                        provideContext(),
-                                        weatherDataToIcon(provideContext(), weatherData, 1, index)
-                                    ))!!.toBitmap(),
-                                    (24 * resources.displayMetrics.density).toInt(),
-                                    (24 * resources.displayMetrics.density).toInt(),
-                                    true
-                                ).toIcon(),
-                                shouldTint = false
-                            ), null
-                        )
-                        carouselItem
-                    }
+                // TODO: allow switching daily <-> hourly
+                val carouselItemList = mutableListOf<CarouselTemplateData. CarouselItem>()
+
+                hourlyData.take(dataPoints).forEachIndexed { index, point ->
+                    val carouselItem = CarouselTemplateData.CarouselItem(
+                        Text(Temperature(point.temp, unit).toString()),
+                        Text(" ${Time(provideContext(), point.timestamp).getEventTime()} "),
+                        com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
+                            Bitmap.createScaledBitmap(
+                                ContextCompat.getDrawable(
+                                    provideContext(),
+                                    weatherDataToIcon(provideContext(), weatherData, 1, index)
+                                )!!.toBitmap(),
+                                (24 * resources.displayMetrics.density).toInt(),
+                                (24 * resources.displayMetrics.density).toInt(),
+                                true
+                            ).toIcon(),
+                            shouldTint = false
+                        ), null
+                    )
+
+                    carouselItemList.add(carouselItem)
+                }
 
                 return listOf(TargetTemplate.Carousel(
                     id = "example_$smartspacerId",
@@ -84,8 +86,8 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
                         "condition" -> currentCondition
-                        "both" -> "${temperatureUnitConverter(currentTemperature, unit)} $currentCondition"
-                        else -> temperatureUnitConverter(currentTemperature, unit)
+                        "both" -> "${Temperature(currentTemperature, unit)} $currentCondition"
+                        else -> Temperature(currentTemperature, unit).toString()
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         IconCompat.createWithResource(
@@ -95,6 +97,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         shouldTint = false
                     ),
                     items = carouselItemList,
+                    // TODO: export as utility functions
                     onClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
                         null -> null
                         else -> TapAction(
@@ -117,8 +120,8 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
                         "condition" -> currentCondition
-                        "both" -> "${temperatureUnitConverter(currentTemperature, unit)} $currentCondition"
-                        else -> temperatureUnitConverter(currentTemperature, unit)
+                        "both" -> "${Temperature(currentTemperature, unit)} $currentCondition"
+                        else -> Temperature(currentTemperature, unit).toString()
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         IconCompat.createWithResource(

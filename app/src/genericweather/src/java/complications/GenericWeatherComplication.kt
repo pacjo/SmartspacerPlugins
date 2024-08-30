@@ -16,8 +16,8 @@ import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
+import utils.Temperature
 import utils.WeatherData
-import utils.temperatureUnitConverter
 import utils.weatherDataToIcon
 import utils.weatherDataToSmartspacerToIcon
 import java.io.File
@@ -59,9 +59,10 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                     ),
                     content = Text(when (complicationStyle) {
                         "condition" -> data.currentCondition
-                        "both" -> "${temperatureUnitConverter(data.currentTemp, unit)} ${data.currentCondition}"
-                        else -> temperatureUnitConverter(data.currentTemp, unit)
+                        "both" -> "${Temperature(data.currentTemp, unit)} ${data.currentCondition}"
+                        else -> Temperature(data.currentTemp, unit).toString()
                     }),
+                    // TODO: export as utility function
                     onClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
                         null -> null
                         else -> TapAction(

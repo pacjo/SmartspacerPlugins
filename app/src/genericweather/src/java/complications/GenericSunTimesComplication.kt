@@ -2,7 +2,6 @@ package complications
 
 import android.content.Intent
 import android.graphics.drawable.Icon
-import android.icu.text.SimpleDateFormat
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
@@ -12,12 +11,12 @@ import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvi
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
 import utils.WeatherData
 import java.io.File
-import java.util.Locale
 import kotlin.math.min
 
 class GenericSunTimesComplication: SmartspacerComplicationProvider() {
@@ -26,7 +25,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
         val file = File(context?.filesDir, "data.json")
 
-        isFirstRun(context!!)
+        isFirstRun(provideContext())
         val jsonString = file.readText()
         val jsonObject = JSONObject(jsonString)
 
@@ -70,14 +69,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
                             }
                         )
                     ),
-                    content = Text(
-//                        when (complicationStyle) {
-//                            "time_to" -> "in ${SimpleDateFormatWrapper(nextEvent - System.currentTimeMillis(), true)}"
-//                            "both" -> "in ${SimpleDateFormatWrapper(nextEvent - System.currentTimeMillis(), true)} (${SimpleDateFormat("HH:mm").format(nextEvent)})"
-//                            else -> SimpleDateFormat("HH:mm").format(nextEvent)
-//                        }
-                        SimpleDateFormat("HH:mm", Locale.getDefault()).format(nextEvent)
-                    ),
+                    content = Text(Time(provideContext(), nextEvent).getEventTime()),
                     onClick = when (context!!.packageManager.getLaunchIntentForPackage(launchPackage)) {
                         null -> null
                         else -> TapAction(

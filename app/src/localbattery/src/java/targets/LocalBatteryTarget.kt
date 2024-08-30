@@ -14,7 +14,7 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.plugin.R
-import nodomain.pacjo.smartspacer.plugin.utils.convertTimeTo
+import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
@@ -65,10 +65,10 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
         }
 
         val subtitle = when (showEstimate && (isCharging && chargingTimeRemaining > -1)) {
-            false -> "${level}%"        // if estimate is user-disable or we don't have it
+            false -> "$level%"        // if estimate is disabled by user or we don't have it
             else -> when (level == 100) {
-                true -> "${level}% — charging complete"
-                else -> "${level}% — full in ${convertTimeTo(chargingTimeRemaining)}"
+                true -> "$level% — charging complete"
+                else -> "$level% — full in ${Time.getTimeToEvent(chargingTimeRemaining)}"
             }
         }
 
