@@ -1,11 +1,7 @@
 package complications
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -13,35 +9,22 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
-import data.ChargingComplicationDataStoreManager.Companion.DATASTORE_NAME
-import data.ChargingComplicationDataStoreManager.Companion.disableTrimmingKey
+import data.SharedDataStoreManager.Companion.batteryCurrentKey
+import data.SharedDataStoreManager.Companion.batteryIsChargingKey
+import data.SharedDataStoreManager.Companion.batteryVoltageKey
+import data.SharedDataStoreManager.Companion.disableTrimmingKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
+import providers.BatteryBroadcastProvider.Companion.dataStore
 import ui.activities.ChargingComplicationConfigurationActivity
-import java.io.File
 
 class ChargingStatusComplication: SmartspacerComplicationProvider() {
 
-    companion object {
-        val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
-    }
-
     @OptIn(DisablingTrim::class)
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val file = File(context?.filesDir, "data.json")
-
-        isFirstRun(context!!)
-
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
-
-        // get data
-        val dataObject = jsonObject.getJSONObject("local_data")
-        val isCharging = dataObject.optBoolean("isCharging", false)
-        val current = dataObject.optInt("current", 0)
-        val voltage = dataObject.optInt("voltage", 0)
+        val isCharging = provideContext().dataStore.get(batteryIsChargingKey) ?: false
+        val current = provideContext().dataStore.get(batteryCurrentKey) ?: 0
+        val voltage = provideContext().dataStore.get(batteryVoltageKey) ?: 0
 
         val disableComplicationTextTrimming = provideContext().dataStore.get(disableTrimmingKey)
 

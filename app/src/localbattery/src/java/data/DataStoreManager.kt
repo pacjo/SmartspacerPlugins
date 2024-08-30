@@ -6,6 +6,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.protobuf.InvalidProtocolBufferException
 import kotlinx.coroutines.flow.first
@@ -16,19 +18,22 @@ import providers.BluetoothDevice
 import java.io.InputStream
 import java.io.OutputStream
 
-class ChargingComplicationDataStoreManager {
+class SharedDataStoreManager {
     companion object {
-        const val DATASTORE_NAME = "charging_complication_settings"
+        const val DATASTORE_NAME = "localbattery_settings"
 
-        val disableTrimmingKey = booleanPreferencesKey("disable_trimming")
-    }
-}
+        val batteryStatusKey = intPreferencesKey("battery_status")
+        val batteryIsChargingKey = booleanPreferencesKey("battery_is_charging")
+        val batteryChargingTimeRemainingKey = longPreferencesKey("battery_charging_time_remaining")
+        val batteryVoltageKey = intPreferencesKey("battery_voltage")
+        val batteryCurrentKey = intPreferencesKey("battery_current")
+        val batteryLevelKey = intPreferencesKey("battery_level")
 
-class StatusTargetDataStoreManager {
-    companion object {
-        const val DATASTORE_NAME = "status_target_settings"
+        val lowBatteryDismissedKey = booleanPreferencesKey("low_battery_dismissed")
 
-        val showEstimateKey = booleanPreferencesKey("show_estimate")
+        val showEstimateKey = booleanPreferencesKey("status_target_show_estimate")
+
+        val disableTrimmingKey = booleanPreferencesKey("charging_complication_disable_trimming")
     }
 }
 

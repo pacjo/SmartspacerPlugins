@@ -7,26 +7,17 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
+import data.SharedDataStoreManager.Companion.batteryLevelKey
 import nodomain.pacjo.smartspacer.plugin.R
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
-import java.io.File
+import nodomain.pacjo.smartspacer.plugin.utils.get
+import providers.BatteryBroadcastProvider.Companion.dataStore
 
 class BatteryLevelComplication: SmartspacerComplicationProvider() {
 
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val file = File(context?.filesDir, "data.json")
+        val level = provideContext().dataStore.get(batteryLevelKey)
 
-        isFirstRun(context!!)
-
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
-
-        // get data
-        val dataObject = jsonObject.getJSONObject("local_data")
-        val level = dataObject.optInt("level", -1)
-
-        return listOf(
+        return if (level != null) listOf(
             ComplicationTemplate.Basic(
                 id = "example_$smartspacerId",
                 icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
@@ -38,7 +29,7 @@ class BatteryLevelComplication: SmartspacerComplicationProvider() {
                 content = Text("$level%"),
                 onClick = TapAction(intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY))
             ).create()
-        )
+        ) else emptyList()
     }
 
     override fun getConfig(smartspacerId: String?): Config {

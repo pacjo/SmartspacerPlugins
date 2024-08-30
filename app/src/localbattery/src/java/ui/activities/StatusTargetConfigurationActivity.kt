@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.SmartspacerConstants
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import data.StatusTargetDataStoreManager.Companion.showEstimateKey
+import data.SharedDataStoreManager.Companion.showEstimateKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
@@ -14,8 +14,8 @@ import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.save
+import providers.BatteryBroadcastProvider.Companion.dataStore
 import targets.LocalBatteryTarget
-import targets.LocalBatteryTarget.Companion.dataStore
 
 class StatusTargetConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,55 +1,37 @@
 package targets
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.provider.Settings
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
-import data.StatusTargetDataStoreManager.Companion.DATASTORE_NAME
-import data.StatusTargetDataStoreManager.Companion.showEstimateKey
+import data.SharedDataStoreManager.Companion.batteryChargingTimeRemainingKey
+import data.SharedDataStoreManager.Companion.batteryIsChargingKey
+import data.SharedDataStoreManager.Companion.batteryLevelKey
+import data.SharedDataStoreManager.Companion.lowBatteryDismissedKey
+import data.SharedDataStoreManager.Companion.showEstimateKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.get
-import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
-import org.json.JSONObject
+import nodomain.pacjo.smartspacer.plugin.utils.save
+import providers.BatteryBroadcastProvider.Companion.dataStore
 import ui.activities.StatusTargetConfigurationActivity
-import java.io.File
 
 class LocalBatteryTarget: SmartspacerTargetProvider() {
 
-    companion object {
-        // during the transition period we'll be using both json and datastore
-        // over time we'll move everything to datastore, TODO: remove comment
-        val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
-    }
-
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        isFirstRun(context!!)
-
-        val file = File(context?.filesDir, "data.json")
-
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
-
         // get preferences
         val showEstimate = provideContext().dataStore.get(showEstimateKey) ?: true
 
         // get data
-        val dataObject = jsonObject.getJSONObject("local_data")
-        val isCharging = dataObject.optBoolean("isCharging", false)
-        val chargingTimeRemaining = dataObject.optLong("chargingTimeRemaining", 0)
-        val level = dataObject.optInt("level", -1)
-        val isLowBatteryDismissed = getBoolFromDataStore(provideContext().dataStore, "low_battery_dismissed") ?: false
+        val isCharging = provideContext().dataStore.get(batteryIsChargingKey) ?: false
+        val chargingTimeRemaining = provideContext().dataStore.get(batteryChargingTimeRemainingKey) ?: 0
+        val level = provideContext().dataStore.get(batteryLevelKey) ?: -1
+        val isLowBatteryDismissed = provideContext().dataStore.get(lowBatteryDismissedKey) ?: false
 
         // get battery saver trigger level (and set a default value, in case it's unset)
         val batterySaverTriggerLevel = try {
@@ -60,7 +42,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
 
         // reset the dismissed status (writing null removes entry)
         if (level > batterySaverTriggerLevel)
-            saveToDataStore(provideContext().dataStore, "low_battery_dismissed")
+            provideContext().dataStore.save(lowBatteryDismissedKey)
 
         val title = when {
             isCharging -> "Charging"
@@ -118,7 +100,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
 
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
         context?.let {
-            saveToDataStore(it.dataStore, "low_battery_dismissed", true)
+            provideContext().dataStore.save(lowBatteryDismissedKey, true)
             notifyChange(smartspacerId)
 
             return true

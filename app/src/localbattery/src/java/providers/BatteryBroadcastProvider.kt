@@ -4,33 +4,38 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerBroadcastProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerRequirementProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import complications.BatteryLevelComplication
 import complications.ChargingStatusComplication
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
+import data.SharedDataStoreManager.Companion.DATASTORE_NAME
+import data.SharedDataStoreManager.Companion.batteryChargingTimeRemainingKey
+import data.SharedDataStoreManager.Companion.batteryCurrentKey
+import data.SharedDataStoreManager.Companion.batteryIsChargingKey
+import data.SharedDataStoreManager.Companion.batteryLevelKey
+import data.SharedDataStoreManager.Companion.batteryStatusKey
+import data.SharedDataStoreManager.Companion.batteryVoltageKey
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import requirements.ChargingRequirement
 import targets.LocalBatteryTarget
-import java.io.File
 
 class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
 
+    companion object {
+        // it's here, because we share the datastore between target and complications
+        // and this is the only shared part
+        val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
+    }
+
     override fun onReceive(intent: Intent) {
-        val file = File(context?.filesDir, "data.json")
-
-        isFirstRun(context!!)
-
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
-
-        val dataObject = JSONObject()
-
         val batteryManager = context?.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
-            context!!.registerReceiver(null, ifilter)
+        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { filter ->
+            context!!.registerReceiver(null, filter)
         }
 
         val status = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
@@ -43,23 +48,20 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
         val current = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
         val level = (
             (
-                (
-                    100f *
-                    batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, 0)!!) /
-                    batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
-                )
+                100f *
+                batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, 0)!!) /
+                batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
             ).toInt()
 
-        // save result to file
-        dataObject.put("status", status)
-        dataObject.put("isCharging", isCharging)
-        dataObject.put("chargingTimeRemaining", chargingTimeRemaining)
-        dataObject.put("voltage", voltage)
-        dataObject.put("current", current)
-        dataObject.put("level", level)
-
-        jsonObject.put("local_data", dataObject)
-        file.writeText(jsonObject.toString())
+        // save result
+        provideContext().dataStore.run {
+            save(batteryStatusKey, status)
+            save(batteryIsChargingKey, isCharging)
+            save(batteryChargingTimeRemainingKey, chargingTimeRemaining)
+            save(batteryVoltageKey, voltage)
+            save(batteryCurrentKey, current)
+            save(batteryLevelKey, level)
+        }
 
         // notify about change
         SmartspacerTargetProvider.notifyChange(context!!, LocalBatteryTarget::class.java)
