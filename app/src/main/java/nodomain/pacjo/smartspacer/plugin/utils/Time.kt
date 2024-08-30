@@ -108,9 +108,9 @@ class Time {
         }
 
         fun getCurrentDate(): String {
-            val dateFormat = DateTimeFormatter
-                .ofPattern("yyyy-MM-dd")
+            val dateFormat = DateTimeFormatter.ISO_LOCAL_DATE
                 .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
 
             return dateFormat.format(Instant.now())
         }
