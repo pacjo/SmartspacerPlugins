@@ -13,18 +13,21 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
+import data.StatusTargetDataStoreManager.Companion.DATASTORE_NAME
+import data.StatusTargetDataStoreManager.Companion.showEstimateKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
 import org.json.JSONObject
-import ui.activities.ConfigurationActivity
+import ui.activities.StatusTargetConfigurationActivity
 import java.io.File
 
 // during the transition period we'll be using both json and datastore
 // over time we'll move everything to datastore, TODO: remove comment
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "status_target_data")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
 
 class LocalBatteryTarget: SmartspacerTargetProvider() {
 
@@ -37,15 +40,14 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
         val jsonObject = JSONObject(jsonString)
 
         // get preferences
-        val preferencesObject = jsonObject.getJSONObject("preferences")
-        val showEstimate = preferencesObject.optBoolean("target_show_estimate", true)
+        val showEstimate = provideContext().dataStore.get(showEstimateKey) ?: true
 
         // get data
         val dataObject = jsonObject.getJSONObject("local_data")
         val isCharging = dataObject.optBoolean("isCharging", false)
         val chargingTimeRemaining = dataObject.optLong("chargingTimeRemaining", 0)
         val level = dataObject.optInt("level", -1)
-        val isLowBatteryDismissed = getBoolFromDataStore(context!!.dataStore, "low_battery_dismissed") ?: false
+        val isLowBatteryDismissed = getBoolFromDataStore(provideContext().dataStore, "low_battery_dismissed") ?: false
 
         // get battery saver trigger level (and set a default value, in case it's unset)
         val batterySaverTriggerLevel = try {
@@ -56,7 +58,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
 
         // reset the dismissed status (writing null removes entry)
         if (level > batterySaverTriggerLevel)
-            saveToDataStore(context!!.dataStore, "low_battery_dismissed")
+            saveToDataStore(provideContext().dataStore, "low_battery_dismissed")
 
         val title = when {
             isCharging -> "Charging"
@@ -107,7 +109,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             label = "Battery info",
             description = "Shows battery related messages",
             icon = Icon.createWithResource(provideContext(), R.drawable.battery_unknown),
-            configActivity = Intent(context, ConfigurationActivity::class.java),
+            configActivity = Intent(context, StatusTargetConfigurationActivity::class.java),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.localbattery.broadcast.battery"
         )
     }
@@ -115,7 +117,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
         context?.let {
             saveToDataStore(it.dataStore, "low_battery_dismissed", true)
-            notifyChange(context!!, LocalBatteryTarget::class.java)
+            notifyChange(smartspacerId)
 
             return true
         }

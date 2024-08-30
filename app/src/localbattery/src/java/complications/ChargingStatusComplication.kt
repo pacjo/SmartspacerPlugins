@@ -1,7 +1,11 @@
 package complications
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -9,11 +13,16 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
+import data.ChargingComplicationDataStoreManager.Companion.DATASTORE_NAME
+import data.ChargingComplicationDataStoreManager.Companion.disableTrimmingKey
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
-import ui.activities.ConfigurationActivity
+import ui.activities.ChargingComplicationConfigurationActivity
 import java.io.File
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
 
 class ChargingStatusComplication: SmartspacerComplicationProvider() {
 
@@ -32,8 +41,7 @@ class ChargingStatusComplication: SmartspacerComplicationProvider() {
         val current = dataObject.optInt("current", 0)
         val voltage = dataObject.optInt("voltage", 0)
 
-        val preferences = jsonObject.getJSONObject("preferences")
-        val disableComplicationTextTrimming = preferences.optBoolean("complication_disable_trimming", false)
+        val disableComplicationTextTrimming = provideContext().dataStore.get(disableTrimmingKey)
 
         return if (isCharging) {
             listOf(
@@ -65,7 +73,7 @@ class ChargingStatusComplication: SmartspacerComplicationProvider() {
             label = "Charging status complication",
             description = "Shows voltage and current when charging",
             icon = Icon.createWithResource(provideContext(), R.drawable.battery_charging),
-            configActivity = Intent(context, ConfigurationActivity::class.java),
+            configActivity = Intent(context, ChargingComplicationConfigurationActivity::class.java),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.localbattery.broadcast.battery"
         )
     }

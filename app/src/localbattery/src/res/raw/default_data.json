@@ -1,8 +1,4 @@
 {
-  "preferences": {
-    "target_show_estimate": true,
-    "complication_disable_trimming": false
-  },
   "local_data": {},
   "bluetooth_data": []
 }
