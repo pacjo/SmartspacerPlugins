@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import complications.GenericAirQualityComplication
 import complications.GenericSunTimesComplication
 import complications.GenericWeatherComplication
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
@@ -34,5 +35,6 @@ class WeatherBroadcastReceiver : BroadcastReceiver() {
         SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
         SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
         SmartspacerComplicationProvider.notifyChange(context, GenericSunTimesComplication::class.java)
+        SmartspacerComplicationProvider.notifyChange(context, GenericAirQualityComplication::class.java)
     }
 }

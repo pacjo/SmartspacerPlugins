@@ -62,7 +62,6 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                         "both" -> "${Temperature(data.currentTemp, unit)} ${data.currentCondition}"
                         else -> Temperature(data.currentTemp, unit).toString()
                     }),
-                    // TODO: export as utility function
                     onClick = getPackageLaunchTapAction(provideContext(), launchPackage),
                     trimToFit = when (complicationTrimToFit) {
                         false -> TrimToFit.Disabled

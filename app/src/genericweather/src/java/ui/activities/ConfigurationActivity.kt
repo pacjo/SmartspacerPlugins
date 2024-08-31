@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import complications.GenericAirQualityComplication
 import complications.GenericSunTimesComplication
 import complications.GenericWeatherComplication
 import nodomain.pacjo.smartspacer.plugin.R
@@ -40,6 +41,7 @@ class ConfigurationActivity : ComponentActivity() {
 
             val conditionComplicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit", true)
             val sunTimesComplicationTrimToFit = preferences.optBoolean("suntimes_complication_trim_to_fit", true)
+            val airQualityComplicationShowAlways = preferences.optBoolean("air_quality_complication_show_always", false)
 
             PluginTheme {
                 PreferenceLayout("Generic Weather") {
@@ -129,7 +131,7 @@ class ConfigurationActivity : ComponentActivity() {
                         checked = conditionComplicationTrimToFit
                     )
 
-                    PreferenceHeading("Sun times target")
+                    PreferenceHeading("Sun times complication")
 
                     PreferenceSwitch (
                         icon = R.drawable.content_cut,
@@ -140,6 +142,19 @@ class ConfigurationActivity : ComponentActivity() {
                             SmartspacerComplicationProvider.notifyChange(context, GenericSunTimesComplication::class.java)
                         },
                         checked = sunTimesComplicationTrimToFit
+                    )
+
+                    PreferenceHeading("Air quality complication")
+
+                    PreferenceSwitch (
+                        icon = R.drawable.eye_off,
+                        title = "Show always",
+                        description = "Enable this to show complication regardless of current AQI value",
+                        onCheckedChange = {
+                            value -> savePreference(context,"air_quality_complication_show_always", value)
+                            SmartspacerComplicationProvider.notifyChange(context, GenericAirQualityComplication::class.java)
+                        },
+                        checked = airQualityComplicationShowAlways
                     )
                 }
             }

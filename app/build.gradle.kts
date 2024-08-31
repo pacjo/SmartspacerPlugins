@@ -135,7 +135,6 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")          // is this duplicated?
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     implementation("com.mikepenz:iconics-core:5.5.0-compose01")

@@ -41,6 +41,7 @@ data class Daily(
     val moonPhase: Int,
     val airQuality: AirQuality?
 )
+
 @Keep
 data class Hourly(
     val timestamp: Long,
@@ -50,6 +51,7 @@ data class Hourly(
     val windSpeed: Double,
     val windDirection: Int
 )
+
 @Keep
 data class AirQuality(
     val aqi: Int,
@@ -66,6 +68,15 @@ data class AirQuality(
     val pm25Aqi: Int,
     val so2Aqi: Int
 )
+
+object AirQualityThresholds {
+    const val EXCELLENT = 20
+    const val FAIR = 50
+    const val POOR = 100
+    const val UNHEALTHY = 150
+    const val VERY_UNHEALTHY = 250
+    const val DANGEROUS = Int.MAX_VALUE
+}
 
 // this mapping is wrong and should be changed
 fun weatherDataToSmartspacerToIcon(data: WeatherData, type: Int, index: Int = 0): WeatherStateIcon {

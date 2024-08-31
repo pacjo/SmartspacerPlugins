@@ -25,6 +25,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         tools:targetApi="34">
+
         <activity
             android:name="ui.activities.ConfigurationActivity"
             android:excludeFromRecents="true"
@@ -59,9 +60,20 @@
                 <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
             </intent-filter>
         </provider>
+
         <provider
             android:name="complications.GenericSunTimesComplication"
             android:authorities="${applicationId}.complication.suntimes"
+            android:exported="true"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS" >
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
+            </intent-filter>
+        </provider>
+
+        <provider
+            android:name="complications.GenericAirQualityComplication"
+            android:authorities="${applicationId}.complication.air"
             android:exported="true"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS" >
             <intent-filter>
@@ -77,5 +89,7 @@
                 <action android:name="nodomain.freeyourgadget.gadgetbridge.ACTION_GENERIC_WEATHER" />
             </intent-filter>
         </receiver>
+
     </application>
+
 </manifest>
