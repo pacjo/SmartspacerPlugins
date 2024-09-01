@@ -53,8 +53,8 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
             label = "Anki progress",
             description = "Anki progress showing number of cards to do",
             icon = Icon.createWithResource(provideContext(), R.drawable.ankidroid),
-            configActivity = Intent(context, ConfigurationActivity::class.java),
-            compatibilityState = getCompatibilityState(context, AnkiWidgetProvider.PACKAGE_NAME, "Anki isn't installed"),
+            configActivity = Intent(provideContext(), ConfigurationActivity::class.java),
+            compatibilityState = getCompatibilityState(provideContext(), AnkiWidgetProvider.PACKAGE_NAME, "Anki isn't installed"),
             widgetProvider = "nodomain.pacjo.smartspacer.plugin.anki.widget.anki"
         )
     }

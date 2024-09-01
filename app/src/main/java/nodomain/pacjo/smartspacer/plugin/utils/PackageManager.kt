@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.annotation.StringRes
 import com.kieronquinn.app.smartspacer.sdk.model.CompatibilityState
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 
@@ -15,11 +16,24 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
  * Checks availability of a selected package and returns Smartspacer compatible [CompatibilityState]
  */
 @SuppressLint("QueryPermissionsNeeded")
-fun getCompatibilityState(context: Context?, packageName: String, incompatibilityMessage: String): CompatibilityState {
+fun getCompatibilityState(
+    context: Context,
+    packageName: String,
+    incompatibilityMessage: String
+): CompatibilityState {
     // https://stackoverflow.com/questions/6758841/how-can-i-find-if-a-particular-package-exists-on-my-android-device
     return if (context?.packageManager?.getInstalledApplications(0)?.find { info -> info.packageName == packageName } == null) {
         CompatibilityState.Incompatible(incompatibilityMessage)
     } else CompatibilityState.Compatible
+}
+
+@SuppressLint("QueryPermissionsNeeded")
+fun getCompatibilityState(
+    context: Context,
+    packageName: String,
+    @StringRes incompatibilityMessageResourceId: Int
+): CompatibilityState {
+    return getCompatibilityState(context, packageName, context.getString(incompatibilityMessageResourceId))
 }
 
 /**

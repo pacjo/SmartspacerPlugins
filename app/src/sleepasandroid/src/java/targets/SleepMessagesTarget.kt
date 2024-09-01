@@ -124,8 +124,8 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
             label = "Sleep messages",
             description = "Shows messages from Sleep as Android app",
             icon = Icon.createWithResource(provideContext(), R.drawable.sleep_as_android),
-            configActivity = Intent(context, ConfigurationActivity::class.java),
-            compatibilityState = getCompatibilityState(context, PACKAGE_NAME, "Sleep as Android isn't installed"),
+            configActivity = Intent(provideContext(), ConfigurationActivity::class.java),
+            compatibilityState = getCompatibilityState(provideContext(), PACKAGE_NAME, R.string.config_incompatibility_message),
             broadcastProvider = "nodomain.pacjo.smartspacer.plugin.sleepasandroid.broadcast.sleep"
         )
     }

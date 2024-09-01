@@ -71,8 +71,8 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
             label = "Duolingo progress",
             description = "Duolingo progress and motivational message",
             icon = Icon.createWithResource(provideContext(), R.drawable.duolingo),
-            configActivity = Intent(context, ConfigurationActivity::class.java),
-            compatibilityState = getCompatibilityState(context, DuolingoWidgetProvider.PACKAGE_NAME, "Duolingo isn't installed"),
+            configActivity = Intent(provideContext(), ConfigurationActivity::class.java),
+            compatibilityState = getCompatibilityState(provideContext(), DuolingoWidgetProvider.PACKAGE_NAME, "Duolingo isn't installed"),
             widgetProvider = "nodomain.pacjo.smartspacer.plugin.duolingo.widget.duolingo"
         )
     }
