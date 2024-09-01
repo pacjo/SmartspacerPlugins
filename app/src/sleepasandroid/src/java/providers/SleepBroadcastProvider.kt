@@ -4,9 +4,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerBroadcastProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
+import data.DataStoreManager.Companion.broadcastEventKey
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import targets.SleepMessagesTarget
-import targets.dataStore
+import targets.SleepMessagesTarget.Companion.dataStore
 
 class SleepBroadcastProvider: SmartspacerBroadcastProvider() {
 
@@ -19,7 +20,7 @@ class SleepBroadcastProvider: SmartspacerBroadcastProvider() {
 
     override fun onReceive(intent: Intent) {
         // save data
-        saveToDataStore(context!!.dataStore, "event", intent.action.toString())
+        provideContext().dataStore.save(broadcastEventKey, intent.action.toString())
 
         SmartspacerTargetProvider.notifyChange(context!!, SleepMessagesTarget::class.java)
     }
@@ -32,5 +33,4 @@ class SleepBroadcastProvider: SmartspacerBroadcastProvider() {
             )
         )
     }
-
 }

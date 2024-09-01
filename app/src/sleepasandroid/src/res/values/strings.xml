@@ -2,5 +2,33 @@
     <string name="app_name" translatable="false">Sleep As Android Plugin</string>
 
     <!-- Generic -->
+    <string name="config_title">Sleep As Android</string>
+
     <string name="config_incompatibility_message">Sleep as Android isn\'t installed</string>
+
+    <!-- Messages target -->
+    <string name="messages_target_title">Messages target</string>
+    <string name="messages_target_description">Shows messages from Sleep as Android app</string>
+
+    <!-- Time to bed strings -->
+    <string name="messages_time_to_bed_1">Time to bed.</string>
+    <string name="messages_time_to_bed_2">Goodnight.</string>
+    <string name="messages_time_to_bed_3">It\'s late.</string>
+    <string name="messages_time_to_bed_4">Getting late.</string>
+
+    <!-- Alarm dismissed strings -->
+    <string name="messages_alarm_dismissed_1">Still sleepy?</string>
+    <string name="messages_alarm_dismissed_2">Already awake?</string>
+    <string name="messages_alarm_dismissed_3">Morning!</string>
+    <string name="messages_alarm_dismissed_4">It\'s never enough</string>
+
+    <string name="messages_alarm_dismissed_3_subtitle">How have you slept?</string>
+    <string name="messages_alarm_dismissed_4_subtitle">isn\'t it?</string>
+
+    <string name="messages_target_simple_style">Simple style</string>
+    <string name="messages_target_simple_style_description">Show basic target instead of image one</string>
+    <string name="messages_target_show_time_to_bed">Time to bed</string>
+    <string name="messages_target_show_time_to_bed_description">Show time to bed message</string>
+    <string name="messages_target_show_alarm_dismissed">Alarm dismissed</string>
+    <string name="messages_target_show_alarm_dismissed_description">Show alarm dismissed message</string>
 </resources>

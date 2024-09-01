@@ -4,16 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import data.DataStoreManager.Companion.showAlarmDismissedKey
+import data.DataStoreManager.Companion.showTimeToBedKey
+import data.DataStoreManager.Companion.simpleStyleKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
-import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
-import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
+import nodomain.pacjo.smartspacer.plugin.utils.get
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import targets.SleepMessagesTarget
-import targets.dataStore
+import targets.SleepMessagesTarget.Companion.dataStore
 
 class ConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,42 +26,42 @@ class ConfigurationActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            val simpleStyle = getBoolFromDataStore(context.dataStore, "simple_style") ?: false
-            val showTimeToBed = getBoolFromDataStore(context.dataStore, "show_time_to_bed") ?: true
-            val showAlarmDismissed = getBoolFromDataStore(context.dataStore, "show_alarm_dismissed") ?: true
+            val simpleStyle = context.dataStore.get(simpleStyleKey) ?: false
+            val showTimeToBed = context.dataStore.get(showTimeToBedKey) ?: true
+            val showAlarmDismissed = context.dataStore.get(showAlarmDismissedKey) ?: true
 
             PluginTheme {
-                PreferenceLayout("Sleep as Android") {
-                    PreferenceHeading("Messages target")
+                PreferenceLayout(title = stringResource(id = R.string.config_title)) {
+                    PreferenceHeading(stringResource(id = R.string.messages_target_title))
 
-                    PreferenceSwitch (
+                    PreferenceSwitch(
                         icon = R.drawable.cog,
-                        title = "Simple style",
-                        description = "Show basic target instead of image one",
+                        title = stringResource(id = R.string.messages_target_simple_style),
+                        description = stringResource(id = R.string.messages_target_simple_style_description),
                         onCheckedChange = {
-                            value -> saveToDataStore(context.dataStore,"simple_style", value)
+                            value -> context.dataStore.save(simpleStyleKey, value)
                             SmartspacerTargetProvider.notifyChange(context, SleepMessagesTarget::class.java)
                         },
                         checked = simpleStyle
                     )
 
-                    PreferenceSwitch (
+                    PreferenceSwitch(
                         icon = R.drawable.bed_outline,
-                        title = "Time to bed",
-                        description = "Show time to bed message",
+                        title = stringResource(id = R.string.messages_target_show_time_to_bed),
+                        description = stringResource(id = R.string.messages_target_show_time_to_bed_description),
                         onCheckedChange = {
-                            value -> saveToDataStore(context.dataStore,"show_time_to_bed", value)
+                            value -> context.dataStore.save(showTimeToBedKey, value)
                             SmartspacerTargetProvider.notifyChange(context, SleepMessagesTarget::class.java)
                         },
                         checked = showTimeToBed
                     )
 
-                    PreferenceSwitch (
+                    PreferenceSwitch(
                         icon = R.drawable.tea_outline,
-                        title = "Alarm dismissed",
-                        description = "Show alarm dismissed message",
+                        title = stringResource(id = R.string.messages_target_show_alarm_dismissed),
+                        description = stringResource(id = R.string.messages_target_show_alarm_dismissed_description),
                         onCheckedChange = {
-                            value -> saveToDataStore(context.dataStore,"show_alarm_dismissed", value)
+                            value -> context.dataStore.save(showAlarmDismissedKey, value)
                             SmartspacerTargetProvider.notifyChange(context, SleepMessagesTarget::class.java)
                         },
                         checked = showAlarmDismissed
