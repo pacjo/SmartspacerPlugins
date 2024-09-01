@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 fun <T> DataStore<Preferences>.save(key: Preferences.Key<T>, value: T? = null) {
     val dataStore = this
 
-    CoroutineScope(Dispatchers.IO).launch {
+    runBlocking {
         dataStore.edit { settings ->
             if (value == null)
                 settings.remove(key)
@@ -30,12 +30,9 @@ fun <T> DataStore<Preferences>.save(key: Preferences.Key<T>, value: T? = null) {
 fun <T> DataStore<Preferences>.get(key: Preferences.Key<T>): T? {
     val dataStore = this
 
-    var result: T?
-    runBlocking {
-        result = dataStore.data.first()[key]
+    return runBlocking {
+        dataStore.data.first()[key]
     }
-
-    return result
 }
 
 @Deprecated("Use generic DataStore<Preferences>.save instead")
