@@ -3,8 +3,11 @@ package utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.drawable.Drawable
 import androidx.annotation.Keep
 import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData.WeatherStateIcon
+import utils.icons.BreezyIconProvider
+import utils.icons.IconPackInfo
 
 // TODO: add missing data from weather json
 
@@ -22,6 +25,8 @@ data class WeatherData(
     val currentTemp: Int,
     val currentConditionCode: Int,
     val currentCondition: String,
+    val todayMaxTemp: Int,
+    val todayMinTemp: Int,
     val sunRise: Long,
     val sunSet: Long,
     val forecasts: List<Daily>,
@@ -276,6 +281,46 @@ fun weatherDataToIcon(context: Context, data: WeatherData, type: Int, index: Int
     }.replace("<theme>", theme).replace("<time>", time)
 
     return context.resources.getIdentifier(drawableName, "drawable", "nodomain.pacjo.smartspacer.plugin.genericweather")
+}
+
+fun weatherBreezyDataToIcon(
+    context: Context,
+    iconPack: IconPackInfo,
+    data: WeatherData,
+    type: Int,
+    index: Int = 0
+): Drawable {
+    // type:
+    // 0 - current
+    // 1 - hourly
+    // 2 - daily
+
+    val conditionCode = when (type) {
+        0 -> data.currentConditionCode
+        1 -> data.hourly[index].conditionCode
+        2 -> data.forecasts[index].conditionCode
+
+        else -> throw IllegalArgumentException("Unknown type: $type")
+    }
+
+    val timestamp = when (type) {
+        1 -> data.hourly[index].timestamp
+
+        else -> System.currentTimeMillis() / 1000
+    }
+
+    val iconProvider = BreezyIconProvider(context)
+
+    return iconProvider.getWeatherIcon(
+        iconPack,
+        iconProvider.getBreezyWeatherCode(conditionCode)!!,
+        when (timestamp) {
+            in data.sunRise..data.sunSet -> true
+            in data.forecasts[index].sunRise..data.forecasts[index].sunSet -> true
+
+            else -> false
+        }
+    )!!
 }
 
 class Temperature {

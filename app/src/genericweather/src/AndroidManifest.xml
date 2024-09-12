@@ -10,14 +10,14 @@
             <!-- Breezy Weather Icon Packs. -->
             <action android:name="org.breezyweather.ICON_PROVIDER" />
         </intent>
-        <intent>
-            <!-- Geometric Weather Icon Packs. -->
-            <action android:name="wangdaye.com.geometricweather.ICON_PROVIDER" />
-        </intent>
-        <intent>
-            <!-- Chronus Icon Packs. -->
-            <action android:name="android.intent.action.MAIN" />
-        </intent>
+<!--        <intent>-->
+<!--            &lt;!&ndash; Geometric Weather Icon Packs. &ndash;&gt;-->
+<!--            <action android:name="wangdaye.com.geometricweather.ICON_PROVIDER" />-->
+<!--        </intent>-->
+<!--        <intent>-->
+<!--            &lt;!&ndash; Chronus Icon Packs. &ndash;&gt;-->
+<!--            <action android:name="android.intent.action.MAIN" />-->
+<!--        </intent>-->
     </queries>
 
     <application
@@ -41,15 +41,16 @@
                 <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
             </intent-filter>
         </provider>
-<!--        <provider-->
-<!--            android:name="targets.WeatherForecastTarget"-->
-<!--            android:authorities="${applicationId}.target.forecast"-->
-<!--            android:exported="true"-->
-<!--            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS" >-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.kieronquinn.app.smartspacer.TARGET" />-->
-<!--            </intent-filter>-->
-<!--        </provider>-->
+
+        <provider
+            android:name="targets.WeatherForecastTarget"
+            android:authorities="${applicationId}.target.forecast"
+            android:exported="true"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS" >
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
+            </intent-filter>
+        </provider>
 
         <provider
             android:name="complications.GenericWeatherComplication"

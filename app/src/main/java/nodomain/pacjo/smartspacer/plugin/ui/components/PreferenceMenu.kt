@@ -25,8 +25,8 @@ fun PreferenceMenu(
     icon: Int,
     title: String,
     description: String,
-    onItemChange: (Any) -> Unit,
-    items: List<Pair<String, Any>>
+    onItemChange: (Any?) -> Unit,
+    items: List<Pair<String, Any?>>
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 

@@ -10,6 +10,8 @@ import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import complications.GenericAirQualityComplication
 import complications.GenericSunTimesComplication
 import complications.GenericWeatherComplication
+import data.PreferencesKeys
+import data.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceInput
@@ -19,9 +21,12 @@ import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSlider
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import nodomain.pacjo.smartspacer.plugin.utils.savePreference
 import org.json.JSONObject
 import targets.GenericWeatherTarget
+import targets.WeatherForecastTarget
+import utils.icons.BreezyIconProvider
 import java.io.File
 
 class ConfigurationActivity : ComponentActivity() {
@@ -31,6 +36,9 @@ class ConfigurationActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             isFirstRun(context)
+
+            val iconProvider = BreezyIconProvider(this)
+            val iconPacks = iconProvider.getInstalledIconPacks()
 
             // get number of forecast points (as we need it to show the default)
             val file = File(context.filesDir, "data.json")
@@ -47,12 +55,32 @@ class ConfigurationActivity : ComponentActivity() {
                 PreferenceLayout("Generic Weather") {
 
                     PreferenceMenu (
+                    PreferenceMenu(
+                        icon = R.drawable.alert_circle,      // TODO: change
+                        title = "Icon pack",
+                        description = "Select icon pack to use",
+                        onItemChange = {
+                            value -> context.dataStore.save(PreferencesKeys.ICON_PACK_PACKAGE_NAME, value as String?)
+
+                            SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
+                            SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
+                        },
+                        items =     // TODO: filter for weatherIcon support
+                            iconPacks.map { iconPack ->
+                                Pair(iconPack.name, iconPack.packageName)
+                            }.plus(
+                                Pair("Default", null)
+                            )
+                    )
+
+                    PreferenceMenu(
                         icon = R.drawable.thermometer,
                         title = "Temperature Unit",
                         description = "Select preferred unit",
                         onItemChange = {
-                            value -> savePreference(context,"unit", value)
+                            value -> savePreference(context,"unit", value!!)
                             SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
+                            // TODO: notify the rest too
                         },
                         items = listOf(
                             Pair("Kelvin", "K"),
@@ -61,13 +89,14 @@ class ConfigurationActivity : ComponentActivity() {
                         )
                     )
 
-                    PreferenceInput (
+                    PreferenceInput(
                         icon = R.drawable.package_variant,
                         title = "Launch Package",
                         description = "Select package name of an app to open when target / complication is clicked",
                         onTextChange = {
                             value -> savePreference(context,"launch_package", value)
                             SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
+                            // TODO: notify the rest too
                         },
                         dialogText = "Enter package name",
                         defaultText = launchPackage
@@ -75,12 +104,12 @@ class ConfigurationActivity : ComponentActivity() {
 
                     PreferenceHeading("Weather target")
 
-                    PreferenceMenu (
+                    PreferenceMenu(
                         icon = R.drawable.palette_outline,
                         title = "Style",
                         description = "Select target style",
                         onItemChange = {
-                            value -> savePreference(context,"target_style", value)
+                            value -> savePreference(context,"target_style", value!!)
                             SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
                         },
                         items = listOf(
@@ -90,7 +119,7 @@ class ConfigurationActivity : ComponentActivity() {
                         )
                     )
 
-                    PreferenceSlider (
+                    PreferenceSlider(
                         icon = R.drawable.calendar_range_outline,
                         title = "Forecast points to show",
                         description = "Select number of visible forecast days/hours",
@@ -105,12 +134,12 @@ class ConfigurationActivity : ComponentActivity() {
 
                     PreferenceHeading("Weather complication")
 
-                    PreferenceMenu (
+                    PreferenceMenu(
                         icon = R.drawable.palette_outline,
                         title = "Style",
                         description = "Select complication style",
                         onItemChange = {
-                            value -> savePreference(context,"condition_complication_style", value)
+                            value -> savePreference(context,"condition_complication_style", value!!)
                             SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
                         },
                         items = listOf(
@@ -120,7 +149,7 @@ class ConfigurationActivity : ComponentActivity() {
                         )
                     )
 
-                    PreferenceSwitch (
+                    PreferenceSwitch(
                         icon = R.drawable.content_cut,
                         title = "Complication text trimming",
                         description = "Disable this if text is getting cut off. May cause unexpected results",
@@ -133,7 +162,7 @@ class ConfigurationActivity : ComponentActivity() {
 
                     PreferenceHeading("Sun times complication")
 
-                    PreferenceSwitch (
+                    PreferenceSwitch(
                         icon = R.drawable.content_cut,
                         title = "Complication text trimming",
                         description = "Disable this if text is getting cut off. May cause unexpected results",
@@ -146,7 +175,7 @@ class ConfigurationActivity : ComponentActivity() {
 
                     PreferenceHeading("Air quality complication")
 
-                    PreferenceSwitch (
+                    PreferenceSwitch(
                         icon = R.drawable.eye_off,
                         title = "Show always",
                         description = "Enable this to show complication regardless of current AQI value",

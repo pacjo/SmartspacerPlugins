@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Icon
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toIcon
 import com.google.gson.Gson
@@ -14,14 +13,20 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.CarouselTemplate
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
+import data.PreferencesKeys
+import data.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
 import utils.Temperature
 import utils.WeatherData
+import utils.icons.BreezyIconProvider
+import utils.icons.IconPackInfo
+import utils.weatherBreezyDataToIcon
 import utils.weatherDataToIcon
 import java.io.File
 
@@ -41,6 +46,12 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
         val targetStyle = preferences.optString("target_style","both")
         val launchPackage = preferences.optString("launch_package", "")
         val dataPoints = preferences.optInt("target_points_visible", 4)
+
+        val iconPackPackageName = provideContext().dataStore.get(PreferencesKeys.ICON_PACK_PACKAGE_NAME)
+        val iconProvider = BreezyIconProvider(provideContext())
+        var iconPack: IconPackInfo? = null
+        if (iconPackPackageName != null)
+            iconPack = iconProvider.getIconPackByPackageName(iconPackPackageName)
 
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()
@@ -64,14 +75,32 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         Text(Temperature(point.temp, unit).toString()),
                         Text(" ${Time(provideContext(), point.timestamp).getEventTime()} "),
                         com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                            Bitmap.createScaledBitmap(
-                                ContextCompat.getDrawable(
-                                    provideContext(),
-                                    weatherDataToIcon(provideContext(), weatherData, 1, index)
-                                )!!.toBitmap(),
-                                (24 * resources.displayMetrics.density).toInt(),
-                                (24 * resources.displayMetrics.density).toInt(),
-                                true
+                            // TODO: figure out scaling issue
+                            // also icon pack icons look pixelated
+                            (
+                                if (iconPack != null)
+                                    Bitmap.createScaledBitmap(
+                                        weatherBreezyDataToIcon(
+                                            context = provideContext(),
+                                            iconPack = iconPack,
+                                            data = weatherData,
+                                            type = 1,
+                                            index = index
+                                        ).toBitmap(),
+                                        (12 * resources.displayMetrics.density).toInt(),
+                                        (12 * resources.displayMetrics.density).toInt(),
+                                        true
+                                    )
+                                else
+                                    Bitmap.createScaledBitmap(
+                                        ContextCompat.getDrawable(
+                                            provideContext(),
+                                            weatherDataToIcon(provideContext(), weatherData, 1, index)
+                                        )!!.toBitmap(),
+                                        (24 * resources.displayMetrics.density).toInt(),
+                                        (24 * resources.displayMetrics.density).toInt(),
+                                        true
+                                    )
                             ).toIcon(),
                             shouldTint = false
                         ), null
@@ -90,10 +119,20 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         else -> Temperature(currentTemperature, unit).toString()
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        IconCompat.createWithResource(
-                            provideContext(),
-                            weatherDataToIcon(provideContext(), weatherData, 0)
-                        ).toIcon(context),
+                        if (iconPack != null)
+                            Icon.createWithBitmap(
+                                weatherBreezyDataToIcon(
+                                    context = provideContext(),
+                                    iconPack = iconPack,
+                                    data = weatherData,
+                                    0
+                                ).toBitmap()
+                            )
+                        else
+                            Icon.createWithResource(
+                                provideContext(),
+                                weatherDataToIcon(provideContext(), weatherData, 0)
+                            ),
                         shouldTint = false
                     ),
                     items = carouselItemList,
@@ -113,10 +152,10 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         else -> Temperature(currentTemperature, unit).toString()
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        IconCompat.createWithResource(
+                        Icon.createWithResource(
                             provideContext(),
                             weatherDataToIcon(provideContext(), weatherData, 0)
-                        ).toIcon(context),
+                        ),
                         shouldTint = false
                     ),
                     onClick = getPackageLaunchTapAction(provideContext(), launchPackage)

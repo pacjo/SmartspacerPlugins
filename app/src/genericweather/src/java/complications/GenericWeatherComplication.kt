@@ -2,7 +2,7 @@ package complications
 
 import android.content.Intent
 import android.graphics.drawable.Icon
-import androidx.core.graphics.drawable.IconCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
 import com.kieronquinn.app.smartspacer.sdk.annotations.LimitedNativeSupport
@@ -11,13 +11,19 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
+import data.PreferencesKeys
+import data.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
 import ui.activities.ConfigurationActivity
 import utils.Temperature
 import utils.WeatherData
+import utils.icons.BreezyIconProvider
+import utils.icons.IconPackInfo
+import utils.weatherBreezyDataToIcon
 import utils.weatherDataToIcon
 import utils.weatherDataToSmartspacerToIcon
 import java.io.File
@@ -27,7 +33,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
 
     @OptIn(DisablingTrim::class, LimitedNativeSupport::class)
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val file = File(context?.filesDir, "data.json")
+        val file = File(provideContext().filesDir, "data.json")
 
         isFirstRun(provideContext())
         val jsonString = file.readText()
@@ -40,6 +46,12 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
         val complicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit",true)
         val launchPackage = preferences.optString("launch_package", "")
 
+        val iconPackPackageName = provideContext().dataStore.get(PreferencesKeys.ICON_PACK_PACKAGE_NAME)
+        val iconProvider = BreezyIconProvider(provideContext())
+        var iconPack: IconPackInfo? = null
+        if (iconPackPackageName != null)
+            iconPack = iconProvider.getIconPackByPackageName(iconPackPackageName)
+
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()
         if (weather != "{}") {
@@ -51,10 +63,20 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                 ComplicationTemplate.Basic(
                     id = "example_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        IconCompat.createWithResource(
-                            provideContext(),
-                            weatherDataToIcon(provideContext(), data, 0)
-                        ).toIcon(context),
+                        if (iconPack != null)
+                            Icon.createWithBitmap(
+                                weatherBreezyDataToIcon(
+                                    context = provideContext(),
+                                    iconPack = iconPack,
+                                    data = data,
+                                    0
+                                ).toBitmap()
+                            )
+                        else
+                            Icon.createWithResource(
+                                provideContext(),
+                                weatherDataToIcon(provideContext(), data, 0)
+                            ),
                         shouldTint = false
                     ),
                     content = Text(when (complicationStyle) {
@@ -104,5 +126,4 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
             configActivity = Intent(context, ConfigurationActivity::class.java)
         )
     }
-
 }
