@@ -9,8 +9,8 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
-import data.PreferencesKeys
-import data.dataStore
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.launchPackageKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.get
@@ -35,7 +35,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
         val complicationTrimToFit = preferences.optBoolean("suntimes_complication_trim_to_fit",true)
-        val launchPackage = provideContext().dataStore.get(PreferencesKeys.LAUNCH_PACKAGE) ?: ""
+        val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
 
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()

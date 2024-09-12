@@ -1,20 +1,17 @@
 package providers
 
 import android.appwidget.AppWidgetProviderInfo
-import android.content.Context
 import android.widget.RemoteViews
 import android.widget.TextView
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerWidgetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.findViewByIdentifier
 import complications.AnkiProgressComplication
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.widgetDueKey
+import data.DataStoreManager.Companion.widgetEtaKey
 import nodomain.pacjo.smartspacer.plugin.utils.getProvider
-import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "anki_widget_data")
+import nodomain.pacjo.smartspacer.plugin.utils.save
 
 class AnkiWidgetProvider: SmartspacerWidgetProvider() {
 
@@ -29,10 +26,10 @@ class AnkiWidgetProvider: SmartspacerWidgetProvider() {
         val ankiDue = view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/widget_due")?.text
         val ankiETA = view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/widget_eta")?.text
 
-        saveToDataStore(context!!.dataStore, "widget_due", ankiDue)
-        saveToDataStore(context!!.dataStore, "widget_eta", ankiETA)
+        provideContext().dataStore.save(widgetDueKey, ankiDue.toString())
+        provideContext().dataStore.save(widgetEtaKey, ankiETA.toString())
 
-        // Notify target about new data
+        // Notify complication about new data
         SmartspacerComplicationProvider.notifyChange(provideContext(), AnkiProgressComplication::class.java)
     }
 

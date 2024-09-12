@@ -5,15 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.hideWhenLessonCompletedKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
-import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
-import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
+import nodomain.pacjo.smartspacer.plugin.utils.get
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import targets.DuolingoProgressTarget
-import targets.dataStore
 
 class ConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +23,7 @@ class ConfigurationActivity : ComponentActivity() {
             val context = LocalContext.current
 
             // get target settings
-            val hideWhenCompleted = getBoolFromDataStore(context.dataStore, "hide_when_completed") ?: false
+            val hideWhenCompleted = context.dataStore.get(hideWhenLessonCompletedKey) ?: false
 
             PluginTheme {
                 PreferenceLayout("Duolingo") {
@@ -32,8 +33,9 @@ class ConfigurationActivity : ComponentActivity() {
                         icon = R.drawable.eye_off,
                         title = "Hide when completed",
                         description = "Hides target if lesson is completed",
-                        onCheckedChange = {
-                            value -> saveToDataStore(context.dataStore,"hide_when_completed", value)
+                        onCheckedChange = { value ->
+                            context.dataStore.save(hideWhenLessonCompletedKey, value)
+
                             SmartspacerTargetProvider.notifyChange(context, DuolingoProgressTarget::class.java)
                         },
                         checked = hideWhenCompleted

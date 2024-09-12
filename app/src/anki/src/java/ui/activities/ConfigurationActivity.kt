@@ -6,14 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import complications.AnkiProgressComplication
+import data.DataStoreManager.Companion.complicationTemplateKey
+import data.DataStoreManager.Companion.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceInput
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
-import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
-import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
-import providers.dataStore
+import nodomain.pacjo.smartspacer.plugin.utils.get
+import nodomain.pacjo.smartspacer.plugin.utils.save
 
 class ConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,18 +23,19 @@ class ConfigurationActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            val template = getStringFromDataStore(context.dataStore, "complication_template") ?: "Anki {eta} / {due}"
+            val template = context.dataStore.get(complicationTemplateKey) ?: "Anki {eta} / {due}"
 
             PluginTheme {
                 PreferenceLayout("Anki") {
                     PreferenceHeading("Messages target")
 
-                    PreferenceInput (
+                    PreferenceInput(
                         icon = R.drawable.pencil,
                         title = "Complication template",
                         description = "Control how complication shows data",
-                        onTextChange = {
-                            value: String -> saveToDataStore(context.dataStore,"complication_template", value)
+                        onTextChange = { value ->
+                            context.dataStore.save(complicationTemplateKey, value)
+
                             SmartspacerComplicationProvider.notifyChange(context, AnkiProgressComplication::class.java)
                         },
                         dialogText = "Use: \n" +

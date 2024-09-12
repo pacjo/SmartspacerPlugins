@@ -21,12 +21,12 @@ import androidx.compose.ui.Modifier
  * @param items The list of items.
  */
 @Composable
-fun PreferenceMenu(
+fun <T> PreferenceMenu(
     icon: Int,
     title: String,
     description: String,
-    onItemChange: (Any?) -> Unit,
-    items: List<Pair<String, Any?>>
+    onItemChange: (T) -> Unit,
+    items: List<Pair<String, T>>
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -54,6 +54,6 @@ fun PreferenceMenu(
                     )
                 }
             }
-        },
+        }
     )
 }

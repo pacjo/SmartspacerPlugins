@@ -5,8 +5,10 @@ import androidx.compose.runtime.Composable
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import complications.GenericWeatherComplication
-import data.PreferencesKeys
-import data.dataStore
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.iconPackPackageNameKey
+import data.DataStoreManager.Companion.launchPackageKey
+import data.DataStoreManager.Companion.temperatureUnitKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceInput
@@ -25,7 +27,7 @@ fun GeneralSettings(context: Context) {
     val iconProvider = BreezyIconProvider(context)
     val iconPacks = iconProvider.getInstalledIconPacks()
 
-    val launchPackage = context.dataStore.get(PreferencesKeys.LAUNCH_PACKAGE) ?: ""
+    val launchPackage = context.dataStore.get(launchPackageKey) ?: ""
 
     PreferenceHeading("General settings")
 
@@ -34,7 +36,7 @@ fun GeneralSettings(context: Context) {
         title = "Icon pack",
         description = "Select icon pack to use",
         onItemChange = { value ->
-            context.dataStore.save(PreferencesKeys.ICON_PACK_PACKAGE_NAME, value)
+            context.dataStore.save(iconPackPackageNameKey, value)
 
             notifyAllProviders(context)
         },
@@ -55,7 +57,7 @@ fun GeneralSettings(context: Context) {
         title = "Temperature unit",
         description = "Select preferred unit",
         onItemChange = { value ->
-            context.dataStore.save(PreferencesKeys.TEMPERATURE_UNIT, value)
+            context.dataStore.save(temperatureUnitKey, value)
 
             notifyAllProviders(context)
         },
@@ -71,7 +73,7 @@ fun GeneralSettings(context: Context) {
         title = "Launch package",
         description = "Select package name of an app to open when target / complication is clicked",
         onTextChange = { value ->
-            context.dataStore.save(PreferencesKeys.LAUNCH_PACKAGE, value)
+            context.dataStore.save(launchPackageKey, value)
 
             notifyAllProviders(context)
         },

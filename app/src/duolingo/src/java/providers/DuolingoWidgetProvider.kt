@@ -11,10 +11,11 @@ import android.widget.TextView
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerWidgetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.findViewByIdentifier
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.widgetSubtitleKey
 import nodomain.pacjo.smartspacer.plugin.utils.getProvider
-import nodomain.pacjo.smartspacer.plugin.utils.saveToDataStore
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import targets.DuolingoProgressTarget
-import targets.dataStore
 import java.io.File
 import java.io.FileOutputStream
 
@@ -113,7 +114,7 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
         }
 
         val subtitle = subtitles.firstOrNull { it?.isNotBlank() == true } ?: "Good job!"
-        saveToDataStore(context!!.dataStore, "widget_text", subtitle)
+        provideContext().dataStore.save(widgetSubtitleKey, subtitle)
 
         saveWidgetViewToFile(view, imageFile)
 

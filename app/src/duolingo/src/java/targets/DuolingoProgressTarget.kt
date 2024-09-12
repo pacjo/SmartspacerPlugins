@@ -1,28 +1,24 @@
 package targets
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import androidx.core.graphics.drawable.IconCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.hideWhenLessonCompletedKey
+import data.DataStoreManager.Companion.widgetSubtitleKey
 import nodomain.pacjo.smartspacer.plugin.R
-import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
-import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
 import providers.DuolingoWidgetProvider
 import ui.activities.ConfigurationActivity
 import java.io.File
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "progress_target_data")
 
 class DuolingoProgressTarget: SmartspacerTargetProvider() {
 
@@ -30,8 +26,8 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
         val context = context ?: return emptyList()
         val imageFile = File(context.filesDir, "image.png")
 
-        val hideWhenCompleted = getBoolFromDataStore(context.dataStore, "hide_when_completed") ?: false
-        val subtitle = getStringFromDataStore(context.dataStore, "widget_text")
+        val hideWhenCompleted = context.dataStore.get(hideWhenLessonCompletedKey) ?: false
+        val subtitle = context.dataStore.get(widgetSubtitleKey)
 
         if (hideWhenCompleted && subtitle == "Good job!") {
             return emptyList()

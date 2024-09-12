@@ -5,6 +5,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import data.DataStoreManager.Companion.expectedPrecipitationDismissDateKey
+import data.DataStoreManager.Companion.expectedPrecipitationDismissedKey
+import data.DataStoreManager.Companion.todayForecastDismissDateKey
+import data.DataStoreManager.Companion.todayForecastDismissedKey
+import data.DataStoreManager.Companion.tomorrowForecastDismissDateKey
+import data.DataStoreManager.Companion.tomorrowForecastDismissedKey
 
 // TODO: add weather alerts when WeatherSpec v5 comes out
 // https://codeberg.org/Freeyourgadget/Gadgetbridge/pulls/3273#issuecomment-1075497
@@ -14,36 +20,40 @@ enum class TargetMode {
     EXPECTED_PRECIPITATION
 }
 
-val Context.dataStore by preferencesDataStore(name = "genericweather_datastore")
+class DataStoreManager {
+    companion object {
+        private const val DATASTORE_NAME = "genericweather_datastore"
 
-object PreferencesKeys {
-    val ICON_PACK_PACKAGE_NAME = stringPreferencesKey("icon_pack_package_name")
+        val Context.dataStore by preferencesDataStore(name = DATASTORE_NAME)
 
-    val TEMPERATURE_UNIT = stringPreferencesKey("temperature_unit")
-    val LAUNCH_PACKAGE = stringPreferencesKey("launch_package")
+        val iconPackPackageNameKey = stringPreferencesKey("icon_pack_package_name")
 
-    val TODAY_FORECAST_DISMISSED = booleanPreferencesKey("today_forecast_dismissed")
-    val TODAY_FORECAST_DISMISS_DATE = stringPreferencesKey("today_forecast_dismiss_date")
+        val temperatureUnitKey = stringPreferencesKey("temperature_unit")
+        val launchPackageKey = stringPreferencesKey("launch_package")
 
-    val TOMORROW_FORECAST_DISMISSED = booleanPreferencesKey("tomorrow_forecast_dismissed")
-    val TOMORROW_FORECAST_DISMISS_DATE = stringPreferencesKey("tomorrow_forecast_dismiss_date")
+        val todayForecastDismissedKey = booleanPreferencesKey("today_forecast_dismissed")
+        val todayForecastDismissDateKey = stringPreferencesKey("today_forecast_dismiss_date")
 
-    val EXPECTED_PRECIPITATION_DISMISSED = booleanPreferencesKey("dismissed_rain")
-    val EXPECTED_PRECIPITATION_DISMISS_DATE = stringPreferencesKey("dismiss_date_rain")
+        val tomorrowForecastDismissedKey = booleanPreferencesKey("tomorrow_forecast_dismissed")
+        val tomorrowForecastDismissDateKey = stringPreferencesKey("tomorrow_forecast_dismiss_date")
+
+        val expectedPrecipitationDismissedKey = booleanPreferencesKey("dismissed_rain")
+        val expectedPrecipitationDismissDateKey = stringPreferencesKey("dismiss_date_rain")
+    }
 }
 
 fun getDismissedKey(targetMode: TargetMode): Preferences.Key<Boolean> {
     return when (targetMode) {
-        TargetMode.FORECAST_TODAY -> PreferencesKeys.TODAY_FORECAST_DISMISSED
-        TargetMode.FORECAST_TOMORROW -> PreferencesKeys.TOMORROW_FORECAST_DISMISSED
-        TargetMode.EXPECTED_PRECIPITATION -> PreferencesKeys.EXPECTED_PRECIPITATION_DISMISSED
+        TargetMode.FORECAST_TODAY -> todayForecastDismissedKey
+        TargetMode.FORECAST_TOMORROW -> tomorrowForecastDismissedKey
+        TargetMode.EXPECTED_PRECIPITATION -> expectedPrecipitationDismissedKey
     }
 }
 
 fun getDismissDateKey(targetMode: TargetMode): Preferences.Key<String> {
     return when (targetMode) {
-        TargetMode.FORECAST_TODAY -> PreferencesKeys.TODAY_FORECAST_DISMISS_DATE
-        TargetMode.FORECAST_TOMORROW -> PreferencesKeys.TOMORROW_FORECAST_DISMISS_DATE
-        TargetMode.EXPECTED_PRECIPITATION -> PreferencesKeys.EXPECTED_PRECIPITATION_DISMISS_DATE
+        TargetMode.FORECAST_TODAY -> todayForecastDismissDateKey
+        TargetMode.FORECAST_TOMORROW -> tomorrowForecastDismissDateKey
+        TargetMode.EXPECTED_PRECIPITATION -> expectedPrecipitationDismissDateKey
     }
 }

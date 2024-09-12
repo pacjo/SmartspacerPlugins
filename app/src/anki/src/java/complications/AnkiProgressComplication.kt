@@ -8,22 +8,25 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
+import data.DataStoreManager.Companion.complicationTemplateKey
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.widgetDueKey
+import data.DataStoreManager.Companion.widgetEtaKey
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
-import nodomain.pacjo.smartspacer.plugin.utils.getStringFromDataStore
 import providers.AnkiWidgetProvider
-import providers.dataStore
 import ui.activities.ConfigurationActivity
 
 class AnkiProgressComplication: SmartspacerComplicationProvider() {
 
     @OptIn(DisablingTrim::class)
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val ankiDue = getStringFromDataStore(context!!.dataStore, "widget_due")
-        val ankiETA = getStringFromDataStore(context!!.dataStore, "widget_eta")
+        val ankiDue = provideContext().dataStore.get(widgetDueKey)
+        val ankiETA = provideContext().dataStore.get(widgetEtaKey)
 
-        val template = getStringFromDataStore(context!!.dataStore, "complication_template") ?: "Anki {eta} / {due}"
+        val template = provideContext().dataStore.get(complicationTemplateKey) ?: "Anki {eta} / {due}"
 
         // for now we just show the complication if we have both fields
         // might break with card count so small eta is empty

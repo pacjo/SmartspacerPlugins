@@ -11,8 +11,10 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
-import data.PreferencesKeys
-import data.dataStore
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.iconPackPackageNameKey
+import data.DataStoreManager.Companion.launchPackageKey
+import data.DataStoreManager.Companion.temperatureUnitKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
@@ -41,12 +43,12 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
-        val temperatureUnit = provideContext().dataStore.get(PreferencesKeys.TEMPERATURE_UNIT) ?: "C"
+        val temperatureUnit = provideContext().dataStore.get(temperatureUnitKey) ?: "C"
         val complicationStyle = preferences.optString("condition_complication_style","temperature")
         val complicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit",true)
-        val launchPackage = provideContext().dataStore.get(PreferencesKeys.LAUNCH_PACKAGE) ?: ""
+        val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
 
-        val iconPackPackageName = provideContext().dataStore.get(PreferencesKeys.ICON_PACK_PACKAGE_NAME)
+        val iconPackPackageName = provideContext().dataStore.get(iconPackPackageNameKey)
         val iconProvider = BreezyIconProvider(provideContext())
         var iconPack: IconPackInfo? = null
         if (iconPackPackageName != null)

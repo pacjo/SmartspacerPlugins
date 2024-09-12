@@ -13,8 +13,10 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.CarouselTemplate
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
-import data.PreferencesKeys
-import data.dataStore
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.iconPackPackageNameKey
+import data.DataStoreManager.Companion.launchPackageKey
+import data.DataStoreManager.Companion.temperatureUnitKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.get
@@ -42,12 +44,12 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
-        val temperatureUnit = provideContext().dataStore.get(PreferencesKeys.TEMPERATURE_UNIT) ?: "C"
+        val temperatureUnit = provideContext().dataStore.get(temperatureUnitKey) ?: "C"
         val targetStyle = preferences.optString("target_style","both")
-        val launchPackage = provideContext().dataStore.get(PreferencesKeys.LAUNCH_PACKAGE) ?: ""
+        val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
         val dataPoints = preferences.optInt("target_points_visible", 4)
 
-        val iconPackPackageName = provideContext().dataStore.get(PreferencesKeys.ICON_PACK_PACKAGE_NAME)
+        val iconPackPackageName = provideContext().dataStore.get(iconPackPackageNameKey)
         val iconProvider = BreezyIconProvider(provideContext())
         var iconPack: IconPackInfo? = null
         if (iconPackPackageName != null)

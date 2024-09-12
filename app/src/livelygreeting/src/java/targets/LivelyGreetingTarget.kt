@@ -1,30 +1,26 @@
 package targets
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
 import androidx.core.graphics.drawable.toIcon
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.hideTargetWithoutComplicationsKey
 import nodomain.pacjo.smartspacer.plugin.R
-import nodomain.pacjo.smartspacer.plugin.utils.getBoolFromDataStore
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import ui.activities.ConfigurationActivity
 import kotlin.random.Random
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "greeting_target_settings")
 
 class LivelyGreetingTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        val hideNoComplications = getBoolFromDataStore(provideContext().dataStore, "target_hide_no_complications") ?: false
+        val hideNoComplications = provideContext().dataStore.get(hideTargetWithoutComplicationsKey) ?: false
 
         val morningString = context!!.resources.getStringArray(R.array.quickspace_psa_morning)
         val lateEveningStrings = context!!.resources.getStringArray(R.array.quickspace_psa_late_evening)
