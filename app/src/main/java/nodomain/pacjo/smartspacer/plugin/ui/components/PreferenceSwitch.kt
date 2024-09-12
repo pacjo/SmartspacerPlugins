@@ -50,9 +50,8 @@ fun PreferenceSwitch(
                     onCheckedChange(isChecked)
                 },
             )
-        },
+        }
     )
-
 }
 
 @Composable
@@ -84,7 +83,6 @@ fun PreferenceSwitch(
                     onCheckedChange(isChecked)
                 },
             )
-        },
+        }
     )
-
 }

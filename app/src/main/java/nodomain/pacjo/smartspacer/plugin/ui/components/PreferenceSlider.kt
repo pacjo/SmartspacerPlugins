@@ -56,6 +56,6 @@ fun PreferenceSlider(
                 modifier = Modifier
                     .fillMaxWidth()
             )
-        },
+        }
     )
 }

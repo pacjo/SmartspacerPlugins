@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.activities.AboutActivity
 
@@ -37,6 +36,7 @@ import nodomain.pacjo.smartspacer.plugin.ui.activities.AboutActivity
 @Composable
 fun PreferenceLayout(
     title: String,
+    floatingActionButton: @Composable () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
@@ -51,10 +51,7 @@ fun PreferenceLayout(
             topBar = {
                 LargeTopAppBar(
                     title = {
-                        Text(
-                            text = title,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        Text(text = title)
                     },
                     navigationIcon = {
                         IconButton(
@@ -82,7 +79,8 @@ fun PreferenceLayout(
                     },
                     scrollBehavior = scrollBehavior
                 )
-            }
+            },
+            floatingActionButton = floatingActionButton
         ) {
             Column(
                 modifier = Modifier
