@@ -21,7 +21,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
-import ui.activities.ConfigurationActivity
+import ui.activities.WeatherTargetConfigurationActivity
 import utils.Temperature
 import utils.WeatherData
 import utils.icons.BreezyIconProvider
@@ -42,9 +42,9 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
-        val unit = preferences.optString("unit", "C")
+        val temperatureUnit = provideContext().dataStore.get(PreferencesKeys.TEMPERATURE_UNIT) ?: "C"
         val targetStyle = preferences.optString("target_style","both")
-        val launchPackage = preferences.optString("launch_package", "")
+        val launchPackage = provideContext().dataStore.get(PreferencesKeys.LAUNCH_PACKAGE) ?: ""
         val dataPoints = preferences.optInt("target_points_visible", 4)
 
         val iconPackPackageName = provideContext().dataStore.get(PreferencesKeys.ICON_PACK_PACKAGE_NAME)
@@ -72,7 +72,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
 
                 hourlyData.take(dataPoints).forEachIndexed { index, point ->
                     val carouselItem = CarouselTemplateData.CarouselItem(
-                        Text(Temperature(point.temp, unit).toString()),
+                        Text(Temperature(point.temp, temperatureUnit).toString()),
                         Text(" ${Time(provideContext(), point.timestamp).getEventTime()} "),
                         com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                             // TODO: figure out scaling issue
@@ -115,8 +115,8 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
                         "condition" -> currentCondition
-                        "both" -> "${Temperature(currentTemperature, unit)} $currentCondition"
-                        else -> Temperature(currentTemperature, unit).toString()
+                        "both" -> "${Temperature(currentTemperature, temperatureUnit)} $currentCondition"
+                        else -> Temperature(currentTemperature, temperatureUnit).toString()
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         if (iconPack != null)
@@ -148,8 +148,8 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
                         "condition" -> currentCondition
-                        "both" -> "${Temperature(currentTemperature, unit)} $currentCondition"
-                        else -> Temperature(currentTemperature, unit).toString()
+                        "both" -> "${Temperature(currentTemperature, temperatureUnit)} $currentCondition"
+                        else -> Temperature(currentTemperature, temperatureUnit).toString()
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
@@ -182,7 +182,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
             label = "Generic weather",
             description = "Shows weather information from supported apps",
             icon = Icon.createWithResource(context, R.drawable.weather_sunny_alert),
-            configActivity = Intent(context, ConfigurationActivity::class.java)
+            configActivity = Intent(context, WeatherTargetConfigurationActivity::class.java)
         )
     }
 

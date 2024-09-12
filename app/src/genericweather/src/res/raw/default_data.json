@@ -2,8 +2,6 @@
   "preferences": {
     "target_points_visible": 4,
     "target_style": "both",
-    "unit": "C",
-    "launch_package": "",
     "condition_complication_style": "temperature",
     "condition_complication_trim_to_fit": true,
     "suntimes_complication_trim_to_fit": true,

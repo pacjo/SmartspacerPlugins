@@ -18,7 +18,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
-import ui.activities.ConfigurationActivity
+import ui.activities.WeatherComplicationConfigurationActivity
 import utils.Temperature
 import utils.WeatherData
 import utils.icons.BreezyIconProvider
@@ -41,10 +41,10 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
 
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
-        val unit = preferences.optString("unit", "C")
+        val temperatureUnit = provideContext().dataStore.get(PreferencesKeys.TEMPERATURE_UNIT) ?: "C"
         val complicationStyle = preferences.optString("condition_complication_style","temperature")
         val complicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit",true)
-        val launchPackage = preferences.optString("launch_package", "")
+        val launchPackage = provideContext().dataStore.get(PreferencesKeys.LAUNCH_PACKAGE) ?: ""
 
         val iconPackPackageName = provideContext().dataStore.get(PreferencesKeys.ICON_PACK_PACKAGE_NAME)
         val iconProvider = BreezyIconProvider(provideContext())
@@ -81,8 +81,8 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                     ),
                     content = Text(when (complicationStyle) {
                         "condition" -> data.currentCondition
-                        "both" -> "${Temperature(data.currentTemp, unit)} ${data.currentCondition}"
-                        else -> Temperature(data.currentTemp, unit).toString()
+                        "both" -> "${Temperature(data.currentTemp, temperatureUnit)} ${data.currentCondition}"
+                        else -> Temperature(data.currentTemp, temperatureUnit).toString()
                     }),
                     onClick = getPackageLaunchTapAction(provideContext(), launchPackage),
                     trimToFit = when (complicationTrimToFit) {
@@ -123,7 +123,7 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
             label = "Generic weather",
             description = "Shows temperature and/or condition icon from supported apps",
             icon = Icon.createWithResource(context, R.drawable.weather_sunny_alert),
-            configActivity = Intent(context, ConfigurationActivity::class.java)
+            configActivity = Intent(context, WeatherComplicationConfigurationActivity::class.java)
         )
     }
 }

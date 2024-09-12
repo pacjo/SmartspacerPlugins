@@ -9,12 +9,15 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
+import data.PreferencesKeys
+import data.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
-import ui.activities.ConfigurationActivity
+import ui.activities.SunTimesComplicationConfigurationActivity
 import utils.WeatherData
 import java.io.File
 import kotlin.math.min
@@ -32,7 +35,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
         val complicationTrimToFit = preferences.optBoolean("suntimes_complication_trim_to_fit",true)
-        val launchPackage = preferences.optString("launch_package", "")
+        val launchPackage = provideContext().dataStore.get(PreferencesKeys.LAUNCH_PACKAGE) ?: ""
 
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()
@@ -100,7 +103,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
             label = "Generic sun times",
             description = "Shows sunrise / sunset information from supported apps",
             icon = Icon.createWithResource(context, R.drawable.ic_sunrise),
-            configActivity = Intent(context, ConfigurationActivity::class.java)
+            configActivity = Intent(context, SunTimesComplicationConfigurationActivity::class.java)
         )
     }
 

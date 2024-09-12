@@ -11,11 +11,14 @@ import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
+import data.PreferencesKeys
+import data.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
+import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
 import org.json.JSONObject
-import ui.activities.ConfigurationActivity
+import ui.activities.AirQualityComplicationConfigurationActivity
 import utils.AirQualityThresholds
 import utils.WeatherData
 import java.io.File
@@ -32,7 +35,7 @@ class GenericAirQualityComplication: SmartspacerComplicationProvider() {
         // get preferences
         val preferences = jsonObject.getJSONObject("preferences")
         val complicationShowAlways = preferences.optBoolean("air_quality_complication_show_always", false)
-        val launchPackage = preferences.optString("launch_package", "")
+        val launchPackage = provideContext().dataStore.get(PreferencesKeys.LAUNCH_PACKAGE) ?: ""
 
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()
@@ -81,7 +84,7 @@ class GenericAirQualityComplication: SmartspacerComplicationProvider() {
             label = "Generic air quality",
             description = "Shows air quality index information from supported apps",
             icon = Icon.createWithResource(context, R.drawable.weather_dust),
-            configActivity = Intent(context, ConfigurationActivity::class.java)
+            configActivity = Intent(context, AirQualityComplicationConfigurationActivity::class.java)
         )
     }
 

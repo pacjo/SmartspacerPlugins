@@ -19,6 +19,9 @@ val Context.dataStore by preferencesDataStore(name = "genericweather_datastore")
 object PreferencesKeys {
     val ICON_PACK_PACKAGE_NAME = stringPreferencesKey("icon_pack_package_name")
 
+    val TEMPERATURE_UNIT = stringPreferencesKey("temperature_unit")
+    val LAUNCH_PACKAGE = stringPreferencesKey("launch_package")
+
     val TODAY_FORECAST_DISMISSED = booleanPreferencesKey("today_forecast_dismissed")
     val TODAY_FORECAST_DISMISS_DATE = stringPreferencesKey("today_forecast_dismiss_date")
 
