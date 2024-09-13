@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import nodomain.pacjo.smartspacer.plugin.localbattery.data.BluetoothProto
 import nodomain.pacjo.smartspacer.plugin.localbattery.data.BluetoothProto.BluetoothDeviceStore
-import providers.BluetoothDevice
+import data.BluetoothDevice
 import java.io.InputStream
 import java.io.OutputStream
 

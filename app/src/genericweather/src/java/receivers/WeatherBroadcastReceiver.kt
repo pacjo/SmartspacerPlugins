@@ -24,6 +24,7 @@ class WeatherBroadcastReceiver : BroadcastReceiver() {
             context.dataStore.save(weatherDataKey, weatherData)
 
         SmartspacerTargetProvider.notifyChange(context, WeatherConditionTarget::class.java)
+        SmartspacerTargetProvider.notifyChange(context, WeatherForecastTarget::class.java)
         SmartspacerComplicationProvider.notifyChange(context, WeatherConditionComplication::class.java)
         SmartspacerComplicationProvider.notifyChange(context, SunTimesComplication::class.java)
         SmartspacerComplicationProvider.notifyChange(context, AirQualityComplication::class.java)

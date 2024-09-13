@@ -11,14 +11,6 @@ import data.BluetoothTargetDataStoreManager.Companion.removeBluetoothDevice
 import data.BluetoothTargetDataStoreManager.Companion.saveBluetoothDevice
 import targets.BluetoothBatteryTarget
 
-class BluetoothDevice(
-    val macAddress: String,
-    val bluetoothClass: Int,
-    val bluetoothName: String,
-    val batteryLevel: Int,
-    val modifiedTime: Long
-)
-
 class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
 
     @SuppressLint("MissingPermission")      // we're checking this in the target code
@@ -35,11 +27,11 @@ class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
 
         device?.let {
             if (intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL") != -1) {
-                val bluetoothDevice = BluetoothDevice(
+                val bluetoothDevice = data.BluetoothDevice(
                     macAddress = device.address,
                     bluetoothClass = device.bluetoothClass.deviceClass,
                     bluetoothName = device.name,
-                    batteryLevel = intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL")!!,     // TODO: check
+                    batteryLevel = intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL")!!,
                     modifiedTime = System.currentTimeMillis()
                 )
 
@@ -60,5 +52,4 @@ class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
             )
         )
     }
-
 }
