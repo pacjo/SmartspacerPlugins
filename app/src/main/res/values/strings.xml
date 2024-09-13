@@ -7,10 +7,10 @@
 
     <string name="version">Version %1$s</string>
     <string name="app_description">is one of my plugins for Smartspacer, all of them available under an open source license on GitHub.\n\nIf you like my work consider contributing or donating to the project to support further development.</string>
-    <string name="github">GitHub</string>
+    <string name="github" translatable="false">GitHub</string>
     <string name="github_url" translatable="false">https://github.com/pacjo</string>
-    <string name="mastodon">Mastodon</string>
+    <string name="mastodon" translatable="false">Mastodon</string>
     <string name="mastodon_url" translatable="false">https://fosstodon.org/@pacjo</string>
-    <string name="paypal">PayPal</string>
+    <string name="paypal" translatable="false">PayPal</string>
     <string name="paypal_url" translatable="false">https://www.paypal.com/donate?hosted_button_id=VKCHVWUV48STE</string>
 </resources>
