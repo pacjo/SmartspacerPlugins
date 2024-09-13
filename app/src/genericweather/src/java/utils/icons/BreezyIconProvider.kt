@@ -1,5 +1,6 @@
 package utils.icons
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,7 +8,9 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.annotation.XmlRes
+import androidx.core.content.res.ResourcesCompat
 import org.xmlpull.v1.XmlPullParser
+import utils.WeatherData
 
 // TODO: move elsewhere if we implement other icon packs
 data class IconPackInfo(
@@ -15,6 +18,11 @@ data class IconPackInfo(
     val packageName: String,
     val hasWeatherIcons: Boolean,
     val drawableFilter: Map<String, String> = emptyMap()
+)
+
+private data class IconPackConfig(
+    val hasWeatherIcons: Boolean
+    // we could add other attributes as needed
 )
 
 class BreezyIconProvider(
@@ -29,11 +37,7 @@ class BreezyIconProvider(
         private const val DRAWABLE_FILTER_META_DATA = "org.breezyweather.DRAWABLE_FILTER"
     }
 
-    // TODO: do we need this?
-    private data class IconPackConfig(
-        val hasWeatherIcons: Boolean
-        // Add other attributes as needed
-    )
+    // icon pack discovery
 
     fun getInstalledIconPacks(): List<IconPackInfo> {
         val packageManager = context.packageManager
@@ -41,8 +45,6 @@ class BreezyIconProvider(
             Intent(ICON_PROVIDER_ACTION),
             PackageManager.GET_RESOLVED_FILTER
         )
-
-        Log.d(TAG, "providers: $providers")
 
         return providers.mapNotNull { resolveInfo ->
             getIconPackByPackageName(resolveInfo.activityInfo.packageName)
@@ -77,73 +79,34 @@ class BreezyIconProvider(
         }
     }
 
+    // icon usage
+
     fun getWeatherIcon(
         iconPack: IconPackInfo,
-        weatherCode: String,
-        isDay: Boolean
-    ): Drawable? {
-        val resources = try {
-            context.packageManager.getResourcesForApplication(iconPack.packageName)
-        } catch (e: PackageManager.NameNotFoundException) {
-            Log.e(TAG, "Failed to get resources for ${iconPack.packageName}", e)
-            return null
+        data: WeatherData,
+        type: Int,
+        index: Int = 0
+    ): Drawable {
+        // type:
+        // 0 - current
+        // 1 - hourly
+        // 2 - daily
+
+        val conditionCode = when (type) {
+            0 -> data.currentConditionCode
+            1 -> data.hourly[index].conditionCode
+            2 -> data.forecasts[index].conditionCode
+
+            else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
-        val fileName = getWeatherIconFileName(weatherCode, isDay, iconPack.drawableFilter)
-        val drawableId = resources.getIdentifier(fileName, "drawable", iconPack.packageName)
+        val timestamp = when (type) {
+            1 -> data.hourly[index].timestamp
 
-        return if (drawableId != 0) {
-            resources.getDrawable(drawableId)
-        } else {
-            null
-        }
-    }
-
-    private fun parseConfig(resources: Resources, @XmlRes configResId: Int): IconPackConfig {
-        val parser = resources.getXml(configResId)
-        var type = parser.eventType
-        while (type != XmlPullParser.END_DOCUMENT) {
-            if (type == XmlPullParser.START_TAG && "config" == parser.name) {
-                return IconPackConfig(
-                    parser.getAttributeBooleanValue(
-                        null,
-                        "hasWeatherIcons",
-                        false
-                    )
-                )
-            }
-            type = parser.next()
+            else -> System.currentTimeMillis() / 1000
         }
 
-        return IconPackConfig(false)
-    }
-
-    private fun parseFilter(resources: Resources, @XmlRes filterResId: Int): Map<String, String> {
-        val map: MutableMap<String, String> = HashMap()
-        val parser = resources.getXml(filterResId)
-        var type = parser.eventType
-        while (type != XmlPullParser.END_DOCUMENT) {
-            if (type == XmlPullParser.START_TAG && "item" == parser.name) {
-                map[parser.getAttributeValue(null, "name")] =
-                    parser.getAttributeValue(null, "value")
-            }
-            type = parser.next()
-        }
-        return map
-    }
-
-    private fun getWeatherIconFileName(
-        weatherCode: String,
-        isDay: Boolean,
-        drawableFilter: Map<String, String>
-    ): String {
-        val standardFileName = "${weatherCode}_${if (isDay) "day" else "night"}"
-
-        return drawableFilter[standardFileName] ?: standardFileName
-    }
-
-    fun getBreezyWeatherCode(conditionCode: Int?): String? {
-        return when (conditionCode) {
+        val breezyWeatherCode = when (conditionCode) {
             200, 201, 202 -> "weather_thunderstorm"
             210, 211, 212 -> "shortcuts_thunder"
             221, 230, 231, 232 -> "weather_thunderstorm"
@@ -161,7 +124,82 @@ class BreezyIconProvider(
             801, 802 -> "weather_partly_cloudy"
             803, 804 -> "weather_cloudy"
 
-            else -> null
+            else -> throw IllegalArgumentException("Unknown condition code: $conditionCode")
         }
+
+        return this.getIconFromIconPack(
+            iconPack,
+            breezyWeatherCode,
+            when (timestamp) {
+                in data.sunRise..data.sunSet -> true
+                in data.forecasts[index].sunRise..data.forecasts[index].sunSet -> true
+
+                else -> false
+            }
+        )!!
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun getIconFromIconPack(
+        iconPack: IconPackInfo,
+        weatherCode: String,
+        isDay: Boolean
+    ): Drawable? {
+        val resources = try {
+            context.packageManager.getResourcesForApplication(iconPack.packageName)
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e(TAG, "Failed to get resources for ${iconPack.packageName}", e)
+
+            return null
+        }
+
+        val standardFileName = "${weatherCode}_${if (isDay) "day" else "night"}"
+        val fileName = iconPack.drawableFilter[standardFileName] ?: standardFileName
+        val drawableId = resources.getIdentifier(fileName, "drawable", iconPack.packageName)
+
+        return if (drawableId != 0) {
+            ResourcesCompat.getDrawable(resources, drawableId, null)
+        } else {
+            null
+        }
+    }
+
+    // xml parsing
+
+    private fun parseConfig(resources: Resources, @XmlRes configResId: Int): IconPackConfig {
+        val parser = resources.getXml(configResId)
+        var type = parser.eventType
+        while (type != XmlPullParser.END_DOCUMENT) {
+            if (type == XmlPullParser.START_TAG && "config" == parser.name) {
+                return IconPackConfig(
+                    parser.getAttributeBooleanValue(
+                        null,
+                        "hasWeatherIcons",
+                        false
+                    )
+                )
+                // we could also check other properties here
+            }
+            type = parser.next()
+        }
+
+        return IconPackConfig(false)
+    }
+
+    private fun parseFilter(resources: Resources, @XmlRes filterResId: Int): Map<String, String> {
+        val map: MutableMap<String, String> = HashMap()
+        val parser = resources.getXml(filterResId)
+
+        var type = parser.eventType
+        while (type != XmlPullParser.END_DOCUMENT) {
+            if (type == XmlPullParser.START_TAG && "item" == parser.name) {
+                map[parser.getAttributeValue(null, "name")] =
+                    parser.getAttributeValue(null, "value")
+            }
+
+            type = parser.next()
+        }
+
+        return map
     }
 }

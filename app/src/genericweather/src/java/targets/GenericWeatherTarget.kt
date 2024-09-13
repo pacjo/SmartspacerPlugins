@@ -27,9 +27,9 @@ import ui.activities.WeatherTargetConfigurationActivity
 import utils.Temperature
 import utils.WeatherData
 import utils.icons.BreezyIconProvider
+import utils.icons.BuiltinIconProvider
+import utils.icons.IconHelper.getWeatherIcon
 import utils.icons.IconPackInfo
-import utils.weatherBreezyDataToIcon
-import utils.weatherDataToIcon
 import java.io.File
 
 class GenericWeatherTarget: SmartspacerTargetProvider() {
@@ -82,8 +82,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                             (
                                 if (iconPack != null)
                                     Bitmap.createScaledBitmap(
-                                        weatherBreezyDataToIcon(
-                                            context = provideContext(),
+                                        iconProvider.getWeatherIcon(
                                             iconPack = iconPack,
                                             data = weatherData,
                                             type = 1,
@@ -97,7 +96,12 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                                     Bitmap.createScaledBitmap(
                                         ContextCompat.getDrawable(
                                             provideContext(),
-                                            weatherDataToIcon(provideContext(), weatherData, 1, index)
+                                            BuiltinIconProvider.getWeatherIcon(
+                                                context = provideContext(),
+                                                data = weatherData,
+                                                type = 1,
+                                                index = index
+                                            )
                                         )!!.toBitmap(),
                                         (24 * resources.displayMetrics.density).toInt(),
                                         (24 * resources.displayMetrics.density).toInt(),
@@ -121,20 +125,12 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         else -> Temperature(currentTemperature, temperatureUnit).toString()
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        if (iconPack != null)
-                            Icon.createWithBitmap(
-                                weatherBreezyDataToIcon(
-                                    context = provideContext(),
-                                    iconPack = iconPack,
-                                    data = weatherData,
-                                    0
-                                ).toBitmap()
-                            )
-                        else
-                            Icon.createWithResource(
-                                provideContext(),
-                                weatherDataToIcon(provideContext(), weatherData, 0)
-                            ),
+                        getWeatherIcon(
+                            context = provideContext(),
+                            iconPackPackageName = iconPackPackageName,
+                            weatherData = weatherData,
+                            type = 0
+                        ),
                         shouldTint = false
                     ),
                     items = carouselItemList,
@@ -154,9 +150,11 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
                         else -> Temperature(currentTemperature, temperatureUnit).toString()
                     }),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        Icon.createWithResource(
-                            provideContext(),
-                            weatherDataToIcon(provideContext(), weatherData, 0)
+                        getWeatherIcon(
+                            context = provideContext(),
+                            iconPackPackageName = iconPackPackageName,
+                            weatherData = weatherData,
+                            type = 0
                         ),
                         shouldTint = false
                     ),

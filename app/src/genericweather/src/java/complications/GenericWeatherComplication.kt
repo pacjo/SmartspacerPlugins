@@ -2,7 +2,6 @@ package complications
 
 import android.content.Intent
 import android.graphics.drawable.Icon
-import androidx.core.graphics.drawable.toBitmap
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.annotations.DisablingTrim
 import com.kieronquinn.app.smartspacer.sdk.annotations.LimitedNativeSupport
@@ -23,11 +22,8 @@ import org.json.JSONObject
 import ui.activities.WeatherComplicationConfigurationActivity
 import utils.Temperature
 import utils.WeatherData
-import utils.icons.BreezyIconProvider
-import utils.icons.IconPackInfo
-import utils.weatherBreezyDataToIcon
-import utils.weatherDataToIcon
-import utils.weatherDataToSmartspacerToIcon
+import utils.icons.BuiltinIconProvider
+import utils.icons.IconHelper.getWeatherIcon
 import java.io.File
 import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData as SmartspacerWeatherData
 
@@ -49,10 +45,6 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
         val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
 
         val iconPackPackageName = provideContext().dataStore.get(iconPackPackageNameKey)
-        val iconProvider = BreezyIconProvider(provideContext())
-        var iconPack: IconPackInfo? = null
-        if (iconPackPackageName != null)
-            iconPack = iconProvider.getIconPackByPackageName(iconPackPackageName)
 
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()
@@ -65,20 +57,12 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                 ComplicationTemplate.Basic(
                     id = "example_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                        if (iconPack != null)
-                            Icon.createWithBitmap(
-                                weatherBreezyDataToIcon(
-                                    context = provideContext(),
-                                    iconPack = iconPack,
-                                    data = data,
-                                    0
-                                ).toBitmap()
-                            )
-                        else
-                            Icon.createWithResource(
-                                provideContext(),
-                                weatherDataToIcon(provideContext(), data, 0)
-                            ),
+                        getWeatherIcon(
+                            context = provideContext(),
+                            iconPackPackageName = iconPackPackageName,
+                            weatherData = data,
+                            type = 0
+                        ),
                         shouldTint = false
                     ),
                     content = Text(when (complicationStyle) {
@@ -93,11 +77,11 @@ class GenericWeatherComplication: SmartspacerComplicationProvider() {
                     }).create().apply {
                         weatherData = SmartspacerWeatherData(
                             description = data.currentCondition,
-                            state = weatherDataToSmartspacerToIcon(data, 0),
                             useCelsius = when {
                                 (unit == "F") -> false
                                 else -> true
                             },
+                            state = BuiltinIconProvider.getSmartspacerWeatherIcon(data, 0),
                             temperature = data.currentTemp
                     )
                 }
