@@ -6,9 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import complications.GenericAirQualityComplication
+import data.DataStoreManager.Companion.airQualityComplicationShowThresholdKey
+import data.DataStoreManager.Companion.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
+import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSlider
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
 import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
@@ -31,6 +34,7 @@ class AirQualityComplicationConfigurationActivity : ComponentActivity() {
 
             val airQualityComplicationShowAlways =
                 preferences.optBoolean("air_quality_complication_show_always", false)
+            val showThreshold = context.dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
 
             PluginTheme {
                 PreferenceLayout("Generic Weather") {
@@ -38,6 +42,22 @@ class AirQualityComplicationConfigurationActivity : ComponentActivity() {
                     GeneralSettings(context)
 
                     PreferenceHeading("Air quality complication")
+
+                    PreferenceSlider(
+                        icon = R.drawable.counter,
+                        title = "Threshold",
+                        description = "AQI value above which complication should be shown.",
+                        onSliderChange = { value ->
+                            context.dataStore.save(airQualityComplicationShowThresholdKey, value)
+
+                            SmartspacerComplicationProvider.notifyChange(
+                                context,
+                                AirQualityComplication::class.java
+                            )
+                        },
+                        range = AirQualityThresholds.EXCELLENT..AirQualityThresholds.VERY_UNHEALTHY,
+                        defaultPosition = showThreshold
+                    )
 
                     PreferenceSwitch(
                         icon = R.drawable.eye_off,

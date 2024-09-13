@@ -30,6 +30,7 @@ class DataStoreManager {
 
         val temperatureUnitKey = stringPreferencesKey("temperature_unit")
         val launchPackageKey = stringPreferencesKey("launch_package")
+        val airQualityComplicationShowThresholdKey = intPreferencesKey("air_quality_complication_show_threshold")
 
         val todayForecastDismissedKey = booleanPreferencesKey("today_forecast_dismissed")
         val todayForecastDismissDateKey = stringPreferencesKey("today_forecast_dismiss_date")

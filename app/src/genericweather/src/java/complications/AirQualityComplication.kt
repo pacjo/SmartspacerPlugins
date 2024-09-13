@@ -11,6 +11,7 @@ import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
+import data.DataStoreManager.Companion.airQualityComplicationShowThresholdKey
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.launchPackageKey
 import nodomain.pacjo.smartspacer.plugin.R
@@ -40,6 +41,7 @@ class GenericAirQualityComplication: SmartspacerComplicationProvider() {
         // get weather data
         val weather = jsonObject.getJSONObject("weather").toString()
         if (weather != "{}") {
+            val showThreshold = provideContext().dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
 
             val gson = Gson()
             val weatherData = gson.fromJson(weather, WeatherData::class.java)
@@ -47,9 +49,7 @@ class GenericAirQualityComplication: SmartspacerComplicationProvider() {
             val aqi = weatherData.airQuality.aqi
             val aqiColor = getAQIColor(aqi)
 
-            // TODO: make threshold configurable
-
-            return if (aqi > AirQualityThresholds.FAIR || complicationShowAlways)
+            return if (aqi > showThreshold || complicationShowAlways)
                 listOf(
                     ComplicationTemplate.Basic(
                         id = "example_$smartspacerId",
