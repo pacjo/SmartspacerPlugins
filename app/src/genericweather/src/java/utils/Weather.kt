@@ -2,8 +2,6 @@ package utils
 
 import androidx.annotation.Keep
 
-// TODO: add missing data from weather json
-
 /*
 Removing @Keep breaks minification and proguard
 This is an issue with GSON as mentioned here:

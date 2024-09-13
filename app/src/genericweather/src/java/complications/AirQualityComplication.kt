@@ -35,9 +35,7 @@ class AirQualityComplication: SmartspacerComplicationProvider() {
             val complicationShowAlways = provideContext().dataStore.get(airQualityComplicationShowAlways) ?: false
             val showThreshold = provideContext().dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
 
-            // TODO: throw this into utils
-            val gson = Gson()
-            val weatherData = gson.fromJson(jsonString, WeatherData::class.java)
+            val weatherData = Gson().fromJson(jsonString, WeatherData::class.java)
 
             val aqi = weatherData.airQuality.aqi
             val aqiColor = getAQIColor(aqi)
@@ -45,7 +43,7 @@ class AirQualityComplication: SmartspacerComplicationProvider() {
             return if (aqi > showThreshold || complicationShowAlways)
                 listOf(
                     ComplicationTemplate.Basic(
-                        id = "example_$smartspacerId",
+                        id = "air_quality_complication_$smartspacerId",
                         icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                             icon = createCircleIcon(aqiColor),
                             shouldTint = false
@@ -58,7 +56,7 @@ class AirQualityComplication: SmartspacerComplicationProvider() {
             // If nothing was returned above
             return listOf(
                 ComplicationTemplate.Basic(
-                    id = "example_$smartspacerId",
+                    id = "air_quality_complication_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
                             context,

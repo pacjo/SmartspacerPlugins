@@ -52,9 +52,7 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
             if (iconPackPackageName != null)
                 iconPack = iconProvider.getIconPackByPackageName(iconPackPackageName)
 
-            // TODO: throw this into utils
-            val gson = Gson()
-            val weatherData = gson.fromJson(jsonString, WeatherData::class.java)
+            val weatherData = Gson().fromJson(jsonString, WeatherData::class.java)
 
             val currentTemperature = weatherData.currentTemp
             val location = weatherData.location
@@ -63,7 +61,6 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
             val hourlyData = weatherData.hourly
 
             if (dataPoints > 0) {
-                // TODO: allow switching daily <-> hourly
                 val carouselItemList = mutableListOf<CarouselTemplateData. CarouselItem>()
 
                 hourlyData.take(dataPoints).forEachIndexed { index, point ->
@@ -110,14 +107,17 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
                 }
 
                 return listOf(TargetTemplate.Carousel(
-                    id = "example_$smartspacerId",
+                    id = "condition_target_$smartspacerId",
                     componentName = ComponentName(context!!, WeatherConditionTarget::class.java),
                     title = Text(location),
-                    subtitle = Text(when (targetStyle) {
-                        "condition" -> currentCondition
-                        "both" -> "${Temperature(currentTemperature, temperatureUnit)} $currentCondition"
-                        else -> Temperature(currentTemperature, temperatureUnit).toString()
-                    }),
+                    subtitle = Text(
+                        when (targetStyle) {
+                            "condition" -> currentCondition
+                            "both" -> "${Temperature(currentTemperature, temperatureUnit)} $currentCondition"
+
+                            else -> Temperature(currentTemperature, temperatureUnit).toString()
+                        }
+                    ),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         getWeatherIcon(
                             context = provideContext(),
@@ -135,13 +135,14 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
                 })
             } else {
                 return listOf(TargetTemplate.Basic(
-                    id = "example_$smartspacerId",
+                    id = "condition_target_$smartspacerId",
                     componentName = ComponentName(context!!, WeatherConditionTarget::class.java),
                     title = Text(location),
                     subtitle = Text(
                         when (targetStyle) {
                             "condition" -> currentCondition
                             "both" -> "${Temperature(currentTemperature, temperatureUnit)} $currentCondition"
+
                             else -> Temperature(currentTemperature, temperatureUnit).toString()
                         }
                     ),
@@ -159,7 +160,7 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
             }
         } else {
             return listOf(TargetTemplate.Basic(
-                id = "example_$smartspacerId",
+                id = "condition_target_$smartspacerId",
                 componentName = ComponentName(context!!, WeatherConditionTarget::class.java),
                 title = Text("Couldn't get weather"),
                 subtitle = Text("Enable integration in weather app, then sync"),

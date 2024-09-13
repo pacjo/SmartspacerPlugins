@@ -27,11 +27,13 @@
                 <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
             </intent-filter>
         </provider>
+
         <provider
             android:name="providers.AnkiWidgetProvider"
             android:authorities="${applicationId}.widget.anki"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_WIDGETS"
-            android:exported="true"/>
+            android:exported="true" />
+
     </application>
 
 </manifest>

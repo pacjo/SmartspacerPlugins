@@ -42,13 +42,11 @@ class WeatherConditionComplication: SmartspacerComplicationProvider() {
             val style = provideContext().dataStore.get(conditionComplicationStyleKey) ?:"temperature"
             val trimToFit = provideContext().dataStore.get(conditionComplicationTrimToFitKey) ?: true
 
-            // TODO: throw this into utils
-            val gson = Gson()
-            val data = gson.fromJson(jsonString, WeatherData::class.java)
+            val data = Gson().fromJson(jsonString, WeatherData::class.java)
 
             return listOf(
                 ComplicationTemplate.Basic(
-                    id = "example_$smartspacerId",
+                    id = "condition_complication_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         getWeatherIcon(
                             context = provideContext(),
@@ -82,7 +80,7 @@ class WeatherConditionComplication: SmartspacerComplicationProvider() {
             // If nothing was returned above
             return listOf(
                 ComplicationTemplate.Basic(
-                    id = "example_$smartspacerId",
+                    id = "condition_complication_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
                             context,

@@ -33,9 +33,7 @@ class SunTimesComplication: SmartspacerComplicationProvider() {
 
             val trimToFit = provideContext().dataStore.get(sunTimesComplicationTrimToFitKey) ?: true
 
-            // TODO: throw this into utils
-            val gson = Gson()
-            val weatherData = gson.fromJson(jsonString, WeatherData::class.java)
+            val weatherData = Gson().fromJson(jsonString, WeatherData::class.java)
 
             val nextSunrise: Long = when (System.currentTimeMillis() < weatherData.sunRise * 1000L) {
                 true -> weatherData.sunRise                 // if we're still before today's sunrise
@@ -55,7 +53,7 @@ class SunTimesComplication: SmartspacerComplicationProvider() {
 
             return listOf(
                 ComplicationTemplate.Basic(
-                    id = "example_$smartspacerId",
+                    id = "suntimes_complication_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
                             context,
@@ -77,7 +75,7 @@ class SunTimesComplication: SmartspacerComplicationProvider() {
             // If nothing was returned above
             return listOf(
                 ComplicationTemplate.Basic(
-                    id = "example_$smartspacerId",
+                    id = "suntimes_complication_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
                             context,

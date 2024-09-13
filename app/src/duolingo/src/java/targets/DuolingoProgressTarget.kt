@@ -12,6 +12,7 @@ import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.hideWhenLessonCompletedKey
 import data.DataStoreManager.Companion.widgetSubtitleKey
+import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
@@ -36,7 +37,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
         return if (imageFile.exists() && subtitle != null) {
             listOf(TargetTemplate.Image(
                 context = provideContext(),
-                id = "example_$smartspacerId",
+                id = "progress_target_$smartspacerId",
                 componentName = ComponentName(
                     provideContext(),
                     DuolingoProgressTarget::class.java
@@ -69,7 +70,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
             icon = Icon.createWithResource(provideContext(), R.drawable.duolingo),
             configActivity = Intent(provideContext(), ConfigurationActivity::class.java),
             compatibilityState = getCompatibilityState(provideContext(), DuolingoWidgetProvider.PACKAGE_NAME, "Duolingo isn't installed"),
-            widgetProvider = "nodomain.pacjo.smartspacer.plugin.duolingo.widget.duolingo"
+            widgetProvider = "${BuildConfig.APPLICATION_ID}.widget.duolingo"
         )
     }
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {

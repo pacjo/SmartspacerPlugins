@@ -14,6 +14,7 @@ import data.SharedDataStoreManager.Companion.batteryIsChargingKey
 import data.SharedDataStoreManager.Companion.batteryLevelKey
 import data.SharedDataStoreManager.Companion.lowBatteryDismissedKey
 import data.SharedDataStoreManager.Companion.showEstimateKey
+import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.get
@@ -60,7 +61,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
 
         return if (isCharging) {
             listOf(TargetTemplate.Basic(
-                id = "example_$smartspacerId",
+                id = "charging_target_$smartspacerId",
                 componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
                 title = Text(title),
                 subtitle = Text(subtitle),
@@ -76,7 +77,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             })
         } else if (level <= batterySaverTriggerLevel && !isLowBatteryDismissed) {
             listOf(TargetTemplate.Basic(
-                id = "example_$smartspacerId",
+                id = "low_battery_target_$smartspacerId",
                 componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
                 title = Text(title),
                 subtitle = null,
@@ -94,7 +95,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             description = "Shows battery related messages",
             icon = Icon.createWithResource(provideContext(), R.drawable.battery_unknown),
             configActivity = Intent(context, StatusTargetConfigurationActivity::class.java),
-            broadcastProvider = "nodomain.pacjo.smartspacer.plugin.localbattery.broadcast.battery"
+            broadcastProvider = "${BuildConfig.APPLICATION_ID}.broadcast.battery"
         )
     }
 

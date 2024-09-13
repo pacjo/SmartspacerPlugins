@@ -16,6 +16,7 @@ import data.DataStoreManager.Companion.broadcastEventKey
 import data.DataStoreManager.Companion.showAlarmDismissedKey
 import data.DataStoreManager.Companion.showTimeToBedKey
 import data.DataStoreManager.Companion.simpleStyleKey
+import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
@@ -84,7 +85,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
         return if (title != "") {
              if (simpleStyle) {
                 listOf(TargetTemplate.Basic(
-                    id = "sleepasandroid_$smartspacerId",
+                    id = "message_target_$smartspacerId",
                     componentName = ComponentName(
                         provideContext(),
                         SleepMessagesTarget::class.java
@@ -99,7 +100,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
             } else {
                 listOf(TargetTemplate.Image(
                     context = provideContext(),
-                    id = "sleepasandroid_$smartspacerId",
+                    id = "message_target_$smartspacerId",
                     componentName = ComponentName(
                         provideContext(),
                         SleepMessagesTarget::class.java
@@ -147,7 +148,7 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
             icon = Icon.createWithResource(provideContext(), R.drawable.sleep_as_android),
             configActivity = Intent(provideContext(), ConfigurationActivity::class.java),
             compatibilityState = getCompatibilityState(provideContext(), PACKAGE_NAME, R.string.config_incompatibility_message),
-            broadcastProvider = "nodomain.pacjo.smartspacer.plugin.sleepasandroid.broadcast.sleep"
+            broadcastProvider = "${BuildConfig.APPLICATION_ID}.broadcast.sleep"
         )
     }
 

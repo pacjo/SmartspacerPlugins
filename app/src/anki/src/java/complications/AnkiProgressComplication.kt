@@ -12,6 +12,7 @@ import data.DataStoreManager.Companion.complicationTemplateKey
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.widgetDueKey
 import data.DataStoreManager.Companion.widgetEtaKey
+import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
@@ -32,7 +33,7 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
         // might break with card count so small eta is empty
         return if (!ankiDue.isNullOrEmpty() && !ankiETA.isNullOrEmpty()) listOf(
             ComplicationTemplate.Basic(
-                id = "example_$smartspacerId",
+                id = "progress_target_$smartspacerId",
                 icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                     Icon.createWithResource(
                         provideContext(),
@@ -58,7 +59,7 @@ class AnkiProgressComplication: SmartspacerComplicationProvider() {
             icon = Icon.createWithResource(provideContext(), R.drawable.ankidroid),
             configActivity = Intent(provideContext(), ConfigurationActivity::class.java),
             compatibilityState = getCompatibilityState(provideContext(), AnkiWidgetProvider.PACKAGE_NAME, "Anki isn't installed"),
-            widgetProvider = "nodomain.pacjo.smartspacer.plugin.anki.widget.anki"
+            widgetProvider = "${BuildConfig.APPLICATION_ID}.widget.anki"
         )
     }
 }

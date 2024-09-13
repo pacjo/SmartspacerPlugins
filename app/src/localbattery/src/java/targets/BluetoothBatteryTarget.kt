@@ -44,10 +44,10 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
         // show error if we're missing permissions
         val isPluginMissingPermissions = ActivityCompat.checkSelfPermission(
             provideContext(),
-            (when {
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> Manifest.permission.BLUETOOTH_CONNECT
-                else -> Manifest.permission.BLUETOOTH
-            })
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                 Manifest.permission.BLUETOOTH_CONNECT
+            else
+                Manifest.permission.BLUETOOTH
         ) != PackageManager.PERMISSION_GRANTED
 
         val isSmartspacerMissingPermission = !provideContext().packageManager.packageHasPermission(
@@ -60,7 +60,7 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
 
         if (isPluginMissingPermissions || isSmartspacerMissingPermission) {
             return listOf(TargetTemplate.Basic(
-                id = "example_$smartspacerId",
+                id = "bluetooth_battery_target_$smartspacerId",
                 componentName = ComponentName(provideContext(), BluetoothBatteryTarget::class.java),
                 title = Text("Missing bluetooth permission"),
                 subtitle = Text("Click here to open settings"),
@@ -95,7 +95,7 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
                 dismissedMACs.contains(device.macAddress)
             }.map { device ->
             TargetTemplate.Basic(
-                id = "${smartspacerId}_${device.macAddress}",
+                id = "bluetooth_battery_target_${smartspacerId}_${device.macAddress}",
                 componentName = ComponentName(provideContext(), BluetoothBatteryTarget::class.java),
                 title = Text(device.bluetoothName),
                 subtitle = Text("${device.batteryLevel}%"),
@@ -115,12 +115,13 @@ class BluetoothBatteryTarget: SmartspacerTargetProvider() {
             description = "Provides battery from bluetooth devices",
             icon = Icon.createWithResource(provideContext(), R.drawable.battery_unknown_bluetooth),
             configActivity = Intent(context, BluetoothTargetConfigurationActivity::class.java),
-            broadcastProvider = "nodomain.pacjo.smartspacer.plugin.localbattery.broadcast.bluetooth_battery"
+            broadcastProvider = "${BuildConfig.APPLICATION_ID}.broadcast.bluetooth_battery"
         )
     }
 
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
-        val deviceMAC = targetId.substring(targetId.indexOf('_') + 1)
+        val deviceMAC = targetId.substring(targetId.lastIndexOf('_') + 1)
+
         removeBluetoothDevice(
             context = provideContext(),
             macAddress =  deviceMAC

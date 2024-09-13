@@ -37,6 +37,7 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
             in 12..15 -> context!!.resources.getString(R.string.quickspace_grt_afternoon)
             in 16..20 -> context!!.resources.getString(R.string.quickspace_grt_evening)
             in 21..23 -> context!!.resources.getString(R.string.quickspace_grt_night)
+
             else -> context!!.resources.getString(R.string.quickspace_grt_general)
         }
 
@@ -46,16 +47,18 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
             in 12..15 -> afternoonStrings[Random.nextInt(0, afternoonStrings.size - 1)]
             in 16..18 -> earlyEveningStrings[Random.nextInt(0, earlyEveningStrings.size - 1)]
             in 19..22 -> lateEveningStrings[Random.nextInt(0, lateEveningStrings.size - 1)]
+
             else -> randomStrings[Random.nextInt(0, randomStrings.size - 1)]
         }
 
         return listOf(TargetTemplate.Basic(
-            id = "example_$smartspacerId",
+            id = "greeting_target_$smartspacerId",
             componentName = ComponentName(provideContext(), LivelyGreetingTarget::class.java),
-            title = Text(when {
-                    Random.nextInt(0, 100) < 15 -> timeOfDayGreeting  // about 15% chance
-                    else -> funnyGreeting
-                }
+            title = Text(
+                if (Random.nextInt(0, 100) < 15)  // about 15% chance
+                    timeOfDayGreeting
+                else
+                    funnyGreeting
             ),
             subtitle = null,
             icon = null

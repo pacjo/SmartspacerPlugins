@@ -13,6 +13,7 @@ import data.SharedDataStoreManager.Companion.batteryCurrentKey
 import data.SharedDataStoreManager.Companion.batteryIsChargingKey
 import data.SharedDataStoreManager.Companion.batteryVoltageKey
 import data.SharedDataStoreManager.Companion.disableTrimmingKey
+import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import providers.BatteryBroadcastProvider.Companion.dataStore
@@ -31,18 +32,21 @@ class ChargingStatusComplication: SmartspacerComplicationProvider() {
         return if (isCharging) {
             listOf(
                 ComplicationTemplate.Basic(
-                    id = "example_$smartspacerId",
+                    id = "charging_complication_$smartspacerId",
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
                             provideContext(),
                             R.drawable.battery_charging
                         )
                     ),
-                    content = Text(when {
-                        voltage != 0 && current != 0 -> "${current/1000} mA, ${(voltage/100)/10f} V"
-                        current == 0 -> "${(voltage/100)/10f} V"
-                        else -> "failed to get battery stats"
-                    }),
+                    content = Text(
+                        when {
+                            voltage != 0 && current != 0 -> "${current/1000} mA, ${(voltage/100)/10f} V"
+                            current == 0 -> "${(voltage/100)/10f} V"
+
+                            else -> "failed to get battery stats"
+                        }
+                    ),
                     onClick = TapAction(intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY)),
                     trimToFit = when (disableComplicationTextTrimming) {
                         false -> TrimToFit.Enabled
@@ -59,7 +63,7 @@ class ChargingStatusComplication: SmartspacerComplicationProvider() {
             description = "Shows voltage and current when charging",
             icon = Icon.createWithResource(provideContext(), R.drawable.battery_charging),
             configActivity = Intent(context, ChargingComplicationConfigurationActivity::class.java),
-            broadcastProvider = "nodomain.pacjo.smartspacer.plugin.localbattery.broadcast.battery"
+            broadcastProvider = "${BuildConfig.APPLICATION_ID}.broadcast.battery"
         )
     }
 }

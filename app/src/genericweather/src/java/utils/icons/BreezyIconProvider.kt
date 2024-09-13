@@ -12,7 +12,7 @@ import androidx.core.content.res.ResourcesCompat
 import org.xmlpull.v1.XmlPullParser
 import utils.WeatherData
 
-// TODO: move elsewhere if we implement other icon packs
+// move elsewhere if we implement other icon packs
 data class IconPackInfo(
     val name: String,
     val packageName: String,
