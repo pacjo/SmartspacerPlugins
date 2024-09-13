@@ -1,18 +1,26 @@
 package nodomain.pacjo.smartspacer.plugin.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import kotlin.math.roundToInt
 
 /**
  * Allows the user to select from a range of integer values.
@@ -31,31 +39,49 @@ fun PreferenceSlider(
     description: String,
     onSliderChange: (value: Int) -> Unit,
     range: IntRange,
-    defaultPosition: Float = 4f
+    defaultPosition: Int
 ) {
-    var sliderPosition by remember { mutableFloatStateOf(defaultPosition) }
+    var sliderPosition by remember { mutableIntStateOf(defaultPosition) }
 
     Preference(
         icon = icon,
         title = title,
         description = {
             Text(text = description)
-            Spacer(modifier = Modifier.requiredHeight(16.dp))
-            Slider(
-                value = sliderPosition,
-                onValueChange = {
-                    // Round to the nearest integer value between 0 and 4
-                    val value: Int =
-                        it.coerceIn(range.first.toFloat()..range.last.toFloat()).roundToInt()
-                    sliderPosition = value.toFloat()
 
-                    onSliderChange(value)
-                },
-                valueRange = range.first.toFloat()..range.last.toFloat(),
-                steps = range.last - range.first - 1,
+            Spacer(modifier = Modifier.requiredHeight(16.dp))
+
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-            )
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Slider(
+                    value = sliderPosition.toFloat(),
+                    onValueChange = {
+                        val value = it.toInt()
+
+                        sliderPosition = value
+                        onSliderChange(value)
+                    },
+                    valueRange = range.first.toFloat()..range.last.toFloat(),
+                    steps = range.last - range.first - 1,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                ) {
+                    Text(
+                        text = sliderPosition.toString(),
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
         }
     )
 }

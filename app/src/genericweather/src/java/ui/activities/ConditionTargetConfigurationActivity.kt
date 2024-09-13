@@ -64,7 +64,7 @@ class WeatherTargetConfigurationActivity : ComponentActivity() {
                             SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
                         },
                         range = (0..4),
-                        defaultPosition = dataPoints.toFloat()
+                        defaultPosition = dataPoints
                     )
                 }
             }
