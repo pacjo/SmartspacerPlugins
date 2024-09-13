@@ -5,17 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
-import complications.GenericSunTimesComplication
+import complications.SunTimesComplication
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.sunTimesComplicationTrimToFitKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import nodomain.pacjo.smartspacer.plugin.utils.savePreference
-import org.json.JSONObject
+import nodomain.pacjo.smartspacer.plugin.utils.get
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import ui.composables.GeneralSettings
-import java.io.File
 
 class SunTimesComplicationConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,13 +23,8 @@ class SunTimesComplicationConfigurationActivity : ComponentActivity() {
 
         setContent {
             val context = LocalContext.current
-            isFirstRun(context)
 
-            val file = File(context.filesDir, "data.json")
-            val jsonObject = JSONObject(file.readText())
-            val preferences = jsonObject.getJSONObject("preferences")
-
-            val sunTimesComplicationTrimToFit = preferences.optBoolean("suntimes_complication_trim_to_fit", true)
+            val trimToFit = context.dataStore.get(sunTimesComplicationTrimToFitKey) ?: true
 
             PluginTheme {
                 PreferenceLayout("Generic Weather") {
@@ -43,11 +38,11 @@ class SunTimesComplicationConfigurationActivity : ComponentActivity() {
                         title = "Complication text trimming",
                         description = "Disable this if text is getting cut off. May cause unexpected results",
                         onCheckedChange = {
-                            value -> savePreference(context,"suntimes_complication_trim_to_fit", value)
+                            value -> context.dataStore.save(sunTimesComplicationTrimToFitKey, value)
 
-                            SmartspacerComplicationProvider.notifyChange(context, GenericSunTimesComplication::class.java)
+                            SmartspacerComplicationProvider.notifyChange(context, SunTimesComplication::class.java)
                         },
-                        checked = sunTimesComplicationTrimToFit
+                        checked = trimToFit
                     )
                 }
             }

@@ -13,54 +13,48 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.CarouselTemplate
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
+import data.DataStoreManager.Companion.conditionTargetDataPointsKey
+import data.DataStoreManager.Companion.conditionTargetStyleKey
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.iconPackPackageNameKey
 import data.DataStoreManager.Companion.launchPackageKey
 import data.DataStoreManager.Companion.temperatureUnitKey
+import data.DataStoreManager.Companion.weatherDataKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
-import ui.activities.WeatherTargetConfigurationActivity
+import ui.activities.ConditionTargetConfigurationActivity
 import utils.Temperature
 import utils.WeatherData
 import utils.icons.BreezyIconProvider
 import utils.icons.BuiltinIconProvider
 import utils.icons.IconHelper.getWeatherIcon
 import utils.icons.IconPackInfo
-import java.io.File
 
-class GenericWeatherTarget: SmartspacerTargetProvider() {
+class WeatherConditionTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        val file = File(context?.filesDir, "data.json")
+        val jsonString = provideContext().dataStore.get(weatherDataKey)
 
-        isFirstRun(provideContext())
+        if (jsonString != null) {
+            // get preferences
+            val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
+            val temperatureUnit = provideContext().dataStore.get(temperatureUnitKey) ?: "C"
+            val iconPackPackageName = provideContext().dataStore.get(iconPackPackageNameKey)
 
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
+            val targetStyle = provideContext().dataStore.get(conditionTargetStyleKey) ?: "both"
+            val dataPoints = provideContext().dataStore.get(conditionTargetDataPointsKey) ?: 4
 
-        // get preferences
-        val preferences = jsonObject.getJSONObject("preferences")
-        val temperatureUnit = provideContext().dataStore.get(temperatureUnitKey) ?: "C"
-        val targetStyle = preferences.optString("target_style","both")
-        val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
-        val dataPoints = preferences.optInt("target_points_visible", 4)
+            // rewrite this icon code
+            val iconProvider = BreezyIconProvider(provideContext())
+            var iconPack: IconPackInfo? = null
+            if (iconPackPackageName != null)
+                iconPack = iconProvider.getIconPackByPackageName(iconPackPackageName)
 
-        val iconPackPackageName = provideContext().dataStore.get(iconPackPackageNameKey)
-        val iconProvider = BreezyIconProvider(provideContext())
-        var iconPack: IconPackInfo? = null
-        if (iconPackPackageName != null)
-            iconPack = iconProvider.getIconPackByPackageName(iconPackPackageName)
-
-        // get weather data
-        val weather = jsonObject.getJSONObject("weather").toString()
-        if (weather != "{}") {
-
+            // TODO: throw this into utils
             val gson = Gson()
-            val weatherData = gson.fromJson(weather, WeatherData::class.java)
+            val weatherData = gson.fromJson(jsonString, WeatherData::class.java)
 
             val currentTemperature = weatherData.currentTemp
             val location = weatherData.location
@@ -117,7 +111,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
 
                 return listOf(TargetTemplate.Carousel(
                     id = "example_$smartspacerId",
-                    componentName = ComponentName(context!!, GenericWeatherTarget::class.java),
+                    componentName = ComponentName(context!!, WeatherConditionTarget::class.java),
                     title = Text(location),
                     subtitle = Text(when (targetStyle) {
                         "condition" -> currentCondition
@@ -142,13 +136,15 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
             } else {
                 return listOf(TargetTemplate.Basic(
                     id = "example_$smartspacerId",
-                    componentName = ComponentName(context!!, GenericWeatherTarget::class.java),
+                    componentName = ComponentName(context!!, WeatherConditionTarget::class.java),
                     title = Text(location),
-                    subtitle = Text(when (targetStyle) {
-                        "condition" -> currentCondition
-                        "both" -> "${Temperature(currentTemperature, temperatureUnit)} $currentCondition"
-                        else -> Temperature(currentTemperature, temperatureUnit).toString()
-                    }),
+                    subtitle = Text(
+                        when (targetStyle) {
+                            "condition" -> currentCondition
+                            "both" -> "${Temperature(currentTemperature, temperatureUnit)} $currentCondition"
+                            else -> Temperature(currentTemperature, temperatureUnit).toString()
+                        }
+                    ),
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         getWeatherIcon(
                             context = provideContext(),
@@ -164,7 +160,7 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
         } else {
             return listOf(TargetTemplate.Basic(
                 id = "example_$smartspacerId",
-                componentName = ComponentName(context!!, GenericWeatherTarget::class.java),
+                componentName = ComponentName(context!!, WeatherConditionTarget::class.java),
                 title = Text("Couldn't get weather"),
                 subtitle = Text("Enable integration in weather app, then sync"),
                 icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
@@ -182,14 +178,11 @@ class GenericWeatherTarget: SmartspacerTargetProvider() {
             label = "Generic weather",
             description = "Shows weather information from supported apps",
             icon = Icon.createWithResource(context, R.drawable.weather_sunny_alert),
-            configActivity = Intent(context, WeatherTargetConfigurationActivity::class.java)
+            configActivity = Intent(context, ConditionTargetConfigurationActivity::class.java)
         )
     }
-
-    // TODO: consider removal (onProviderRemoved)
 
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
         return false
     }
-
 }

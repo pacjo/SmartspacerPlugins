@@ -5,36 +5,27 @@ import android.content.Context
 import android.content.Intent
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import complications.GenericAirQualityComplication
-import complications.GenericSunTimesComplication
-import complications.GenericWeatherComplication
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
-import targets.GenericWeatherTarget
-import java.io.File
+import complications.AirQualityComplication
+import complications.SunTimesComplication
+import complications.WeatherConditionComplication
+import data.DataStoreManager.Companion.dataStore
+import data.DataStoreManager.Companion.weatherDataKey
+import nodomain.pacjo.smartspacer.plugin.utils.save
+import targets.WeatherConditionTarget
+import targets.WeatherForecastTarget
 
 class WeatherBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         // save data to file
         val weatherData = intent.getStringExtra("WeatherJson")
-        val file = File(context.filesDir, "data.json")
 
-        if (weatherData != null) {
-            isFirstRun(context)
+        if (weatherData != null)
+            context.dataStore.save(weatherDataKey, weatherData)
 
-            // Read JSON
-            val jsonObject = JSONObject(file.readText())
-
-            // Update only the "weather" key
-            jsonObject.put("weather", JSONObject(weatherData))
-
-            file.writeText(jsonObject.toString())
-        }
-
-        SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
-        SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
-        SmartspacerComplicationProvider.notifyChange(context, GenericSunTimesComplication::class.java)
-        SmartspacerComplicationProvider.notifyChange(context, GenericAirQualityComplication::class.java)
+        SmartspacerTargetProvider.notifyChange(context, WeatherConditionTarget::class.java)
+        SmartspacerComplicationProvider.notifyChange(context, WeatherConditionComplication::class.java)
+        SmartspacerComplicationProvider.notifyChange(context, SunTimesComplication::class.java)
+        SmartspacerComplicationProvider.notifyChange(context, AirQualityComplication::class.java)
     }
 }

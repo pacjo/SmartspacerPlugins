@@ -11,38 +11,31 @@ import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.launchPackageKey
+import data.DataStoreManager.Companion.sunTimesComplicationTrimToFitKey
+import data.DataStoreManager.Companion.weatherDataKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
 import ui.activities.SunTimesComplicationConfigurationActivity
 import utils.WeatherData
-import java.io.File
 import kotlin.math.min
 
-class GenericSunTimesComplication: SmartspacerComplicationProvider() {
+class SunTimesComplication: SmartspacerComplicationProvider() {
 
     @OptIn(DisablingTrim::class)
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val file = File(context?.filesDir, "data.json")
+        val jsonString = provideContext().dataStore.get(weatherDataKey)
 
-        isFirstRun(provideContext())
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
+        if (jsonString != null) {
+            // get preferences
+            val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
 
-        // get preferences
-        val preferences = jsonObject.getJSONObject("preferences")
-        val complicationTrimToFit = preferences.optBoolean("suntimes_complication_trim_to_fit",true)
-        val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
+            val trimToFit = provideContext().dataStore.get(sunTimesComplicationTrimToFitKey) ?: true
 
-        // get weather data
-        val weather = jsonObject.getJSONObject("weather").toString()
-        if (weather != "{}") {
-
+            // TODO: throw this into utils
             val gson = Gson()
-            val weatherData = gson.fromJson(weather, WeatherData::class.java)
+            val weatherData = gson.fromJson(jsonString, WeatherData::class.java)
 
             val nextSunrise: Long = when (System.currentTimeMillis() < weatherData.sunRise * 1000L) {
                 true -> weatherData.sunRise                 // if we're still before today's sunrise
@@ -74,7 +67,7 @@ class GenericSunTimesComplication: SmartspacerComplicationProvider() {
                     ),
                     content = Text(Time(provideContext(), nextEvent).getEventTime()),
                     onClick = getPackageLaunchTapAction(provideContext(), launchPackage),
-                    trimToFit = when (complicationTrimToFit) {
+                    trimToFit = when (trimToFit) {
                         false -> TrimToFit.Disabled
                         else -> TrimToFit.Enabled
                     }

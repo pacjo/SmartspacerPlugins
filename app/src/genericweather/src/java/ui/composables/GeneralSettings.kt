@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import complications.GenericWeatherComplication
+import complications.WeatherConditionComplication
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.iconPackPackageNameKey
 import data.DataStoreManager.Companion.launchPackageKey
@@ -15,7 +15,7 @@ import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceInput
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceMenu
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.save
-import targets.GenericWeatherTarget
+import targets.WeatherConditionTarget
 import targets.WeatherForecastTarget
 import utils.icons.BreezyIconProvider
 
@@ -83,7 +83,7 @@ fun GeneralSettings(context: Context) {
 }
 
 private fun notifyAllProviders(context: Context) {
-    SmartspacerTargetProvider.notifyChange(context, GenericWeatherTarget::class.java)
+    SmartspacerTargetProvider.notifyChange(context, WeatherConditionTarget::class.java)
     SmartspacerTargetProvider.notifyChange(context, WeatherForecastTarget::class.java)
-    SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
+    SmartspacerComplicationProvider.notifyChange(context, WeatherConditionComplication::class.java)
 }

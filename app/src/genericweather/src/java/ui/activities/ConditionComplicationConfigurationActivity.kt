@@ -5,32 +5,28 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
-import complications.GenericWeatherComplication
+import complications.WeatherConditionComplication
+import data.DataStoreManager.Companion.conditionComplicationStyleKey
+import data.DataStoreManager.Companion.conditionComplicationTrimToFitKey
+import data.DataStoreManager.Companion.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceMenu
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import nodomain.pacjo.smartspacer.plugin.utils.savePreference
-import org.json.JSONObject
+import nodomain.pacjo.smartspacer.plugin.utils.get
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import ui.composables.GeneralSettings
-import java.io.File
 
-class WeatherComplicationConfigurationActivity : ComponentActivity() {
+class ConditionComplicationConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             val context = LocalContext.current
-            isFirstRun(context)
 
-            val file = File(context.filesDir, "data.json")
-            val jsonObject = JSONObject(file.readText())
-            val preferences = jsonObject.getJSONObject("preferences")
-
-            val conditionComplicationTrimToFit = preferences.optBoolean("condition_complication_trim_to_fit", true)
+            val trimToFit = context.dataStore.get(conditionComplicationTrimToFitKey) ?: true
 
             PluginTheme {
                 PreferenceLayout("Generic Weather") {
@@ -44,9 +40,9 @@ class WeatherComplicationConfigurationActivity : ComponentActivity() {
                         title = "Style",
                         description = "Select complication style",
                         onItemChange = {
-                            value -> savePreference(context,"condition_complication_style", value)
+                            value -> context.dataStore.save(conditionComplicationStyleKey, value)
 
-                            SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
+                            SmartspacerComplicationProvider.notifyChange(context, WeatherConditionComplication::class.java)
                         },
                         items = listOf(
                             Pair("Temperature only", "temperature"),
@@ -59,12 +55,12 @@ class WeatherComplicationConfigurationActivity : ComponentActivity() {
                         icon = R.drawable.content_cut,
                         title = "Complication text trimming",
                         description = "Disable this if text is getting cut off. May cause unexpected results",
-                        onCheckedChange = {
-                            value -> savePreference(context,"condition_complication_trim_to_fit", value)
+                        onCheckedChange = { value ->
+                            context.dataStore.save(conditionComplicationTrimToFitKey, value)
 
-                            SmartspacerComplicationProvider.notifyChange(context, GenericWeatherComplication::class.java)
+                            SmartspacerComplicationProvider.notifyChange(context, WeatherConditionComplication::class.java)
                         },
-                        checked = conditionComplicationTrimToFit
+                        checked = trimToFit
                     )
                 }
             }

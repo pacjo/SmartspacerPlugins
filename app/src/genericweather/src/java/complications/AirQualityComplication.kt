@@ -11,40 +11,33 @@ import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
+import data.DataStoreManager.Companion.airQualityComplicationShowAlways
 import data.DataStoreManager.Companion.airQualityComplicationShowThresholdKey
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.launchPackageKey
+import data.DataStoreManager.Companion.weatherDataKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import org.json.JSONObject
 import ui.activities.AirQualityComplicationConfigurationActivity
 import utils.AirQualityThresholds
 import utils.WeatherData
-import java.io.File
 
-class GenericAirQualityComplication: SmartspacerComplicationProvider() {
+class AirQualityComplication: SmartspacerComplicationProvider() {
 
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val file = File(context?.filesDir, "data.json")
+        val jsonString = provideContext().dataStore.get(weatherDataKey)
 
-        isFirstRun(provideContext())
-        val jsonString = file.readText()
-        val jsonObject = JSONObject(jsonString)
+        if (jsonString != null) {
+            // get preferences
+            val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
 
-        // get preferences
-        val preferences = jsonObject.getJSONObject("preferences")
-        val complicationShowAlways = preferences.optBoolean("air_quality_complication_show_always", false)
-        val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
-
-        // get weather data
-        val weather = jsonObject.getJSONObject("weather").toString()
-        if (weather != "{}") {
+            val complicationShowAlways = provideContext().dataStore.get(airQualityComplicationShowAlways) ?: false
             val showThreshold = provideContext().dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
 
+            // TODO: throw this into utils
             val gson = Gson()
-            val weatherData = gson.fromJson(weather, WeatherData::class.java)
+            val weatherData = gson.fromJson(jsonString, WeatherData::class.java)
 
             val aqi = weatherData.airQuality.aqi
             val aqiColor = getAQIColor(aqi)

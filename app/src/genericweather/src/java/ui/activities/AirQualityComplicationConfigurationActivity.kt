@@ -5,7 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
-import complications.GenericAirQualityComplication
+import complications.AirQualityComplication
+import data.DataStoreManager.Companion.airQualityComplicationShowAlways
 import data.DataStoreManager.Companion.airQualityComplicationShowThresholdKey
 import data.DataStoreManager.Companion.dataStore
 import nodomain.pacjo.smartspacer.plugin.R
@@ -14,11 +15,10 @@ import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSlider
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceSwitch
 import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
-import nodomain.pacjo.smartspacer.plugin.utils.isFirstRun
-import nodomain.pacjo.smartspacer.plugin.utils.savePreference
-import org.json.JSONObject
+import nodomain.pacjo.smartspacer.plugin.utils.get
+import nodomain.pacjo.smartspacer.plugin.utils.save
 import ui.composables.GeneralSettings
-import java.io.File
+import utils.AirQualityThresholds
 
 class AirQualityComplicationConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,14 +26,8 @@ class AirQualityComplicationConfigurationActivity : ComponentActivity() {
 
         setContent {
             val context = LocalContext.current
-            isFirstRun(context)
 
-            val file = File(context.filesDir, "data.json")
-            val jsonObject = JSONObject(file.readText())
-            val preferences = jsonObject.getJSONObject("preferences")
-
-            val airQualityComplicationShowAlways =
-                preferences.optBoolean("air_quality_complication_show_always", false)
+            val showAlways = context.dataStore.get(airQualityComplicationShowAlways) ?: false
             val showThreshold = context.dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
 
             PluginTheme {
@@ -64,14 +58,14 @@ class AirQualityComplicationConfigurationActivity : ComponentActivity() {
                         title = "Always show",
                         description = "Enable this to show complication regardless of current AQI value",
                         onCheckedChange = { value ->
-                            savePreference(context, "air_quality_complication_show_always", value)
+                            context.dataStore.save(airQualityComplicationShowAlways, value)
 
                             SmartspacerComplicationProvider.notifyChange(
                                 context,
-                                GenericAirQualityComplication::class.java
+                                AirQualityComplication::class.java
                             )
                         },
-                        checked = airQualityComplicationShowAlways
+                        checked = showAlways
                     )
                 }
             }

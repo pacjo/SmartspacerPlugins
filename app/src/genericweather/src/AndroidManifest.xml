@@ -27,16 +27,35 @@
         tools:targetApi="34">
 
         <activity
-            android:name="ui.activities.ConfigurationActivity"
+            android:name="ui.activities.ConditionTargetConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+        <activity
+            android:name="ui.activities.ConditionComplicationConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+        <activity
+            android:name="ui.activities.SunTimesComplicationConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+        <activity
+            android:name="ui.activities.AirQualityComplicationConfigurationActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleInstance" />
 
         <provider
-            android:name="targets.GenericWeatherTarget"
+            android:name="targets.WeatherConditionTarget"
             android:authorities="${applicationId}.target.weather"
             android:exported="true"
-            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS" >
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS">
+
             <intent-filter>
                 <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
             </intent-filter>
@@ -46,37 +65,41 @@
             android:name="targets.WeatherForecastTarget"
             android:authorities="${applicationId}.target.forecast"
             android:exported="true"
-            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS" >
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_TARGETS">
+
             <intent-filter>
                 <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
             </intent-filter>
         </provider>
 
         <provider
-            android:name="complications.GenericWeatherComplication"
+            android:name="complications.WeatherConditionComplication"
             android:authorities="${applicationId}.complication.weather"
             android:exported="true"
-            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS" >
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS">
+
             <intent-filter>
                 <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
             </intent-filter>
         </provider>
 
         <provider
-            android:name="complications.GenericSunTimesComplication"
+            android:name="complications.SunTimesComplication"
             android:authorities="${applicationId}.complication.suntimes"
             android:exported="true"
-            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS" >
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS">
+
             <intent-filter>
                 <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
             </intent-filter>
         </provider>
 
         <provider
-            android:name="complications.GenericAirQualityComplication"
+            android:name="complications.AirQualityComplication"
             android:authorities="${applicationId}.complication.air"
             android:exported="true"
-            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS" >
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS">
+
             <intent-filter>
                 <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
             </intent-filter>
@@ -86,6 +109,7 @@
             android:name="receivers.WeatherBroadcastReceiver"
             android:exported="true"
             tools:ignore="ExportedReceiver">
+
             <intent-filter>
                 <action android:name="nodomain.freeyourgadget.gadgetbridge.ACTION_GENERIC_WEATHER" />
             </intent-filter>

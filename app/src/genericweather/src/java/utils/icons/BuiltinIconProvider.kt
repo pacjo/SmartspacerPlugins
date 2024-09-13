@@ -3,6 +3,7 @@ package utils.icons
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData.WeatherStateIcon
 import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import utils.WeatherData
 
@@ -78,5 +79,57 @@ object BuiltinIconProvider {
         }.replace("<theme>", theme).replace("<time>", time)
 
         return context.resources.getIdentifier(drawableName, "drawable", BuildConfig.APPLICATION_ID)
+    }
+
+    // this mapping is wrong and should be changed
+    fun getSmartspacerWeatherIcon(data: WeatherData, type: Int, index: Int = 0): WeatherStateIcon {
+        // type:
+        // 0 - current
+        // 1 - hourly
+        // 2 - daily
+
+        val conditionCode = when (type) {
+            0 -> data.currentConditionCode
+            1 -> data.hourly[index].conditionCode
+            2 -> data.forecasts[index].conditionCode
+            else -> throw IllegalArgumentException("Unknown type: $type")
+        }
+
+        val timestamp = when (type) {
+            1 -> data.hourly[index].timestamp
+            else -> System.currentTimeMillis() / 1000
+        }
+
+        val time = when (timestamp) {
+            in data.sunRise..data.sunSet -> "day"
+            in data.forecasts[index].sunRise..data.forecasts[index].sunSet -> "day"
+            else -> "night"
+        }
+
+        if (time == "day") {
+            if (conditionCode in 801..802) return WeatherStateIcon.MOSTLY_CLEAR_NIGHT
+            else if (conditionCode == 800) return WeatherStateIcon.CLEAR_NIGHT
+        }
+
+        return when (conditionCode) {
+            200, 201, 202, 210, 211, 212, 221, 230, 231 -> WeatherStateIcon.STRONG_TSTORMS
+            232 -> WeatherStateIcon.STRONG_TSTORMS
+            300, 301 -> WeatherStateIcon.HAZE_FOG_DUST_SMOKE
+            302 -> WeatherStateIcon.HEAVY_RAIN
+            310 -> WeatherStateIcon.HAZE_FOG_DUST_SMOKE
+            311, 312, 313, 314, 321 -> WeatherStateIcon.HEAVY_RAIN
+            500, 501 -> WeatherStateIcon.SHOWERS_RAIN
+            502, 503, 504, 511, 520, 521, 522, 531 -> WeatherStateIcon.HEAVY_RAIN
+            600, 601, 602, 611, 612, 613 -> WeatherStateIcon.HEAVY_SNOW
+            615, 616 -> WeatherStateIcon.BLOWING_SNOW
+            620, 621, 622 -> WeatherStateIcon.HEAVY_SNOW
+            701, 711, 721, 731, 741, 751, 761, 762, 771, 781 -> WeatherStateIcon.HAZE_FOG_DUST_SMOKE
+            800 -> WeatherStateIcon.SUNNY
+            801, 802 -> WeatherStateIcon.MOSTLY_SUNNY
+            803 -> WeatherStateIcon.CLOUDY
+            804 -> WeatherStateIcon.CLOUDY
+
+            else -> throw IllegalArgumentException("Unknown condition code: $conditionCode")
+        }
     }
 }

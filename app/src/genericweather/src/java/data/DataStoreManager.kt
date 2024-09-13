@@ -3,6 +3,7 @@ package data
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import data.DataStoreManager.Companion.expectedPrecipitationDismissDateKey
@@ -26,11 +27,22 @@ class DataStoreManager {
 
         val Context.dataStore by preferencesDataStore(name = DATASTORE_NAME)
 
-        val iconPackPackageNameKey = stringPreferencesKey("icon_pack_package_name")
+        val weatherDataKey = stringPreferencesKey("weather_data")
 
         val temperatureUnitKey = stringPreferencesKey("temperature_unit")
         val launchPackageKey = stringPreferencesKey("launch_package")
+        val iconPackPackageNameKey = stringPreferencesKey("icon_pack_package_name")
+
+        val conditionTargetDataPointsKey = intPreferencesKey("condition_target_data_points")
+        val conditionTargetStyleKey = stringPreferencesKey("condition_target_style")
+
+        val conditionComplicationStyleKey = stringPreferencesKey("condition_complication_style")
+        val conditionComplicationTrimToFitKey = booleanPreferencesKey("condition_complication_trim_to_fit")
+
+        val sunTimesComplicationTrimToFitKey = booleanPreferencesKey("suntimes_complication_trim_to_fit")
+
         val airQualityComplicationShowThresholdKey = intPreferencesKey("air_quality_complication_show_threshold")
+        val airQualityComplicationShowAlways = booleanPreferencesKey("air_quality_complication_show_always")
 
         val todayForecastDismissedKey = booleanPreferencesKey("today_forecast_dismissed")
         val todayForecastDismissDateKey = stringPreferencesKey("today_forecast_dismiss_date")
