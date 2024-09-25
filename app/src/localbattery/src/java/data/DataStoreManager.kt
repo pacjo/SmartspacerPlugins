@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import nodomain.pacjo.smartspacer.plugin.localbattery.data.BluetoothProto
 import nodomain.pacjo.smartspacer.plugin.localbattery.data.BluetoothProto.BluetoothDeviceStore
-import data.BluetoothDevice
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -32,8 +31,10 @@ class SharedDataStoreManager {
         val lowBatteryDismissedKey = booleanPreferencesKey("low_battery_dismissed")
 
         val showEstimateKey = booleanPreferencesKey("status_target_show_estimate")
+        val targetUseColorChargingIconKey = booleanPreferencesKey("status_target_colored_charging_icon")
 
         val disableTrimmingKey = booleanPreferencesKey("charging_complication_disable_trimming")
+        val complicationUseColorChargingIconKey = booleanPreferencesKey("charging_complication_colored_icon")
     }
 }
 

@@ -14,6 +14,7 @@ import data.SharedDataStoreManager.Companion.batteryIsChargingKey
 import data.SharedDataStoreManager.Companion.batteryLevelKey
 import data.SharedDataStoreManager.Companion.lowBatteryDismissedKey
 import data.SharedDataStoreManager.Companion.showEstimateKey
+import data.SharedDataStoreManager.Companion.targetUseColorChargingIconKey
 import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.Time
@@ -27,6 +28,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         // get preferences
         val showEstimate = provideContext().dataStore.get(showEstimateKey) ?: true
+        val useColorChargingIcon = provideContext().dataStore.get(targetUseColorChargingIconKey) ?: true
 
         // get data
         val isCharging = provideContext().dataStore.get(batteryIsChargingKey) ?: false
@@ -51,13 +53,14 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             else -> ""
         }
 
-        val subtitle = when (showEstimate && (isCharging && chargingTimeRemaining > -1)) {
-            false -> "$level%"        // if estimate is disabled by user or we don't have it
-            else -> when (level == 100) {
-                true -> "$level% — charging complete"
-                else -> "$level% — full in ${Time.getTimeToEvent(chargingTimeRemaining)}"
-            }
-        }
+        val subtitle =
+            if (showEstimate && (isCharging && chargingTimeRemaining > -1))
+                if (level == 100)
+                    "$level% — charging complete"
+                else
+                    "$level% — full in ${Time.getTimeToEvent(chargingTimeRemaining)}"
+            else
+                "$level%"           // if estimate is disabled by user or we don't have it
 
         return if (isCharging) {
             listOf(TargetTemplate.Basic(
@@ -69,7 +72,8 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                     Icon.createWithResource(
                         provideContext(),
                         R.drawable.baseline_bolt
-                    )
+                    ),
+                    shouldTint = !useColorChargingIcon
                 ),
                 onClick = TapAction(intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY))
             ).create().apply {

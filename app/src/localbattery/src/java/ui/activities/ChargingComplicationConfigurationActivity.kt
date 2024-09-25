@@ -7,6 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.SmartspacerConstants
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import complications.ChargingStatusComplication
+import data.SharedDataStoreManager.Companion.complicationUseColorChargingIconKey
 import data.SharedDataStoreManager.Companion.disableTrimmingKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
@@ -26,6 +27,7 @@ class ChargingComplicationConfigurationActivity : ComponentActivity() {
             val smartspacerId = intent.getStringExtra(SmartspacerConstants.EXTRA_SMARTSPACER_ID)
 
             val textTrimming = dataStore.get(disableTrimmingKey) ?: false
+            val useColorChargingIcon = dataStore.get(complicationUseColorChargingIconKey) ?: false
 
             PluginTheme {
                 PreferenceLayout("Local Battery") {
@@ -33,7 +35,7 @@ class ChargingComplicationConfigurationActivity : ComponentActivity() {
 
                     PreferenceSwitch(
                         icon = R.drawable.content_cut,
-                        title = "Disable Complication Text Trimming",
+                        title = "Disable complication text trimming",
                         description = "Allows longer text in charging complication",
                         onCheckedChange = { value ->
                             dataStore.save(disableTrimmingKey, value)
@@ -45,6 +47,22 @@ class ChargingComplicationConfigurationActivity : ComponentActivity() {
                             )
                         },
                         checked = textTrimming
+                    )
+
+                    PreferenceSwitch(
+                        icon = R.drawable.palette_outline,
+                        title = "Colored icon bolt",
+                        description = "Use colored icon instead of a stock one",
+                        onCheckedChange = { value ->
+                            dataStore.save(complicationUseColorChargingIconKey, value)
+
+                            SmartspacerComplicationProvider.notifyChange(
+                                context = context,
+                                provider = ChargingStatusComplication::class.java,
+                                smartspacerId = smartspacerId!!
+                            )
+                        },
+                        checked = useColorChargingIcon
                     )
                 }
             }

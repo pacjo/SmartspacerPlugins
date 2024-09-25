@@ -7,6 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.SmartspacerConstants
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import data.SharedDataStoreManager.Companion.showEstimateKey
+import data.SharedDataStoreManager.Companion.targetUseColorChargingIconKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
@@ -26,6 +27,7 @@ class StatusTargetConfigurationActivity : ComponentActivity() {
             val smartspacerId = intent.getStringExtra(SmartspacerConstants.EXTRA_SMARTSPACER_ID)
 
             val showEstimate = dataStore.get(showEstimateKey) ?: true
+            val useColorChargingIcon = dataStore.get(targetUseColorChargingIconKey) ?: true
 
             PluginTheme {
                 PreferenceLayout("Local Battery") {
@@ -45,6 +47,22 @@ class StatusTargetConfigurationActivity : ComponentActivity() {
                             )
                         },
                         checked = showEstimate
+                    )
+
+                    PreferenceSwitch(
+                        icon = R.drawable.palette_outline,
+                        title = "Colored icon bolt",
+                        description = "Use colored icon instead of a stock one",
+                        onCheckedChange = { value ->
+                            dataStore.save(targetUseColorChargingIconKey, value)
+
+                            SmartspacerTargetProvider.notifyChange(
+                                context = context,
+                                provider = LocalBatteryTarget::class.java,
+                                smartspacerId = smartspacerId!!
+                            )
+                        },
+                        checked = useColorChargingIcon
                     )
                 }
             }

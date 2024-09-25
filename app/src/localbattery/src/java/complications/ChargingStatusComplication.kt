@@ -12,6 +12,7 @@ import com.kieronquinn.app.smartspacer.sdk.utils.TrimToFit
 import data.SharedDataStoreManager.Companion.batteryCurrentKey
 import data.SharedDataStoreManager.Companion.batteryIsChargingKey
 import data.SharedDataStoreManager.Companion.batteryVoltageKey
+import data.SharedDataStoreManager.Companion.complicationUseColorChargingIconKey
 import data.SharedDataStoreManager.Companion.disableTrimmingKey
 import nodomain.pacjo.smartspacer.plugin.BuildConfig
 import nodomain.pacjo.smartspacer.plugin.R
@@ -28,6 +29,7 @@ class ChargingStatusComplication: SmartspacerComplicationProvider() {
         val voltage = provideContext().dataStore.get(batteryVoltageKey) ?: 0
 
         val disableComplicationTextTrimming = provideContext().dataStore.get(disableTrimmingKey)
+        val useColorChargingIcon = provideContext().dataStore.get(complicationUseColorChargingIconKey) ?: false
 
         return if (isCharging) {
             listOf(
@@ -36,8 +38,9 @@ class ChargingStatusComplication: SmartspacerComplicationProvider() {
                     icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                         Icon.createWithResource(
                             provideContext(),
-                            R.drawable.battery_charging
-                        )
+                            R.drawable.baseline_bolt
+                        ),
+                        shouldTint = !useColorChargingIcon
                     ),
                     content = Text(
                         when {
