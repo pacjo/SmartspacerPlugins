@@ -70,6 +70,7 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
                         com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                             // TODO: figure out scaling issue
                             // also icon pack icons look pixelated
+                            // when calling .toBitmap() in IconHelper we can pass width and height, how about doing that?
                             (
                                 if (iconPack != null)
                                     Bitmap.createScaledBitmap(

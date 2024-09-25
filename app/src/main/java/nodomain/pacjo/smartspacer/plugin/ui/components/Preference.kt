@@ -29,7 +29,7 @@ import com.mikepenz.iconics.typeface.IIcon
  */
 @Composable
 fun Preference(
-    @DrawableRes icon: Int,
+    @DrawableRes icon: Int?,
     title: String,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier,
@@ -50,11 +50,14 @@ fun Preference(
                     vertical = verticalPadding
                 ),
         ) {
-            Icon(
-                painter = painterResource(id = icon),
-                contentDescription = null
-            )
+            if (icon != null)
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = null
+                )
+
             Spacer(modifier = Modifier.requiredWidth(16.dp))
+
             Row(
                 modifier = contentModifier
                     .weight(1f),
@@ -75,8 +78,10 @@ fun Preference(
                     }
                 }
             }
+
             endWidget?.let {
                 Spacer(modifier = Modifier.requiredWidth(16.dp))
+
                 endWidget()
             }
         }
@@ -85,7 +90,7 @@ fun Preference(
 
 @Composable
 fun Preference(
-    icon: IIcon,
+    iicon: IIcon?,
     title: String,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier,
@@ -106,11 +111,14 @@ fun Preference(
                     vertical = verticalPadding
                 ),
         ) {
-            Icon(
-                painter = IconicsPainter(icon),
-                contentDescription = null
-            )
+            if (iicon != null)
+                Icon(
+                    painter = IconicsPainter(iicon),
+                    contentDescription = null
+                )
+
             Spacer(modifier = Modifier.requiredWidth(16.dp))
+
             Row(
                 modifier = contentModifier
                     .weight(1f),
@@ -131,8 +139,10 @@ fun Preference(
                     }
                 }
             }
+
             endWidget?.let {
                 Spacer(modifier = Modifier.requiredWidth(16.dp))
+
                 endWidget()
             }
         }

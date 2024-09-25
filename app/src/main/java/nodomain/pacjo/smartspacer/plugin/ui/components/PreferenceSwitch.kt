@@ -23,7 +23,7 @@ import com.mikepenz.iconics.typeface.IIcon
  */
 @Composable
 fun PreferenceSwitch(
-    @DrawableRes icon: Int,
+    @DrawableRes icon: Int?,
     title: String,
     description: String,
     onCheckedChange: (Boolean) -> Unit,
@@ -56,7 +56,7 @@ fun PreferenceSwitch(
 
 @Composable
 fun PreferenceSwitch(
-    icon: IIcon,
+    iicon: IIcon?,
     title: String,
     description: String,
     onCheckedChange: (Boolean) -> Unit,
@@ -65,7 +65,7 @@ fun PreferenceSwitch(
     var isChecked by remember { mutableStateOf(checked) }
 
     Preference(
-        icon = icon,
+        iicon = iicon,
         title = title,
         modifier = Modifier.clickable {
             // Change state, then callback

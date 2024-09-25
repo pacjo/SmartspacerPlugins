@@ -26,7 +26,7 @@ fun <T> DataStore<Preferences>.save(key: Preferences.Key<T>, value: T? = null) {
 }
 
 /**
- * Allows retriving data from preferences datastore.
+ * Allows retrieving data from preferences datastore.
  * **Blocking**.
  * @param key preferences key under which data should be saved (e.g. [stringPreferencesKey], [booleanPreferencesKey]...)
  */

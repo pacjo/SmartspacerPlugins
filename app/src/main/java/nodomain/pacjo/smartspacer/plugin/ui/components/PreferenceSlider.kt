@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun PreferenceSlider(
-    icon: Int,
+    icon: Int?,
     title: String,
     description: String,
     onSliderChange: (value: Int) -> Unit,

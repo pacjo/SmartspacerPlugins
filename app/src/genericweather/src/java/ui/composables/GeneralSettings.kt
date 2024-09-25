@@ -77,7 +77,7 @@ fun GeneralSettings(context: Context) {
 
             notifyAllProviders(context)
         },
-        dialogText = "Enter package name",
+        dialogTitle = "Enter package name",
         defaultText = launchPackage
     )
 }
