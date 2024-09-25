@@ -30,7 +30,7 @@ class ConfigurationActivity : ComponentActivity() {
                     PreferenceHeading("Greeting target")
 
                     PreferenceSwitch(
-                        icon = CommunityMaterial.Icon.cmd_eye_off,
+                        iicon = CommunityMaterial.Icon.cmd_eye_off,
                         title = "Dynamically hide",
                         description = "Hide target when no complications are available",
                         onCheckedChange = { value ->
