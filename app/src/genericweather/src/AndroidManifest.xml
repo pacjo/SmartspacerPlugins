@@ -33,6 +33,12 @@
             android:launchMode="singleInstance" />
 
         <activity
+            android:name="ui.activities.ForecastTargetConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+        <activity
             android:name="ui.activities.ConditionComplicationConfigurationActivity"
             android:excludeFromRecents="true"
             android:exported="true"
