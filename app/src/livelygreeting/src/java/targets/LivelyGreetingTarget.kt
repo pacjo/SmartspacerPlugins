@@ -15,6 +15,9 @@ import data.DataStoreManager.Companion.hideTargetWithoutComplicationsKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import ui.activities.ConfigurationActivity
+import java.time.LocalDateTime
+import java.time.format.TextStyle
+import java.util.Locale
 import kotlin.random.Random
 
 class LivelyGreetingTarget: SmartspacerTargetProvider() {
@@ -51,15 +54,21 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
             else -> randomStrings[Random.nextInt(0, randomStrings.size - 1)]
         }
 
+        val currentDateTime = LocalDateTime.now()
+        val currentDay = currentDateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()).lowercase()
+
+        val greeting = when (Random.nextInt(0, 100)) {
+            in 0..1 -> provideContext().getString(R.string.quickspace_ext_one, currentDay)     // 2% chance
+            in 2..3 -> provideContext().getString(R.string.quickspace_ext_two, currentDay)     // 2% chance
+            in 4..24 -> timeOfDayGreeting                                                      // 20% chance
+
+            else -> funnyGreeting
+        }
+
         return listOf(TargetTemplate.Basic(
             id = "greeting_target_$smartspacerId",
             componentName = ComponentName(provideContext(), LivelyGreetingTarget::class.java),
-            title = Text(
-                if (Random.nextInt(0, 100) < 15)  // about 15% chance
-                    timeOfDayGreeting
-                else
-                    funnyGreeting
-            ),
+            title = Text(greeting),
             subtitle = null,
             icon = null
         ).create().apply {
