@@ -16,8 +16,8 @@ android {
         minSdk = 29
         targetSdk = 35
 
-        versionCode = 14
-        versionName = "1.4"
+        versionCode = 15
+        versionName = "1.5"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -145,7 +145,6 @@ dependencies {
     "genericweatherImplementation"("com.google.code.gson:gson:2.11.0")
 
     "localbatteryImplementation"("androidx.datastore:datastore:1.1.1")
-    "localbatteryImplementation"("com.google.protobuf:protobuf-javalite:4.28.1")
     "localbatteryImplementation"("com.google.protobuf:protobuf-javalite:4.28.2")
 }
 

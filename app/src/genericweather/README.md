@@ -12,6 +12,7 @@ Information about configuration and supported apps can be found [here](https://g
 |          complication          | description                                | is customisable |
 |:------------------------------:|--------------------------------------------|:---------------:|
 | Current condition complication | Shows current condition (icon and/or text) |        ✅        |
+|    Air quality complication    | Shows air quality (icon and text)          |        ✅        |
 | Sunrise / sunset complication  | Shows time of next sunrise / sunset        |        ❌        |
 
 
