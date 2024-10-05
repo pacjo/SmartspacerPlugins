@@ -80,7 +80,6 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
         val subtitleIDs = listOf(
             "streakSubtitle",
             "otherModeText",
-            "negativeStreakSubtitle",
             "encouragingSubtitle"
         )
 
