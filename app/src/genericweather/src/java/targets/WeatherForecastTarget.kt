@@ -139,7 +139,7 @@ class WeatherForecastTarget: SmartspacerTargetProvider() {
                     // temperature diff can be negative, so we take away the minus just in case,
                     // TODO: there's for sure a better way to write this
                     temperatureDiff.temperature!! < 0 -> "${temperatureDiff.toString().replace("-", "")} colder then"
-                    temperatureDiff.temperature!! > 0 -> "${temperatureDiff.toString().replace("-", "")} hotter then"
+                    temperatureDiff.temperature!! > 0 -> "${temperatureDiff.toString().replace("-", "")} warmer then"
 
                     else -> "the same as"
                 }
