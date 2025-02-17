@@ -19,6 +19,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.getCompatibilityState
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import providers.DuolingoWidgetProvider
 import ui.activities.ConfigurationActivity
+import utils.WidgetUtils.isLessonCompleted
 import java.io.File
 
 class DuolingoProgressTarget: SmartspacerTargetProvider() {
@@ -30,7 +31,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
         val hideWhenCompleted = context.dataStore.get(hideWhenLessonCompletedKey) ?: false
         val subtitle = context.dataStore.get(widgetSubtitleKey)
 
-        if (hideWhenCompleted && subtitle == "Good job!") {
+        if (hideWhenCompleted && subtitle != null && isLessonCompleted(subtitle)) {
             return emptyList()
         }
 
