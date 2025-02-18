@@ -1,10 +1,6 @@
 package complications
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.drawable.Icon
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
@@ -22,6 +18,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import ui.activities.AirQualityComplicationConfigurationActivity
 import utils.AirQualityThresholds
 import utils.WeatherData
+import utils.icons.AirQuality.createAqiIcon
 
 class AirQualityComplication: SmartspacerComplicationProvider() {
 
@@ -38,14 +35,13 @@ class AirQualityComplication: SmartspacerComplicationProvider() {
             val weatherData = Gson().fromJson(jsonString, WeatherData::class.java)
 
             val aqi = weatherData.airQuality.aqi
-            val aqiColor = getAQIColor(aqi)
 
             return if (aqi > showThreshold || complicationShowAlways)
                 listOf(
                     ComplicationTemplate.Basic(
                         id = "air_quality_complication_$smartspacerId",
                         icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                            icon = createCircleIcon(aqiColor),
+                            icon = createAqiIcon(aqi),
                             shouldTint = false
                         ),
                         content = Text("$aqi AQI"),
@@ -77,30 +73,5 @@ class AirQualityComplication: SmartspacerComplicationProvider() {
             icon = Icon.createWithResource(context, R.drawable.weather_dust),
             configActivity = Intent(context, AirQualityComplicationConfigurationActivity::class.java)
         )
-    }
-
-    private fun createCircleIcon(color: Int): Icon {
-        val size = 48
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.color = color
-        canvas.drawCircle(size / 2f, size / 2f, size / 4f, paint)
-
-        return Icon.createWithBitmap(bitmap)
-    }
-
-    private fun getAQIColor(aqi: Int): Int {
-        // colors are taken from EAQI from google maps API, because I liked them
-        // https://developers.google.com/maps/documentation/air-quality/laqis
-
-        return when {
-            aqi <= AirQualityThresholds.EXCELLENT -> Color.parseColor("#50F0E6")
-            aqi <= AirQualityThresholds.FAIR -> Color.parseColor("#50CCAA")
-            aqi <= AirQualityThresholds.POOR -> Color.parseColor("#F0E641")
-            aqi <= AirQualityThresholds.UNHEALTHY -> Color.parseColor("#FF5050")
-            aqi <= AirQualityThresholds.VERY_UNHEALTHY -> Color.parseColor("#960032")
-            else -> Color.parseColor("#7D2181")
-        }
     }
 }

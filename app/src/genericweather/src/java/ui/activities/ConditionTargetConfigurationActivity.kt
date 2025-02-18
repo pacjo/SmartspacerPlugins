@@ -5,9 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import data.DataStoreManager.Companion.conditionTargetCarouselContentKey
 import data.DataStoreManager.Companion.conditionTargetDataPointsKey
 import data.DataStoreManager.Companion.conditionTargetStyleKey
 import data.DataStoreManager.Companion.dataStore
+import data.ForecastTargetDataType
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceLayout
@@ -48,6 +50,22 @@ class ConditionTargetConfigurationActivity : ComponentActivity() {
                             Pair("Temperature only", "temperature"),
                             Pair("Condition only", "condition"),
                             Pair("Temperature and condition", "both")
+                        )
+                    )
+
+                    PreferenceMenu(
+                        icon = R.drawable.palette_outline,
+                        title = "Carousel content",
+                        description = "Data shown in carousel",
+                        onItemChange = { value ->
+                            context.dataStore.save(conditionTargetCarouselContentKey, value.ordinal)
+
+                            SmartspacerTargetProvider.notifyChange(context, WeatherConditionTarget::class.java)
+                        },
+                        items = listOf(
+                            Pair("Hourly temperature", ForecastTargetDataType.TEMPERATURE_HOURLY),
+                            Pair("Daily temperature", ForecastTargetDataType.TEMPERATURE_DAILY),
+                            Pair("Daily air quality", ForecastTargetDataType.AIR_QUALITY_DAILY)
                         )
                     )
 

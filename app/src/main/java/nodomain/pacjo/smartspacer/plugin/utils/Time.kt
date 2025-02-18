@@ -16,18 +16,6 @@ class Time {
     private val locale = Locale.getDefault()
     private val zoneId = ZoneId.systemDefault()
 
-    private val timeFormatter12h = DateTimeFormatter
-        .ofPattern("h:mm")
-        .withLocale(locale)
-
-    private val timeFormatter24h = DateTimeFormatter
-        .ofPattern("H:mm")
-        .withLocale(locale)
-
-    private val dateFormatter = DateTimeFormatter
-        .ofPattern("d MMM y")
-        .withLocale(locale)
-
     constructor(context: Context, instant: Instant) {
         this.context = context
         eventInstant = instant
@@ -38,22 +26,30 @@ class Time {
         eventInstant = Instant.ofEpochSecond(secondsTimestamp)
     }
     
-    fun getEventTime(): String {
-        val formatter =
-            if (DateFormat.is24HourFormat(context))
-                timeFormatter24h
-            else
-                timeFormatter12h
+    fun getEventTime(format: String? = null): String {
+        val formatter = DateTimeFormatter
+            .ofPattern(
+                when {
+                    format != null -> format
+                    DateFormat.is24HourFormat(context) -> "H:mm"
+                    else -> "h:mm"
+                }
+            )
+            .withLocale(locale)
 
         return LocalDateTime
             .ofInstant(eventInstant, zoneId)
             .format(formatter)
     }
 
-    fun getEventDate(): String {
+    fun getEventDate(format: String? = null): String {
+        val formatter = DateTimeFormatter
+            .ofPattern(format ?: "d MMM y")
+            .withLocale(locale)
+
         return LocalDateTime
             .ofInstant(eventInstant, zoneId)
-            .format(dateFormatter)
+            .format(formatter)
     }
 
     fun getTimeToEvent(): String {

@@ -21,6 +21,14 @@ enum class TargetMode {
     EXPECTED_PRECIPITATION
 }
 
+enum class ForecastTargetDataType {
+    TEMPERATURE_HOURLY,         // hourly temperature + condition
+    TEMPERATURE_DAILY,          // daily min and max temperature + condition
+    AIR_QUALITY_DAILY,          // daily air quality + corresponding color
+//    WIND_HOURLY,                // hourly only
+//    HUMIDITY_HOURLY             // hourly only
+}
+
 class DataStoreManager {
     companion object {
         private const val DATASTORE_NAME = "genericweather_datastore"
@@ -35,6 +43,7 @@ class DataStoreManager {
 
         val conditionTargetDataPointsKey = intPreferencesKey("condition_target_data_points")
         val conditionTargetStyleKey = stringPreferencesKey("condition_target_style")
+        val conditionTargetCarouselContentKey = intPreferencesKey("condition_carousel_content")
 
         val conditionComplicationStyleKey = stringPreferencesKey("condition_complication_style")
         val conditionComplicationTrimToFitKey = booleanPreferencesKey("condition_complication_trim_to_fit")
