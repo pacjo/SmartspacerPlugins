@@ -21,6 +21,7 @@ import data.SharedDataStoreManager.Companion.batteryLevelKey
 import data.SharedDataStoreManager.Companion.batteryStatusKey
 import data.SharedDataStoreManager.Companion.batteryVoltageKey
 import nodomain.pacjo.smartspacer.plugin.utils.save
+import requirements.BatteryLevelRequirement
 import requirements.ChargingRequirement
 import targets.LocalBatteryTarget
 
@@ -68,6 +69,7 @@ class BatteryBroadcastProvider: SmartspacerBroadcastProvider() {
         SmartspacerComplicationProvider.notifyChange(context!!, ChargingStatusComplication::class.java)
         SmartspacerComplicationProvider.notifyChange(context!!, BatteryLevelComplication::class.java)
         SmartspacerRequirementProvider.notifyChange(context!!, ChargingRequirement::class.java)
+        SmartspacerRequirementProvider.notifyChange(context!!, BatteryLevelRequirement::class.java)
     }
 
     override fun getConfig(smartspacerId: String): Config {
