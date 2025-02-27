@@ -33,6 +33,12 @@
             android:exported="true"
             android:launchMode="singleInstance" />
 
+        <activity
+            android:name="ui.activities.BatteryLevelRequirementConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
         <provider
             android:name="targets.LocalBatteryTarget"
             android:authorities="${applicationId}.target.battery"
@@ -88,6 +94,16 @@
         <provider
             android:name="requirements.ChargingRequirement"
             android:authorities="${applicationId}.requirement.charging"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_REQUIREMENTS"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.REQUIREMENT" />
+            </intent-filter>
+        </provider>
+
+        <provider
+            android:name="requirements.BatteryLevelRequirement"
+            android:authorities="${applicationId}.requirement.level"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_REQUIREMENTS"
             android:exported="true">
             <intent-filter>
