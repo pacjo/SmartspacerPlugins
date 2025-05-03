@@ -29,7 +29,7 @@ class AirQualityComplication: SmartspacerComplicationProvider() {
             // get preferences
             val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
 
-            val complicationShowAlways = provideContext().dataStore.get(airQualityComplicationShowAlways) ?: false
+            val complicationShowAlways = provideContext().dataStore.get(airQualityComplicationShowAlways) == true
             val showThreshold = provideContext().dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
 
             val weatherData = Gson().fromJson(jsonString, WeatherData::class.java)

@@ -10,7 +10,7 @@ import providers.BatteryBroadcastProvider.Companion.dataStore
 class ChargingRequirement: SmartspacerRequirementProvider() {
 
     override fun isRequirementMet(smartspacerId: String): Boolean {
-        return provideContext().dataStore.get(batteryIsChargingKey) ?: false
+        return provideContext().dataStore.get(batteryIsChargingKey) == true
     }
 
     override fun getConfig(smartspacerId: String?): Config {

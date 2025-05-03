@@ -24,7 +24,7 @@ class SunTimesComplicationConfigurationActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            val trimToFit = context.dataStore.get(sunTimesComplicationTrimToFitKey) ?: true
+            val trimToFit = context.dataStore.get(sunTimesComplicationTrimToFitKey) != false
 
             PluginTheme {
                 PreferenceLayout("Generic Weather") {

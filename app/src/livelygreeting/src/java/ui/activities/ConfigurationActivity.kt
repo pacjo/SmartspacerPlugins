@@ -23,7 +23,7 @@ class ConfigurationActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            val hideNoComplications = context.dataStore.get(hideTargetWithoutComplicationsKey) ?: false
+            val hideNoComplications = context.dataStore.get(hideTargetWithoutComplicationsKey) == true
 
             PluginTheme {
                 PreferenceLayout("Lively Greeting") {

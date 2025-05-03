@@ -26,8 +26,8 @@ class ChargingComplicationConfigurationActivity : ComponentActivity() {
             val context = LocalContext.current
             val smartspacerId = intent.getStringExtra(SmartspacerConstants.EXTRA_SMARTSPACER_ID)
 
-            val textTrimming = dataStore.get(disableTrimmingKey) ?: false
-            val useColorChargingIcon = dataStore.get(complicationUseColorChargingIconKey) ?: false
+            val textTrimming = dataStore.get(disableTrimmingKey) == true
+            val useColorChargingIcon = dataStore.get(complicationUseColorChargingIconKey) == true
 
             PluginTheme {
                 PreferenceLayout("Local Battery") {

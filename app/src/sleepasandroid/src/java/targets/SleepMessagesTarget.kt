@@ -36,9 +36,9 @@ class SleepMessagesTarget: SmartspacerTargetProvider() {
     }
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        val simpleStyle = provideContext().dataStore.get(simpleStyleKey) ?: false
-        val showTimeToBed = provideContext().dataStore.get(showTimeToBedKey) ?: true
-        val showAlarmDismissed = provideContext().dataStore.get(showAlarmDismissedKey) ?: true
+        val simpleStyle = provideContext().dataStore.get(simpleStyleKey) == true
+        val showTimeToBed = provideContext().dataStore.get(showTimeToBedKey) != false
+        val showAlarmDismissed = provideContext().dataStore.get(showAlarmDismissedKey) != false
 
         val event = provideContext().dataStore.get(broadcastEventKey)
 

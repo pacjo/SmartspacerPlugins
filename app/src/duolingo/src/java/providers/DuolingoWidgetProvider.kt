@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.TextView
+import androidx.core.graphics.createBitmap
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerWidgetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.findViewByIdentifier
@@ -36,11 +37,7 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
             val recalculatedWidth = view.width
             val recalculatedHeight = (view.width * (9f/16f)).toInt()
 
-            val extendedBitmap = Bitmap.createBitmap(
-                recalculatedWidth,
-                recalculatedHeight,
-                Bitmap.Config.ARGB_8888
-            )
+            val extendedBitmap = createBitmap(recalculatedWidth, recalculatedHeight)
 
             val extendedCanvas = Canvas(extendedBitmap)
 
@@ -50,13 +47,7 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
                     View.MeasureSpec.makeMeasureSpec(recalculatedWidth, View.MeasureSpec.EXACTLY),
                     View.MeasureSpec.makeMeasureSpec(recalculatedHeight, View.MeasureSpec.EXACTLY)
                 )
-
-                layout(
-                    0,
-                    0,
-                    recalculatedWidth,
-                    recalculatedHeight
-                )
+                layout(0, 0, recalculatedWidth, recalculatedHeight)
 
                 // and draw
                 draw(extendedCanvas)

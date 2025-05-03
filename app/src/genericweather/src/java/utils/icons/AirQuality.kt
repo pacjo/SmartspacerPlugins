@@ -1,10 +1,10 @@
 package utils.icons
 
-import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Icon
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.toColorInt
 import utils.AirQualityThresholds
 
 object AirQuality {
@@ -14,7 +14,7 @@ object AirQuality {
 
     private fun createCircleIcon(color: Int): Icon {
         val size = 48
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(size, size)
         val canvas = Canvas(bitmap)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         paint.color = color
@@ -28,12 +28,12 @@ object AirQuality {
         // https://developers.google.com/maps/documentation/air-quality/laqis
 
         return when {
-            aqi <= AirQualityThresholds.EXCELLENT -> Color.parseColor("#50F0E6")
-            aqi <= AirQualityThresholds.FAIR -> Color.parseColor("#50CCAA")
-            aqi <= AirQualityThresholds.POOR -> Color.parseColor("#F0E641")
-            aqi <= AirQualityThresholds.UNHEALTHY -> Color.parseColor("#FF5050")
-            aqi <= AirQualityThresholds.VERY_UNHEALTHY -> Color.parseColor("#960032")
-            else -> Color.parseColor("#7D2181")
+            aqi <= AirQualityThresholds.EXCELLENT -> "#50F0E6".toColorInt()
+            aqi <= AirQualityThresholds.FAIR -> "#50CCAA".toColorInt()
+            aqi <= AirQualityThresholds.POOR -> "#F0E641".toColorInt()
+            aqi <= AirQualityThresholds.UNHEALTHY -> "#FF5050".toColorInt()
+            aqi <= AirQualityThresholds.VERY_UNHEALTHY -> "#960032".toColorInt()
+            else -> "#7D2181".toColorInt()
         }
     }
 }

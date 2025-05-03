@@ -43,7 +43,7 @@ private fun saveDismissalState(context: Context, dismissed: Boolean, targetMode:
 private fun getDismissalState(context: Context, targetMode: TargetMode): Pair<Boolean, String?> {
     return runBlocking {
         val preferences = context.dataStore.data.first()
-        val dismissed = preferences[getDismissedKey(targetMode)] ?: false
+        val dismissed = preferences[getDismissedKey(targetMode)] == true
         val dismissDate = preferences[getDismissDateKey(targetMode)]
 
         dismissed to dismissDate

@@ -26,9 +26,9 @@ class ConfigurationActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            val simpleStyle = context.dataStore.get(simpleStyleKey) ?: false
-            val showTimeToBed = context.dataStore.get(showTimeToBedKey) ?: true
-            val showAlarmDismissed = context.dataStore.get(showAlarmDismissedKey) ?: true
+            val simpleStyle = context.dataStore.get(simpleStyleKey) == true
+            val showTimeToBed = context.dataStore.get(showTimeToBedKey) != false
+            val showAlarmDismissed = context.dataStore.get(showAlarmDismissedKey) != false
 
             PluginTheme {
                 PreferenceLayout(title = stringResource(id = R.string.config_title)) {

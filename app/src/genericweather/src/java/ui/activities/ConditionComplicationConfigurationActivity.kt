@@ -26,7 +26,7 @@ class ConditionComplicationConfigurationActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            val trimToFit = context.dataStore.get(conditionComplicationTrimToFitKey) ?: true
+            val trimToFit = context.dataStore.get(conditionComplicationTrimToFitKey) != false
 
             PluginTheme {
                 PreferenceLayout("Generic Weather") {

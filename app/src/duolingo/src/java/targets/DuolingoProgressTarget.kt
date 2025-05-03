@@ -28,7 +28,7 @@ class DuolingoProgressTarget: SmartspacerTargetProvider() {
         val context = context ?: return emptyList()
         val imageFile = File(context.filesDir, "image.png")
 
-        val hideWhenCompleted = context.dataStore.get(hideWhenLessonCompletedKey) ?: false
+        val hideWhenCompleted = context.dataStore.get(hideWhenLessonCompletedKey) == true
         val subtitle = context.dataStore.get(widgetSubtitleKey)
 
         if (hideWhenCompleted && subtitle != null && isLessonCompleted(subtitle)) {

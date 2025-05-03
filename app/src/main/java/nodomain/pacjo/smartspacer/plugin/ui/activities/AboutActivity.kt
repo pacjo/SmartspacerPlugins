@@ -1,7 +1,6 @@
 package nodomain.pacjo.smartspacer.plugin.ui.activities
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.mikepenz.iconics.compose.Image
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.simpleicons.SimpleIcons
@@ -117,7 +117,7 @@ fun IIconLink(asset: IIcon, url: String, contentDescription: String?) {
         modifier = Modifier
             .size(48.dp)
             .clickable {
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
             }
     ) {
         Image(

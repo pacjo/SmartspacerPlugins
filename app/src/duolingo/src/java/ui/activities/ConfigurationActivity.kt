@@ -23,7 +23,7 @@ class ConfigurationActivity : ComponentActivity() {
             val context = LocalContext.current
 
             // get target settings
-            val hideWhenCompleted = context.dataStore.get(hideWhenLessonCompletedKey) ?: false
+            val hideWhenCompleted = context.dataStore.get(hideWhenLessonCompletedKey) == true
 
             PluginTheme {
                 PreferenceLayout("Duolingo") {

@@ -2,11 +2,12 @@ package nodomain.pacjo.smartspacer.plugin.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Icon
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.withTranslation
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -40,17 +41,21 @@ fun imageTargetAdjustDrawable(context: Context, drawableResId: Int): Icon {
     val canvasWidth = vectorDrawable.intrinsicHeight / 9 * 16
     val canvasHeight = vectorDrawable.intrinsicHeight
 
-    val bitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888)
+    val bitmap = createBitmap(canvasWidth, canvasHeight)
     val canvas = Canvas(bitmap)
 
-    canvas.save()
-    // we should divide by 2 to be exact, but 4 looks better due to left padding
-    canvas.translate((canvasWidth - vectorDrawable.intrinsicWidth)/4f, 0f)
-    vectorDrawable.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
-    vectorDrawable.draw(canvas)
-    canvas.restore()
+    canvas.withTranslation((canvasWidth - vectorDrawable.intrinsicWidth) / 4f, 0f) {
+        // we should divide by 2 to be exact, but 4 looks better due to left padding
+        vectorDrawable.setBounds(
+            0,
+            0,
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight
+        )
+        vectorDrawable.draw(this)
+    }
 
-    return Icon.createWithBitmap(BitmapDrawable(context.resources, bitmap).bitmap)
+    return Icon.createWithBitmap(bitmap.toDrawable(context.resources).bitmap)
 }
 
 fun getRandomFromList(elements: List<Any>): Any {

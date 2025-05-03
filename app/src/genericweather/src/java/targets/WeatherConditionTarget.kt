@@ -2,11 +2,11 @@ package targets
 
 import android.content.ComponentName
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.Icon
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toIcon
+import androidx.core.graphics.scale
 import com.google.gson.Gson
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.CarouselTemplateData
@@ -84,31 +84,27 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
                         ForecastTargetDataType.TEMPERATURE_HOURLY, ForecastTargetDataType.TEMPERATURE_DAILY -> {
                             (
                                 if (iconPack != null)
-                                    Bitmap.createScaledBitmap(
-                                        iconProvider.getWeatherIcon(
-                                            iconPack = iconPack,
+                                    iconProvider.getWeatherIcon(
+                                        iconPack = iconPack,
+                                        data = weatherData,
+                                        type = targetType.ordinal + 1,      // hacky, but works (until it doesn't)
+                                        index = index
+                                    ).toBitmap().scale(
+                                        (12 * resources.displayMetrics.density).toInt(),
+                                        (12 * resources.displayMetrics.density).toInt()
+                                    )
+                                else
+                                    ContextCompat.getDrawable(
+                                        provideContext(),
+                                        BuiltinIconProvider.getWeatherIcon(
+                                            context = provideContext(),
                                             data = weatherData,
                                             type = targetType.ordinal + 1,      // hacky, but works (until it doesn't)
                                             index = index
-                                        ).toBitmap(),
-                                        (12 * resources.displayMetrics.density).toInt(),
-                                        (12 * resources.displayMetrics.density).toInt(),
-                                        true
-                                    )
-                                else
-                                    Bitmap.createScaledBitmap(
-                                        ContextCompat.getDrawable(
-                                            provideContext(),
-                                            BuiltinIconProvider.getWeatherIcon(
-                                                context = provideContext(),
-                                                data = weatherData,
-                                                type = targetType.ordinal + 1,      // hacky, but works (until it doesn't)
-                                                index = index
-                                            )
-                                        )!!.toBitmap(),
+                                        )
+                                    )!!.toBitmap().scale(
                                         (24 * resources.displayMetrics.density).toInt(),
-                                        (24 * resources.displayMetrics.density).toInt(),
-                                        true
+                                        (24 * resources.displayMetrics.density).toInt()
                                     )
                                 ).toIcon()
                         }

@@ -26,8 +26,8 @@ class StatusTargetConfigurationActivity : ComponentActivity() {
             val context = LocalContext.current
             val smartspacerId = intent.getStringExtra(SmartspacerConstants.EXTRA_SMARTSPACER_ID)
 
-            val showEstimate = dataStore.get(showEstimateKey) ?: true
-            val useColorChargingIcon = dataStore.get(targetUseColorChargingIconKey) ?: true
+            val showEstimate = dataStore.get(showEstimateKey) != false
+            val useColorChargingIcon = dataStore.get(targetUseColorChargingIconKey) != false
 
             PluginTheme {
                 PreferenceLayout("Local Battery") {

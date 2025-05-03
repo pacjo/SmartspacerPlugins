@@ -26,12 +26,14 @@ class BluetoothBroadcastProvider: SmartspacerBroadcastProvider() {
         }
 
         device?.let {
-            if (intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL") != -1) {
+            val batteryLevel = intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL")
+
+            if (batteryLevel != -1) {
                 val bluetoothDevice = data.BluetoothDevice(
                     macAddress = device.address,
                     bluetoothClass = device.bluetoothClass.deviceClass,
                     bluetoothName = device.name,
-                    batteryLevel = intent.extras?.getInt("android.bluetooth.device.extra.BATTERY_LEVEL")!!,
+                    batteryLevel = batteryLevel!!,
                     modifiedTime = System.currentTimeMillis()
                 )
 

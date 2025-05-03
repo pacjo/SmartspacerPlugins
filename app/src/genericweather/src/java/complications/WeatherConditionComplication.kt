@@ -40,7 +40,7 @@ class WeatherConditionComplication: SmartspacerComplicationProvider() {
             val iconPackPackageName = provideContext().dataStore.get(iconPackPackageNameKey)
 
             val style = provideContext().dataStore.get(conditionComplicationStyleKey) ?:"temperature"
-            val trimToFit = provideContext().dataStore.get(conditionComplicationTrimToFitKey) ?: true
+            val trimToFit = provideContext().dataStore.get(conditionComplicationTrimToFitKey) != false
 
             val data = Gson().fromJson(jsonString, WeatherData::class.java)
 

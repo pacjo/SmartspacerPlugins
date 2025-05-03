@@ -27,7 +27,7 @@ class AirQualityComplicationConfigurationActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            val showAlways = context.dataStore.get(airQualityComplicationShowAlways) ?: false
+            val showAlways = context.dataStore.get(airQualityComplicationShowAlways) == true
             val showThreshold = context.dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
 
             PluginTheme {

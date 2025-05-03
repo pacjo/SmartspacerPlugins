@@ -27,14 +27,14 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         // get preferences
-        val showEstimate = provideContext().dataStore.get(showEstimateKey) ?: true
-        val useColorChargingIcon = provideContext().dataStore.get(targetUseColorChargingIconKey) ?: true
+        val showEstimate = provideContext().dataStore.get(showEstimateKey) != false
+        val useColorChargingIcon = provideContext().dataStore.get(targetUseColorChargingIconKey) != false
 
         // get data
-        val isCharging = provideContext().dataStore.get(batteryIsChargingKey) ?: false
+        val isCharging = provideContext().dataStore.get(batteryIsChargingKey) == true
         val chargingTimeRemaining = provideContext().dataStore.get(batteryChargingTimeRemainingKey) ?: 0
         val level = provideContext().dataStore.get(batteryLevelKey) ?: -1
-        val isLowBatteryDismissed = provideContext().dataStore.get(lowBatteryDismissedKey) ?: false
+        val isLowBatteryDismissed = provideContext().dataStore.get(lowBatteryDismissedKey) == true
 
         // get battery saver trigger level (and set a default value, in case it's unset)
         val batterySaverTriggerLevel = try {

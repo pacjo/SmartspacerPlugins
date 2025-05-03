@@ -23,7 +23,7 @@ import kotlin.random.Random
 class LivelyGreetingTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        val hideNoComplications = provideContext().dataStore.get(hideTargetWithoutComplicationsKey) ?: false
+        val hideNoComplications = provideContext().dataStore.get(hideTargetWithoutComplicationsKey) == true
 
         val morningString = context!!.resources.getStringArray(R.array.quickspace_psa_morning)
         val lateEveningStrings = context!!.resources.getStringArray(R.array.quickspace_psa_late_evening)

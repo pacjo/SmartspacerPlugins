@@ -24,12 +24,12 @@ class ChargingStatusComplication: SmartspacerComplicationProvider() {
 
     @OptIn(DisablingTrim::class)
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val isCharging = provideContext().dataStore.get(batteryIsChargingKey) ?: false
+        val isCharging = provideContext().dataStore.get(batteryIsChargingKey) == true
         val current = provideContext().dataStore.get(batteryCurrentKey) ?: 0
         val voltage = provideContext().dataStore.get(batteryVoltageKey) ?: 0
 
         val disableComplicationTextTrimming = provideContext().dataStore.get(disableTrimmingKey)
-        val useColorChargingIcon = provideContext().dataStore.get(complicationUseColorChargingIconKey) ?: false
+        val useColorChargingIcon = provideContext().dataStore.get(complicationUseColorChargingIconKey) == true
 
         return if (isCharging) {
             listOf(

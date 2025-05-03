@@ -31,19 +31,19 @@ class SunTimesComplication: SmartspacerComplicationProvider() {
             // get preferences
             val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
 
-            val trimToFit = provideContext().dataStore.get(sunTimesComplicationTrimToFitKey) ?: true
+            val trimToFit = provideContext().dataStore.get(sunTimesComplicationTrimToFitKey) != false
 
             val weatherData = Gson().fromJson(jsonString, WeatherData::class.java)
 
-            val nextSunrise: Long = when (System.currentTimeMillis() < weatherData.sunRise * 1000L) {
+            val nextSunrise = when (System.currentTimeMillis() < weatherData.sunRise * 1000L) {
                 true -> weatherData.sunRise                 // if we're still before today's sunrise
                 else -> weatherData.forecasts[0].sunRise
-            }
+            }.toLong()
 
-            val nextSunset: Long = when (System.currentTimeMillis() < weatherData.sunSet * 1000L) {
+            val nextSunset = when (System.currentTimeMillis() < weatherData.sunSet * 1000L) {
                 true -> weatherData.sunSet                 // if we're still before today's sunset
                 else -> weatherData.forecasts[0].sunSet
-            }
+            }.toLong()
 
             // so, we have next sunrise and sunset
             // we'll always show next event (relative to the current time)

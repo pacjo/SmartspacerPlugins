@@ -4,8 +4,6 @@ import android.bluetooth.BluetoothClass
 import android.os.Build
 import androidx.annotation.RequiresApi
 import nodomain.pacjo.smartspacer.plugin.R
-import org.json.JSONArray
-import org.json.JSONObject
 
 // sources we can use:
 //   - https://developer.android.com/reference/android/bluetooth/BluetoothClass.Device
