@@ -16,8 +16,9 @@ android {
         minSdk = 29
         targetSdk = 35
 
-        versionCode = 15
-        versionName = "1.5"
+        // 1000 * major + 100 * minor + patch (assigned randomly to force patch updates in manager)
+        versionCode = 1600
+        versionName = "1.6"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -125,26 +126,26 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.activity:activity-compose:1.10.0")
-    implementation("androidx.compose.foundation:foundation-android:1.7.8")
-    implementation("androidx.compose.material3:material3:1.3.1")
+    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.compose.foundation:foundation-android:1.8.0")
+    implementation("androidx.compose.material3:material3:1.3.2")
     implementation("com.kieronquinn.smartspacer:sdk-plugin:1.1")
-    implementation(platform("androidx.compose:compose-bom:2025.02.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.04.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.datastore:datastore-preferences:1.1.2")
+    implementation("androidx.datastore:datastore-preferences:1.2.0-alpha01")
 
     implementation("com.mikepenz:iconics-core:5.5.0-compose01")
     implementation("com.mikepenz:iconics-compose:5.5.0-compose01")
     implementation("com.mikepenz:community-material-typeface:7.0.96.1-kotlin")
     implementation("com.mikepenz:simple-icons-typeface:17.0.0.2")
 
-    "genericweatherImplementation"("com.google.code.gson:gson:2.12.1")
+    "genericweatherImplementation"("com.google.code.gson:gson:2.13.1")
 
-    "localbatteryImplementation"("androidx.datastore:datastore:1.1.2")
-    "localbatteryImplementation"("com.google.protobuf:protobuf-javalite:4.29.3")
+    "localbatteryImplementation"("androidx.datastore:datastore:1.1.5")
+    "localbatteryImplementation"("com.google.protobuf:protobuf-javalite:4.30.2")
 }
 
 protobuf {

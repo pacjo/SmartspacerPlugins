@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import androidx.datastore.preferences.protobuf.InvalidProtocolBufferException
+import com.google.protobuf.InvalidProtocolBufferException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import nodomain.pacjo.smartspacer.plugin.localbattery.data.BluetoothProto
