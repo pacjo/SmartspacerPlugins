@@ -67,25 +67,11 @@ class DuolingoWidgetProvider: SmartspacerWidgetProvider() {
         // Load the RemoteViews into regular Views
         val view = remoteViews?.load() ?: return
 
-        // extract messages from target (and remove them from view)
-        val subtitleIDs = listOf(
-            "streakSubtitle",
-            "otherModeText",
-            "encouragingSubtitle"
-        )
+        // extract message from target (and remove them from view)
+        val subtitle = view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/subtitle")?.text as String
+        view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/subtitle")?.text  = ""
 
-        val subtitles = mutableListOf<String?>()
-
-        for (subtitleID in subtitleIDs) {
-            subtitles.add(view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/$subtitleID")?.text as String?)
-
-            // remove element from widget
-            view.findViewByIdentifier<TextView>("$PACKAGE_NAME:id/$subtitleID")?.text  = ""
-        }
-
-        val subtitle = subtitles.firstOrNull { it?.isNotBlank() == true } ?: "Good job!"
         provideContext().dataStore.save(widgetSubtitleKey, subtitle)
-
         saveWidgetViewToFile(view, imageFile)
 
         // Notify target about new data
