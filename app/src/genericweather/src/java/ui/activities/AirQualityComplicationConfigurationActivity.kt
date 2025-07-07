@@ -18,7 +18,7 @@ import nodomain.pacjo.smartspacer.plugin.ui.theme.PluginTheme
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.save
 import ui.composables.GeneralSettings
-import utils.AirQualityThresholds
+import utils.AirQuality
 
 class AirQualityComplicationConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ class AirQualityComplicationConfigurationActivity : ComponentActivity() {
             val context = LocalContext.current
 
             val showAlways = context.dataStore.get(airQualityComplicationShowAlways) == true
-            val showThreshold = context.dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
+            val showThreshold = context.dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQuality.FAIR
 
             PluginTheme {
                 PreferenceLayout("Generic Weather") {
@@ -49,7 +49,7 @@ class AirQualityComplicationConfigurationActivity : ComponentActivity() {
                                 AirQualityComplication::class.java
                             )
                         },
-                        range = AirQualityThresholds.EXCELLENT..AirQualityThresholds.VERY_UNHEALTHY,
+                        range = AirQuality.EXCELLENT..AirQuality.VERY_UNHEALTHY,
                         defaultPosition = showThreshold
                     )
 

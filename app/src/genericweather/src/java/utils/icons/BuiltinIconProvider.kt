@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.res.Configuration
 import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData.WeatherStateIcon
 import nodomain.pacjo.smartspacer.plugin.BuildConfig
-import utils.WeatherData
+import utils.Weather
 
 object BuiltinIconProvider {
     private const val TAG = "BuiltinIconProvider"
@@ -13,7 +13,7 @@ object BuiltinIconProvider {
     @SuppressLint("DiscouragedApi")
     fun getWeatherIcon(
         context: Context,
-        data: WeatherData,
+        data: Weather,
         type: Int,
         index: Int = 0
     ): Int {
@@ -82,7 +82,7 @@ object BuiltinIconProvider {
     }
 
     // this mapping is wrong and should be changed
-    fun getSmartspacerWeatherIcon(data: WeatherData, type: Int, index: Int = 0): WeatherStateIcon {
+    fun getSmartspacerWeatherIcon(data: Weather, type: Int, index: Int = 0): WeatherStateIcon {
         // type:
         // 0 - current
         // 1 - hourly

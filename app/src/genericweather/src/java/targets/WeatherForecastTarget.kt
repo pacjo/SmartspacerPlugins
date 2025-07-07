@@ -28,7 +28,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import ui.activities.ForecastTargetConfigurationActivity
 import utils.Temperature
-import utils.WeatherData
+import utils.Weather
 import utils.icons.IconHelper.getWeatherIcon
 
 private fun saveDismissalState(context: Context, dismissed: Boolean, targetMode: TargetMode) {
@@ -50,7 +50,7 @@ private fun getDismissalState(context: Context, targetMode: TargetMode): Pair<Bo
     }
 }
 
-private fun getPrecipitationWarning(weatherData: WeatherData): String? {
+private fun getPrecipitationWarning(weatherData: Weather): String? {
     val currentTime = System.currentTimeMillis()
     val twoHoursInMillis = 2 * 60 * 60 * 1000
 
@@ -106,7 +106,7 @@ class WeatherForecastTarget: SmartspacerTargetProvider() {
             val iconPackPackageName = provideContext().dataStore.get(iconPackPackageNameKey)
 
             val gson = Gson()
-            val weatherData = gson.fromJson(jsonString, WeatherData::class.java)
+            val weatherData = gson.fromJson(jsonString, Weather::class.java)
 
             // TODO: time should be configurable
             if (hour in 9..10 && (!todayForecastState.first || todayForecastState.second != currentDate)) {

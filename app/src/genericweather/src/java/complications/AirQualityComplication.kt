@@ -16,8 +16,8 @@ import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import ui.activities.AirQualityComplicationConfigurationActivity
-import utils.AirQualityThresholds
-import utils.WeatherData
+import utils.AirQuality
+import utils.Weather
 import utils.icons.AirQuality.createAqiIcon
 
 class AirQualityComplication: SmartspacerComplicationProvider() {
@@ -30,9 +30,9 @@ class AirQualityComplication: SmartspacerComplicationProvider() {
             val launchPackage = provideContext().dataStore.get(launchPackageKey) ?: ""
 
             val complicationShowAlways = provideContext().dataStore.get(airQualityComplicationShowAlways) == true
-            val showThreshold = provideContext().dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQualityThresholds.FAIR
+            val showThreshold = provideContext().dataStore.get(airQualityComplicationShowThresholdKey) ?: AirQuality.FAIR
 
-            val weatherData = Gson().fromJson(jsonString, WeatherData::class.java)
+            val weatherData = Gson().fromJson(jsonString, Weather::class.java)
 
             val aqi = weatherData.airQuality.aqi
 

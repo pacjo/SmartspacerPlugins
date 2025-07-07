@@ -10,7 +10,7 @@ import android.util.Log
 import androidx.annotation.XmlRes
 import androidx.core.content.res.ResourcesCompat
 import org.xmlpull.v1.XmlPullParser
-import utils.WeatherData
+import utils.Weather
 
 // move elsewhere if we implement other icon packs
 data class IconPackInfo(
@@ -83,7 +83,7 @@ class BreezyIconProvider(
 
     fun getWeatherIcon(
         iconPack: IconPackInfo,
-        data: WeatherData,
+        data: Weather,
         type: Int,
         index: Int = 0
     ): Drawable {

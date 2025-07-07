@@ -28,7 +28,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import ui.activities.ConditionTargetConfigurationActivity
 import utils.Temperature
-import utils.WeatherData
+import utils.Weather
 import utils.icons.AirQuality.createAqiIcon
 import utils.icons.BreezyIconProvider
 import utils.icons.BuiltinIconProvider
@@ -43,7 +43,7 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
     private fun createCarouselItemList(
         iconPack: IconPackInfo?,
         iconProvider: BreezyIconProvider,
-        weatherData: WeatherData,
+        weatherData: Weather,
         numberOfDataPoints: Int,
         targetTemperatureUnit: String,
         targetType: ForecastTargetDataType
@@ -141,7 +141,7 @@ class WeatherConditionTarget: SmartspacerTargetProvider() {
             if (iconPackPackageName != null)
                 iconPack = iconProvider.getIconPackByPackageName(iconPackPackageName)
 
-            val weatherData = Gson().fromJson(jsonString, WeatherData::class.java)
+            val weatherData = Gson().fromJson(jsonString, Weather::class.java)
 
             val currentTemperature = weatherData.currentTemp
             val location = weatherData.location

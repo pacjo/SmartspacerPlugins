@@ -5,7 +5,7 @@ import android.graphics.Paint
 import android.graphics.drawable.Icon
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.toColorInt
-import utils.AirQualityThresholds
+import utils.AirQuality
 
 object AirQuality {
     fun createAqiIcon(aqi: Int): Icon {
@@ -28,12 +28,12 @@ object AirQuality {
         // https://developers.google.com/maps/documentation/air-quality/laqis
 
         return when {
-            aqi <= AirQualityThresholds.EXCELLENT -> "#50F0E6".toColorInt()
-            aqi <= AirQualityThresholds.FAIR -> "#50CCAA".toColorInt()
-            aqi <= AirQualityThresholds.POOR -> "#F0E641".toColorInt()
-            aqi <= AirQualityThresholds.UNHEALTHY -> "#FF5050".toColorInt()
-            aqi <= AirQualityThresholds.VERY_UNHEALTHY -> "#960032".toColorInt()
-            else -> "#7D2181".toColorInt()
-        }
+            aqi <= AirQuality.EXCELLENT -> "#50F0E6"
+            aqi <= AirQuality.FAIR -> "#50CCAA"
+            aqi <= AirQuality.POOR -> "#F0E641"
+            aqi <= AirQuality.UNHEALTHY -> "#FF5050"
+            aqi <= AirQuality.VERY_UNHEALTHY -> "#960032"
+            else -> "#7D2181"
+        }.toColorInt()
     }
 }

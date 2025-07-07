@@ -3,13 +3,13 @@ package utils.icons
 import android.content.Context
 import android.graphics.drawable.Icon
 import androidx.core.graphics.drawable.toBitmap
-import utils.WeatherData
+import utils.Weather
 
 object IconHelper {
     fun getWeatherIcon(
         context: Context,
         iconPackPackageName: String? = null,
-        weatherData: WeatherData,
+        weatherData: Weather,
         type: Int,
         index: Int = 0
     ): Icon {

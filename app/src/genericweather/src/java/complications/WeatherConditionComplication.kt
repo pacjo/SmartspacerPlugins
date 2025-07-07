@@ -22,7 +22,7 @@ import nodomain.pacjo.smartspacer.plugin.utils.get
 import nodomain.pacjo.smartspacer.plugin.utils.getPackageLaunchTapAction
 import ui.activities.ConditionComplicationConfigurationActivity
 import utils.Temperature
-import utils.WeatherData
+import utils.Weather
 import utils.icons.BuiltinIconProvider
 import utils.icons.IconHelper.getWeatherIcon
 import com.kieronquinn.app.smartspacer.sdk.model.weather.WeatherData as SmartspacerWeatherData
@@ -42,7 +42,7 @@ class WeatherConditionComplication: SmartspacerComplicationProvider() {
             val style = provideContext().dataStore.get(conditionComplicationStyleKey) ?:"temperature"
             val trimToFit = provideContext().dataStore.get(conditionComplicationTrimToFitKey) != false
 
-            val data = Gson().fromJson(jsonString, WeatherData::class.java)
+            val data = Gson().fromJson(jsonString, Weather::class.java)
 
             return listOf(
                 ComplicationTemplate.Basic(
