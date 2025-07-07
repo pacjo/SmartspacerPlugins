@@ -56,6 +56,12 @@
             android:exported="true"
             android:launchMode="singleInstance" />
 
+        <activity
+            android:name="ui.activities.UvIndexComplicationConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
         <provider
             android:name="targets.WeatherConditionTarget"
             android:authorities="${applicationId}.target.weather"
@@ -103,6 +109,17 @@
         <provider
             android:name="complications.AirQualityComplication"
             android:authorities="${applicationId}.complication.air"
+            android:exported="true"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS">
+
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.COMPLICATION" />
+            </intent-filter>
+        </provider>
+
+        <provider
+            android:name="complications.UvIndexComplication"
+            android:authorities="${applicationId}.complication.uv"
             android:exported="true"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_COMPLICATIONS">
 

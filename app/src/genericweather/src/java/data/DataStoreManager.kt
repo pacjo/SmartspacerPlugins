@@ -53,6 +53,9 @@ class DataStoreManager {
         val airQualityComplicationShowThresholdKey = intPreferencesKey("air_quality_complication_show_threshold")
         val airQualityComplicationShowAlways = booleanPreferencesKey("air_quality_complication_show_always")
 
+        val uvIndexComplicationShowThresholdKey = intPreferencesKey("uv_index_complication_show_threshold")
+        val uvIndexComplicationShowAlways = booleanPreferencesKey("uv_index_complication_show_always")
+
         val todayForecastDismissedKey = booleanPreferencesKey("today_forecast_dismissed")
         val todayForecastDismissDateKey = stringPreferencesKey("today_forecast_dismiss_date")
 
