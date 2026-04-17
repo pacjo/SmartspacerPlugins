@@ -121,7 +121,7 @@ object BuiltinIconProvider {
             300, 301, 302 -> WeatherStateIcon.DRIZZLE
             310, 311, 312, 313, 314, 321 -> WeatherStateIcon.SHOWERS_RAIN
             500, 501, 520, 521 -> WeatherStateIcon.SHOWERS_RAIN
-            502, 503, 504, 520, 522, 531 -> WeatherStateIcon.HEAVY_RAIN
+            502, 503, 504, 522 -> WeatherStateIcon.HEAVY_RAIN
             511 -> WeatherStateIcon.MIXED_RAIN_HAIL_RAIN_SLEET
             531 -> WeatherStateIcon.SCATTERED_SHOWERS_DAY
             600, 601, 620, 621 -> WeatherStateIcon.SNOW_SHOWERS_SNOW
