@@ -116,7 +116,7 @@ object BuiltinIconProvider {
         }
 
         return when (conditionCode) {
-            200, 201, 210, 211, 221, 230, 231-> ISOLATED_SCATTERED_TSTORMS_DAY
+            200, 201, 210, 211, 221, 230, 231 -> WeatherStateIcon.ISOLATED_SCATTERED_TSTORMS_DAY
             202, 212, 232 -> WeatherStateIcon.STRONG_TSTORMS
             300, 301, 302 -> WeatherStateIcon.DRIZZLE
             310, 311, 312, 313, 314, 321 -> WeatherStateIcon.SHOWERS_RAIN
@@ -134,8 +134,8 @@ object BuiltinIconProvider {
             800 -> WeatherStateIcon.SUNNY
             801 -> WeatherStateIcon.MOSTLY_SUNNY
             802 -> WeatherStateIcon.PARTLY_CLOUDY
-            803 -> WeatherStateIcon.MOSTLY_CLOUDY
-            804 -> WeatherStateIcon.CLOUDY
+//            803 -> WeatherStateIcon.MOSTLY_CLOUDY // TODO: should use DAY/NIGHT versions
+            803, 804 -> WeatherStateIcon.CLOUDY
 
             else -> throw IllegalArgumentException("Unknown condition code: $conditionCode")
         }
