@@ -34,30 +34,29 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
 
         val hourOfDay: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
 
-        val timeOfDayGreeting = when (hourOfDay) {
-            in 0..3 -> context!!.resources.getString(R.string.quickspace_grt_night)
-            in 5..10 -> context!!.resources.getString(R.string.quickspace_grt_morning)
-            in 12..15 -> context!!.resources.getString(R.string.quickspace_grt_afternoon)
-            in 16..20 -> context!!.resources.getString(R.string.quickspace_grt_evening)
-            in 21..23 -> context!!.resources.getString(R.string.quickspace_grt_night)
+        // every hour of the day maps to exactly one bucket, used for both greeting and funny text
+        val timeOfDayGreeting = context!!.resources.getString(when (hourOfDay) {
+            in 5..11 -> R.string.quickspace_grt_morning
+            in 12..15 -> R.string.quickspace_grt_afternoon
+            in 16..22 -> R.string.quickspace_grt_evening
+            else -> R.string.quickspace_grt_night       // 23..4
+        })
 
-            else -> context!!.resources.getString(R.string.quickspace_grt_general)
+        val timeOfDayStrings = when (hourOfDay) {
+            in 5..11 -> morningString
+            in 12..15 -> afternoonStrings
+            in 16..18 -> earlyEveningStrings
+            in 19..22 -> lateEveningStrings
+            else -> midnightStrings                     // 23..4
         }
 
-        val funnyGreeting = when (hourOfDay) {
-            in 0..3 -> midnightStrings[Random.nextInt(0, midnightStrings.size - 1)]
-            in 5..10 -> morningString[Random.nextInt(0, morningString.size - 1)]
-            in 12..15 -> afternoonStrings[Random.nextInt(0, afternoonStrings.size - 1)]
-            in 16..18 -> earlyEveningStrings[Random.nextInt(0, earlyEveningStrings.size - 1)]
-            in 19..22 -> lateEveningStrings[Random.nextInt(0, lateEveningStrings.size - 1)]
-
-            else -> randomStrings[Random.nextInt(0, randomStrings.size - 1)]
-        }
+        // half the time pick from the time-specific pool, otherwise from the general one
+        val funnyGreeting = (if (Random.nextBoolean()) timeOfDayStrings else randomStrings).random()
 
         val currentDateTime = LocalDateTime.now()
         val currentDay = currentDateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()).lowercase()
 
-        val greeting = when (Random.nextInt(0, 100)) {
+        val greeting = when (Random.nextInt(100)) {
             in 0..1 -> provideContext().getString(R.string.quickspace_ext_one, currentDay)     // 2% chance
             in 2..3 -> provideContext().getString(R.string.quickspace_ext_two, currentDay)     // 2% chance
             in 4..24 -> timeOfDayGreeting                                                      // 20% chance
