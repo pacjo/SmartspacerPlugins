@@ -11,5 +11,6 @@ class DataStoreManager {
         val Context.dataStore by preferencesDataStore(name = DATASTORE_NAME)
 
         val hideTargetWithoutComplicationsKey = booleanPreferencesKey("target_hide_no_complications")
+        val changeOnHomeKey = booleanPreferencesKey("target_change_on_home")
     }
 }

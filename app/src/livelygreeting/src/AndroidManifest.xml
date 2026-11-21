@@ -22,6 +22,15 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="receivers.HomeVisibleReceiver"
+            android:exported="true"
+            android:permission="com.kieronquinn.app.smartspacer.permission.SEND_UPDATE_BROADCAST">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.SMARTSPACE_VISIBILITY_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="targets.LivelyGreetingTarget"
             android:authorities="${applicationId}.target.greeting"

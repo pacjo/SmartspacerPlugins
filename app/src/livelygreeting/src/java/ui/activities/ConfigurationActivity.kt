@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import data.DataStoreManager.Companion.changeOnHomeKey
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.hideTargetWithoutComplicationsKey
 import nodomain.pacjo.smartspacer.plugin.ui.components.PreferenceHeading
@@ -24,6 +25,7 @@ class ConfigurationActivity : ComponentActivity() {
             val context = LocalContext.current
 
             val hideNoComplications = context.dataStore.get(hideTargetWithoutComplicationsKey) == true
+            val changeOnHome = context.dataStore.get(changeOnHomeKey) != false
 
             PluginTheme {
                 PreferenceLayout("Lively Greeting") {
@@ -39,6 +41,16 @@ class ConfigurationActivity : ComponentActivity() {
                             SmartspacerTargetProvider.notifyChange(context, LivelyGreetingTarget::class.java)
                         },
                         checked = hideNoComplications
+                    )
+
+                    PreferenceSwitch(
+                        iicon = CommunityMaterial.Icon2.cmd_home,
+                        title = "Change when returning home",
+                        description = "Show a new message every time you come back to the home screen",
+                        onCheckedChange = { value ->
+                            context.dataStore.save(changeOnHomeKey, value)
+                        },
+                        checked = changeOnHome
                     )
                 }
             }
